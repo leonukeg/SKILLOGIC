@@ -70,10 +70,29 @@ def topbar() -> rx.Component:
         # Spacer
         rx.spacer(),
 
-        # ── Theme + Language toggle (one button, one action) ──
+        # ── Theme toggle (🌙 dark / ☀️ light) ────────────────
         rx.button(
-            AppState.toggle_label,
-            title=AppState.toggle_title,
+            AppState.toggle_theme_label,
+            title=AppState.toggle_theme_title,
+            background=T.BG_HOVER,
+            border=f"1px solid {T.BORDER}",
+            border_radius=T.RADIUS_FULL,
+            padding=f"{T.SPACE_1} {T.SPACE_3}",
+            font_size="16px",
+            cursor="pointer",
+            transition=f"all {T.EASE_FAST}",
+            _hover={
+                "background": T.BG_ELEVATED,
+                "border_color": T.BORDER_STRONG,
+                "transform": "scale(1.08)",
+            },
+            on_click=AppState.toggle_theme,
+        ),
+
+        # ── Language toggle (🇪🇸 ES / 🇬🇧 EN) ──────────────────
+        rx.button(
+            AppState.toggle_lang_label,
+            title=AppState.toggle_lang_title,
             background=T.BG_HOVER,
             border=f"1px solid {T.BORDER}",
             border_radius=T.RADIUS_FULL,
@@ -88,7 +107,7 @@ def topbar() -> rx.Component:
                 "color": T.TEXT_PRIMARY,
                 "border_color": T.BORDER_STRONG,
             },
-            on_click=AppState.toggle_theme_and_lang,
+            on_click=AppState.toggle_lang,
         ),
 
         # Streak badge

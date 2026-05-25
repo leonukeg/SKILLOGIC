@@ -63,28 +63,32 @@ class AppState(rx.State):
         return self.lang == "es"
 
     @rx.var
-    def toggle_label(self) -> str:
-        """Label shown on the theme+lang toggle button."""
-        return "🌙 ES" if self.is_dark else "☀️ EN"
+    def toggle_theme_label(self) -> str:
+        return "🌙" if self.is_dark else "☀️"
 
     @rx.var
-    def toggle_title(self) -> str:
+    def toggle_theme_title(self) -> str:
         if self.is_dark:
-            return "Cambiar a modo claro / inglés"
-        return "Switch to dark mode / Spanish"
+            return "Cambiar a modo claro / Switch to light mode"
+        return "Cambiar a modo oscuro / Switch to dark mode"
 
-    # ── Theme + Language toggle ───────────────────────────────
-    def toggle_theme_and_lang(self):
-        """
-        One action toggles BOTH theme and language simultaneously.
-        dark ↔ light  /  es ↔ en
-        """
-        if self.theme == "dark":
-            self.theme = "light"
-            self.lang = "en"
-        else:
-            self.theme = "dark"
-            self.lang = "es"
+    @rx.var
+    def toggle_lang_label(self) -> str:
+        return "🇪🇸 ES" if self.is_spanish else "🇬🇧 EN"
+
+    @rx.var
+    def toggle_lang_title(self) -> str:
+        return "Switch to English" if self.is_spanish else "Cambiar a Español"
+
+    # ── Theme toggle (independent) ────────────────────────────
+    def toggle_theme(self):
+        """Toggle dark ↔ light mode independently."""
+        self.theme = "light" if self.theme == "dark" else "dark"
+
+    # ── Language toggle (independent) ─────────────────────────
+    def toggle_lang(self):
+        """Toggle es ↔ en independently."""
+        self.lang = "en" if self.lang == "es" else "es"
 
     # ── Auth actions ─────────────────────────────────────────
     def login_mock(self):
