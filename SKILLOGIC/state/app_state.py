@@ -74,7 +74,7 @@ class AppState(rx.State):
 
     @rx.var
     def toggle_lang_label(self) -> str:
-        return "🇪🇸 ES" if self.is_spanish else "🇬🇧 EN"
+        return "ES" if self.is_spanish else "EN"
 
     @rx.var
     def toggle_lang_title(self) -> str:

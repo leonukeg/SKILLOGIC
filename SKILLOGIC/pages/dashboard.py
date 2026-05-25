@@ -41,7 +41,8 @@ def _hero_card() -> rx.Component:
                     rx.cond(AppState.is_spanish, "Aprende Python.", "Learn Python."),
                     font_size=T.TEXT_3XL,
                     font_weight=T.WEIGHT_EXTRABOLD,
-                    color=T.TEXT_PRIMARY,
+                    # Use HERO_TEXT so it contrasts on both dark and light hero backgrounds
+                    color=T.HERO_TEXT,
                     line_height="1.2",
                     letter_spacing="-0.5px",
                 ),
@@ -49,7 +50,12 @@ def _hero_card() -> rx.Component:
                     rx.cond(AppState.is_spanish, "Construye el futuro. 🚀", "Build the future. 🚀"),
                     font_size=T.TEXT_3XL,
                     font_weight=T.WEIGHT_EXTRABOLD,
-                    background=f"linear-gradient(90deg, #a78bfa, {T.BRAND})",
+                    # Dark: light-purple → brand. Light: deep-purple → brand (high contrast on lavender)
+                    background=rx.cond(
+                        AppState.is_dark,
+                        "linear-gradient(90deg, #a78bfa, #7C3AED)",
+                        "linear-gradient(90deg, #5B21B6, #7C3AED)",
+                    ),
                     background_clip="text",
                     webkit_background_clip="text",
                     webkit_text_fill_color="transparent",

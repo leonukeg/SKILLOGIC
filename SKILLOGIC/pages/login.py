@@ -58,7 +58,11 @@ def login_page() -> rx.Component:
                     font_size=T.TEXT_XL,
                     font_weight=T.WEIGHT_EXTRABOLD,
                     letter_spacing="-0.5px",
-                    background=f"linear-gradient(135deg, {T.TEXT_PRIMARY}, #a78bfa)",
+                    background=rx.cond(
+                        AppState.is_dark,
+                        "linear-gradient(135deg, #E6EDF3, #a78bfa)",
+                        "linear-gradient(135deg, #1F2328, #7C3AED)",
+                    ),
                     background_clip="text",
                     webkit_background_clip="text",
                     webkit_text_fill_color="transparent",
