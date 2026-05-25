@@ -297,15 +297,16 @@ def sidebar() -> rx.Component:
                 font_size=T.TEXT_MD,
                 font_weight=T.WEIGHT_BOLD,
                 letter_spacing="-0.3px",
-                # Dark: white→purple on dark bg. Light: near-black→purple on light bg.
+                # Dark: gradient clip (premium look). Light: solid dark text (always readable).
+                color=rx.cond(AppState.is_dark, "transparent", "#1F2328"),
                 background=rx.cond(
                     AppState.is_dark,
                     "linear-gradient(135deg, #E6EDF3, #a78bfa)",
-                    "linear-gradient(135deg, #1F2328, #7C3AED)",
+                    "none",
                 ),
-                background_clip="text",
-                webkit_background_clip="text",
-                webkit_text_fill_color="transparent",
+                background_clip=rx.cond(AppState.is_dark, "text", "initial"),
+                webkit_background_clip=rx.cond(AppState.is_dark, "text", "initial"),
+                webkit_text_fill_color=rx.cond(AppState.is_dark, "transparent", "#1F2328"),
             ),
             align="center",
             gap=T.SPACE_2,
