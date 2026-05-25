@@ -7,6 +7,10 @@ import reflex as rx
 from SKILLOGIC.state import AppState
 from SKILLOGIC.styles import theme as T
 
+# Hardcoded accent colors that don't change with theme
+_VIOLET = "#a855f7"
+_LILAC  = "#a78bfa"
+
 
 def login_page() -> rx.Component:
     """Login page — no sidebar, centered card layout."""
@@ -242,6 +246,7 @@ def login_page() -> rx.Component:
         ),
 
         # Full-page container
+        data_theme=AppState.theme,
         display="flex",
         align_items="center",
         justify_content="center",

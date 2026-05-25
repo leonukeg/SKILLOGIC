@@ -8,6 +8,10 @@ from SKILLOGIC.state import AppState
 from SKILLOGIC.components.layout import app_layout
 from SKILLOGIC.styles import theme as T
 
+# Decorative accents — same across themes
+_VIOLET = "#a855f7"
+_LILAC  = "#a78bfa"
+
 # ── Mock data (will come from DB in Phase 1) ──────────────────
 
 MODULES = [
@@ -114,8 +118,8 @@ def _hero_card() -> rx.Component:
             gap=T.SPACE_6,
         ),
         border_radius=T.RADIUS_XL,
-        background="linear-gradient(135deg, #0f0621 0%, #1a0a3a 40%, #0f1a35 100%)",
-        border=f"1px solid rgba(124, 58, 237, 0.25)",
+        background=T.HERO_GRADIENT,
+        border=f"1px solid {T.HERO_BORDER}",
         padding=f"{T.SPACE_8} {T.SPACE_8}",
         margin_bottom=T.SPACE_6,
         min_height="180px",

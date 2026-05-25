@@ -1,48 +1,81 @@
 """
 SKILLOGIC — Design Tokens
 Single source of truth for all visual constants.
-Never use magic numbers or hardcoded colors in components.
+
+Color tokens use CSS custom property references (var(--token)).
+This makes the dark/light theme switch work automatically:
+  - The wrapper element carries data-theme="dark|light"
+  - assets/theme.css defines var values for each theme
+  - Components use these constants → valid CSS var() references
+
+Non-color tokens (spacing, typography, layout) are plain values.
 """
 
 # ── Backgrounds ────────────────────────────────────────────────
-BG_PRIMARY    = "#0D1117"
-BG_SECONDARY  = "#161B22"
-BG_ELEVATED   = "#1C2128"
-BG_HOVER      = "#21262D"
+BG_PRIMARY    = "var(--bg-primary)"
+BG_SECONDARY  = "var(--bg-secondary)"
+BG_ELEVATED   = "var(--bg-elevated)"
+BG_HOVER      = "var(--bg-hover)"
 
 # ── Borders ────────────────────────────────────────────────────
-BORDER        = "#30363D"
-BORDER_SUBTLE = "#21262D"
-BORDER_STRONG = "#484F58"
+BORDER        = "var(--border)"
+BORDER_SUBTLE = "var(--border-subtle)"
+BORDER_STRONG = "var(--border-strong)"
 
 # ── Text ───────────────────────────────────────────────────────
-TEXT_PRIMARY   = "#E6EDF3"
-TEXT_SECONDARY = "#8B949E"
-TEXT_MUTED     = "#656D76"
-TEXT_DISABLED  = "#3D444D"
+TEXT_PRIMARY   = "var(--text-primary)"
+TEXT_SECONDARY = "var(--text-secondary)"
+TEXT_MUTED     = "var(--text-muted)"
+TEXT_DISABLED  = "var(--text-disabled)"
 
-# ── Brand (Purple) ─────────────────────────────────────────────
-BRAND        = "#7C3AED"
-BRAND_HOVER  = "#6D28D9"
-BRAND_ACTIVE = "#5B21B6"
-BRAND_LIGHT  = "rgba(124, 58, 237, 0.12)"
-BRAND_MEDIUM = "rgba(124, 58, 237, 0.25)"
-BRAND_GLOW   = "rgba(124, 58, 237, 0.40)"
+# ── Brand (purple) ─────────────────────────────────────────────
+BRAND        = "var(--brand)"
+BRAND_HOVER  = "var(--brand-hover)"
+BRAND_ACTIVE = "var(--brand-active)"
+BRAND_LIGHT  = "var(--brand-light)"
+BRAND_MEDIUM = "var(--brand-medium)"
+BRAND_GLOW   = "var(--brand-glow)"
 
 # ── Semantic ───────────────────────────────────────────────────
-SUCCESS       = "#2EA043"
-SUCCESS_LIGHT = "rgba(46, 160, 67, 0.12)"
-WARNING       = "#D29922"
-WARNING_LIGHT = "rgba(210, 153, 34, 0.12)"
-ERROR         = "#F85149"
-ERROR_LIGHT   = "rgba(248, 81, 73, 0.12)"
-INFO          = "#388BFD"
-INFO_LIGHT    = "rgba(56, 139, 253, 0.12)"
+SUCCESS       = "var(--success)"
+SUCCESS_LIGHT = "var(--success-light)"
+WARNING       = "var(--warning)"
+WARNING_LIGHT = "var(--warning-light)"
+ERROR         = "var(--error)"
+ERROR_LIGHT   = "var(--error-light)"
+INFO          = "var(--info)"
+INFO_LIGHT    = "var(--info-light)"
 
-# ── Streak (Orange) ────────────────────────────────────────────
-STREAK       = "#F97316"
-STREAK_LIGHT = "rgba(249, 115, 22, 0.12)"
-STREAK_GLOW  = "rgba(249, 115, 22, 0.35)"
+# ── Streak (orange) ────────────────────────────────────────────
+STREAK        = "var(--streak)"
+STREAK_LIGHT  = "var(--streak-light)"
+STREAK_GLOW   = "var(--streak-glow)"
+
+# ── Shadows ────────────────────────────────────────────────────
+SHADOW_XS     = "var(--shadow-xs)"
+SHADOW_SM     = "var(--shadow-sm)"
+SHADOW_MD     = "var(--shadow-md)"
+SHADOW_LG     = "var(--shadow-lg)"
+SHADOW_XL     = "var(--shadow-xl)"
+SHADOW_BRAND  = "var(--shadow-brand)"
+SHADOW_STREAK = "var(--shadow-streak)"
+
+# ── Hero card ──────────────────────────────────────────────────
+HERO_GRADIENT = "var(--hero-gradient)"
+HERO_BORDER   = "var(--hero-border)"
+HERO_TEXT     = "var(--hero-text)"
+
+# ── Code / terminal ────────────────────────────────────────────
+CODE_BG   = "var(--code-bg)"
+CODE_TEXT = "var(--code-text)"
+
+# ── Input fields ───────────────────────────────────────────────
+INPUT_BG   = "var(--input-bg)"
+INPUT_TEXT = "var(--input-text)"
+
+# ══════════════════════════════════════════════════════════════
+# Non-color tokens — plain values (no theming needed)
+# ══════════════════════════════════════════════════════════════
 
 # ── Typography ─────────────────────────────────────────────────
 FONT_BODY = "'Inter', system-ui, -apple-system, sans-serif"
@@ -87,15 +120,6 @@ RADIUS_XL   = "20px"
 RADIUS_2XL  = "28px"
 RADIUS_FULL = "9999px"
 
-# ── Shadows ────────────────────────────────────────────────────
-SHADOW_XS    = "0 1px 2px rgba(0,0,0,0.35)"
-SHADOW_SM    = "0 1px 4px rgba(0,0,0,0.40)"
-SHADOW_MD    = "0 4px 12px rgba(0,0,0,0.45)"
-SHADOW_LG    = "0 8px 24px rgba(0,0,0,0.55)"
-SHADOW_XL    = "0 16px 48px rgba(0,0,0,0.65)"
-SHADOW_BRAND = "0 4px 24px rgba(124, 58, 237, 0.40)"
-SHADOW_STREAK= "0 4px 20px rgba(249, 115, 22, 0.35)"
-
 # ── Transitions ────────────────────────────────────────────────
 EASE_FAST   = "120ms ease"
 EASE_BASE   = "220ms ease"
@@ -103,11 +127,11 @@ EASE_SLOW   = "380ms ease"
 EASE_BOUNCE = "350ms cubic-bezier(0.34, 1.56, 0.64, 1)"
 
 # ── Layout Dimensions ──────────────────────────────────────────
-SIDEBAR_WIDTH      = "220px"
-TOPBAR_HEIGHT      = "60px"
-RIGHT_PANEL_WIDTH  = "280px"
+SIDEBAR_WIDTH     = "220px"
+TOPBAR_HEIGHT     = "60px"
+RIGHT_PANEL_WIDTH = "280px"
 
-# ── Levels ─────────────────────────────────────────────────────
+# ── Level definitions (data, not CSS) ──────────────────────────
 LEVELS = [
     {"level": 1, "name": "Aprendiz",    "xp_required": 0},
     {"level": 2, "name": "Iniciado",    "xp_required": 500},
@@ -116,7 +140,7 @@ LEVELS = [
     {"level": 5, "name": "Maestro",     "xp_required": 2500},
 ]
 
-# ── Stylesheet URL (Google Fonts) ──────────────────────────────
+# ── Google Fonts URL ───────────────────────────────────────────
 GOOGLE_FONTS_URL = (
     "https://fonts.googleapis.com/css2?"
     "family=Inter:wght@300;400;500;600;700;800;900&"
@@ -124,17 +148,7 @@ GOOGLE_FONTS_URL = (
     "display=swap"
 )
 
-# ── Light theme overrides ──────────────────────────────────────
-LIGHT = {
-    "BG_PRIMARY":    "#FFFFFF",
-    "BG_SECONDARY":  "#F6F8FA",
-    "BG_ELEVATED":   "#EAEEF2",
-    "BG_HOVER":      "#EFF1F3",
-    "BORDER":        "#D0D7DE",
-    "BORDER_SUBTLE": "#EAEEF2",
-    "BORDER_STRONG": "#8C959F",
-    "TEXT_PRIMARY":   "#1F2328",
-    "TEXT_SECONDARY": "#57606A",
-    "TEXT_MUTED":     "#6E7781",
-    "TEXT_DISABLED":  "#AFB8C1",
-}
+# ── Accent colors (decorative, same in both themes) ────────────
+# Used for gradients and accents — not in the theme system
+ACCENT_VIOLET = "#a855f7"
+ACCENT_LILAC  = "#a78bfa"

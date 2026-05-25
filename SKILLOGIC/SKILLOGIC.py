@@ -59,7 +59,10 @@ GLOBAL_STYLES = {
 
 app = rx.App(
     style=GLOBAL_STYLES,
-    stylesheets=[GOOGLE_FONTS_URL],
+    stylesheets=[
+        GOOGLE_FONTS_URL,
+        "/theme.css",   # dark / light CSS custom properties
+    ],
     # HTML metadata
     head_components=[
         rx.el.meta(charset="UTF-8"),

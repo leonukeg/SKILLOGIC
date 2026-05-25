@@ -1,0 +1,160 @@
+/* ================================================================
+   SKILLOGIC — Theme CSS Custom Properties
+   Dark (default) and Light overrides.
+   Components use var(--token) via inline styles.
+   The wrapper box carries data-theme="dark|light" from AppState.
+   ================================================================ */
+
+/* ── Dark theme (default) ─────────────────────────────────────── */
+:root,
+[data-theme="dark"] {
+  /* Backgrounds */
+  --bg-primary:    #0D1117;
+  --bg-secondary:  #161B22;
+  --bg-elevated:   #1C2128;
+  --bg-hover:      #21262D;
+
+  /* Borders */
+  --border:        #30363D;
+  --border-subtle: #21262D;
+  --border-strong: #484F58;
+
+  /* Text */
+  --text-primary:   #E6EDF3;
+  --text-secondary: #8B949E;
+  --text-muted:     #656D76;
+  --text-disabled:  #3D444D;
+
+  /* Brand (purple) */
+  --brand:        #7C3AED;
+  --brand-hover:  #6D28D9;
+  --brand-active: #5B21B6;
+  --brand-light:  rgba(124, 58, 237, 0.12);
+  --brand-medium: rgba(124, 58, 237, 0.25);
+  --brand-glow:   rgba(124, 58, 237, 0.40);
+
+  /* Semantic */
+  --success:       #2EA043;
+  --success-light: rgba(46, 160, 67, 0.12);
+  --warning:       #D29922;
+  --warning-light: rgba(210, 153, 34, 0.12);
+  --error:         #F85149;
+  --error-light:   rgba(248, 81, 73, 0.12);
+  --info:          #388BFD;
+  --info-light:    rgba(56, 139, 253, 0.12);
+
+  /* Streak (orange) */
+  --streak:       #F97316;
+  --streak-light: rgba(249, 115, 22, 0.12);
+  --streak-glow:  rgba(249, 115, 22, 0.35);
+
+  /* Shadows */
+  --shadow-xs:     0 1px 2px rgba(0,0,0,0.35);
+  --shadow-sm:     0 1px 4px rgba(0,0,0,0.40);
+  --shadow-md:     0 4px 12px rgba(0,0,0,0.45);
+  --shadow-lg:     0 8px 24px rgba(0,0,0,0.55);
+  --shadow-xl:     0 16px 48px rgba(0,0,0,0.65);
+  --shadow-brand:  0 4px 24px rgba(124, 58, 237, 0.40);
+  --shadow-streak: 0 4px 20px rgba(249, 115, 22, 0.35);
+
+  /* Hero card */
+  --hero-gradient: linear-gradient(135deg, #0f0621 0%, #1a0a3a 40%, #0f1a35 100%);
+  --hero-border:   rgba(124, 58, 237, 0.25);
+  --hero-text:     #E6EDF3;
+
+  /* Code block */
+  --code-bg:   #161B22;
+  --code-text: #E6EDF3;
+
+  /* Input */
+  --input-bg:   #1C2128;
+  --input-text: #E6EDF3;
+}
+
+/* ── Light theme ──────────────────────────────────────────────── */
+[data-theme="light"] {
+  /* Backgrounds */
+  --bg-primary:    #FFFFFF;
+  --bg-secondary:  #F6F8FA;
+  --bg-elevated:   #EAEEF2;
+  --bg-hover:      #EFF1F3;
+
+  /* Borders */
+  --border:        #D0D7DE;
+  --border-subtle: #EAEEF2;
+  --border-strong: #8C959F;
+
+  /* Text */
+  --text-primary:   #1F2328;
+  --text-secondary: #57606A;
+  --text-muted:     #6E7781;
+  --text-disabled:  #AFB8C1;
+
+  /* Brand (purple — same across themes) */
+  --brand:        #7C3AED;
+  --brand-hover:  #6D28D9;
+  --brand-active: #5B21B6;
+  --brand-light:  rgba(124, 58, 237, 0.08);
+  --brand-medium: rgba(124, 58, 237, 0.16);
+  --brand-glow:   rgba(124, 58, 237, 0.30);
+
+  /* Semantic (adjusted for light bg contrast) */
+  --success:       #1A7F37;
+  --success-light: rgba(26, 127, 55, 0.10);
+  --warning:       #9A6700;
+  --warning-light: rgba(154, 103, 0, 0.10);
+  --error:         #CF222E;
+  --error-light:   rgba(207, 34, 46, 0.10);
+  --info:          #0969DA;
+  --info-light:    rgba(9, 105, 218, 0.10);
+
+  /* Streak */
+  --streak:       #BC4C00;
+  --streak-light: rgba(188, 76, 0, 0.10);
+  --streak-glow:  rgba(249, 115, 22, 0.20);
+
+  /* Shadows (softer on light) */
+  --shadow-xs:     0 1px 2px rgba(0,0,0,0.06);
+  --shadow-sm:     0 1px 4px rgba(0,0,0,0.08);
+  --shadow-md:     0 4px 12px rgba(0,0,0,0.10);
+  --shadow-lg:     0 8px 24px rgba(0,0,0,0.12);
+  --shadow-xl:     0 16px 48px rgba(0,0,0,0.16);
+  --shadow-brand:  0 4px 24px rgba(124, 58, 237, 0.20);
+  --shadow-streak: 0 4px 20px rgba(188, 76, 0, 0.20);
+
+  /* Hero card — light purple/lavender gradient */
+  --hero-gradient: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 50%, #dbeafe 100%);
+  --hero-border:   rgba(124, 58, 237, 0.20);
+  --hero-text:     #1F2328;
+
+  /* Code block — keep dark for readability */
+  --code-bg:   #1e1e2e;
+  --code-text: #cdd6f4;
+
+  /* Input */
+  --input-bg:   #FFFFFF;
+  --input-text: #1F2328;
+}
+
+/* ── Smooth theme transition ─────────────────────────────────── */
+*,
+*::before,
+*::after {
+  transition:
+    background-color 220ms ease,
+    border-color 220ms ease,
+    color 220ms ease,
+    box-shadow 220ms ease;
+}
+
+/* Exception: don't animate transforms (breaks hover effects) */
+button,
+a,
+[role="button"] {
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease,
+    transform 120ms ease,
+    box-shadow 120ms ease;
+}
