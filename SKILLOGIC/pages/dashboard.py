@@ -112,13 +112,21 @@ def _hero_card() -> rx.Component:
                 align_items="start",
                 flex="1",
             ),
-            # Python emoji visual
-            rx.text(
-                "🐍",
-                font_size="80px",
-                opacity="0.9",
+            # Python logo — animated float + glow
+            rx.box(
+                rx.image(
+                    src="/python_logo.svg",
+                    width="88px",
+                    height="88px",
+                    alt="Python logo",
+                ),
+                style={
+                    "animation": "pythonFloat 5s ease-in-out infinite, pythonGlow 3s ease-in-out infinite",
+                },
                 flex_shrink="0",
-                style={"animation": "float 4s ease-in-out infinite"},
+                display="flex",
+                align_items="center",
+                justify_content="center",
             ),
             align="center",
             gap=T.SPACE_6,
@@ -149,7 +157,21 @@ def _module_card(mod: dict, index: int) -> rx.Component:
     bar_color = T.SUCCESS if status_class == "completed" else T.BRAND
 
     return rx.box(
-        rx.text(mod["emoji"], font_size="28px", margin_bottom=T.SPACE_2, display="block"),
+        # Emoji icon — wrapped in themed box so it's visible in both dark and light modes
+        rx.box(
+            rx.text(mod["emoji"], font_size="22px"),
+            width="40px",
+            height="40px",
+            border_radius=T.RADIUS_MD,
+            # Light mode: subtle dark tint makes emojis pop. Dark mode: transparent.
+            background=rx.cond(AppState.is_dark, "rgba(255,255,255,0.05)", "rgba(0,0,0,0.07)"),
+            border=rx.cond(AppState.is_dark, f"1px solid {T.BORDER_SUBTLE}", "1px solid rgba(0,0,0,0.10)"),
+            display="flex",
+            align_items="center",
+            justify_content="center",
+            flex_shrink="0",
+            margin_bottom=T.SPACE_2,
+        ),
         rx.text(
             f"{index + 1}. ",
             rx.cond(AppState.is_spanish, mod["name_es"], mod["name_en"]),

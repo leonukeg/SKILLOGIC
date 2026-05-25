@@ -44,10 +44,21 @@ GLOBAL_STYLES = {
     "::-webkit-scrollbar-thumb:hover": {
         "background": "#484F58",
     },
-    # Float animation for hero emoji
+    # Float animation for hero element
     "@keyframes float": {
-        "0%, 100%": {"transform": "translateY(0px)"},
-        "50%":      {"transform": "translateY(-12px)"},
+        "0%, 100%": {"transform": "translateY(0px) rotate(-3deg)"},
+        "50%":      {"transform": "translateY(-14px) rotate(3deg)"},
+    },
+    # Python logo — float + subtle spin
+    "@keyframes pythonFloat": {
+        "0%, 100%": {"transform": "translateY(0px) rotate(0deg) scale(1)"},
+        "25%":      {"transform": "translateY(-10px) rotate(6deg) scale(1.04)"},
+        "75%":      {"transform": "translateY(-6px) rotate(-4deg) scale(1.02)"},
+    },
+    # Soft glow pulse for the logo
+    "@keyframes pythonGlow": {
+        "0%, 100%": {"filter": "drop-shadow(0 0 8px rgba(55, 118, 171, 0.5))"},
+        "50%":      {"filter": "drop-shadow(0 0 20px rgba(55, 118, 171, 0.85)) drop-shadow(0 0 8px rgba(255, 212, 59, 0.6))"},
     },
     "@keyframes fadeIn": {
         "from": {"opacity": "0", "transform": "translateY(-8px)"},
