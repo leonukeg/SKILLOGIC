@@ -1,0 +1,40 @@
+# ── Reflex ────────────────────────────────────────────────────
+.web/
+.states/
+assets/external/
+
+# ── Python ────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# ── Virtual environment ───────────────────────────────────────
+.venv/
+venv/
+env/
+ENV/
+
+# ── Database / secrets ────────────────────────────────────────
+*.db
+*.sqlite3
+.env
+.env.*
+!.env.example
+
+# ── IDE ───────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ── OS ────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini

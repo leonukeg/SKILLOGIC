@@ -1,0 +1,107 @@
+"""
+SKILLOGIC — Global App State
+Single rx.State subclass that manages all application-level state.
+Lesson-specific state is handled in page-level State classes.
+"""
+
+import reflex as rx
+from typing import List
+from SKILLOGIC.styles.theme import LEVELS
+
+
+class AppState(rx.State):
+    """
+    Global state: auth, theme, language, user stats.
+    Follows the Immutability-by-default principle:
+    all mutations go through explicit EventHandlers.
+    """
+
+    # ── Auth ──────────────────────────────────────────────────
+    is_authenticated: bool = False
+    user_name: str = ""
+    user_email: str = ""
+    user_initials: str = ""
+
+    # ── User progress ─────────────────────────────────────────
+    user_level: int = 4
+    user_xp: int = 820
+    user_xp_to_next: int = 1200
+    user_streak: int = 7
+    user_rank: str = "Explorer"
+    streak_days: List[bool] = [True, True, True, True, False, False, False]
+
+    # ── Theme ─────────────────────────────────────────────────
+    # dark = ES (primary),  light = EN (secondary)
+    theme: str = "dark"   # "dark" | "light"
+    lang: str = "es"      # "es"   | "en"
+
+    # ── Navigation ────────────────────────────────────────────
+    active_nav: str = "home"
+
+    # ── Computed helpers ──────────────────────────────────────
+    @rx.var
+    def xp_percent(self) -> int:
+        """XP progress as integer percentage 0-100."""
+        if self.user_xp_to_next == 0:
+            return 100
+        return min(int((self.user_xp / self.user_xp_to_next) * 100), 100)
+
+    @rx.var
+    def level_name(self) -> str:
+        """Human-readable level name derived from XP."""
+        for lvl in reversed(LEVELS):
+            if self.user_xp >= lvl["xp_required"]:
+                return lvl["name"]
+        return LEVELS[0]["name"]
+
+    @rx.var
+    def is_dark(self) -> bool:
+        return self.theme == "dark"
+
+    @rx.var
+    def is_spanish(self) -> bool:
+        return self.lang == "es"
+
+    @rx.var
+    def toggle_label(self) -> str:
+        """Label shown on the theme+lang toggle button."""
+        return "🌙 ES" if self.is_dark else "☀️ EN"
+
+    @rx.var
+    def toggle_title(self) -> str:
+        if self.is_dark:
+            return "Cambiar a modo claro / inglés"
+        return "Switch to dark mode / Spanish"
+
+    # ── Theme + Language toggle ───────────────────────────────
+    def toggle_theme_and_lang(self):
+        """
+        One action toggles BOTH theme and language simultaneously.
+        dark ↔ light  /  es ↔ en
+        """
+        if self.theme == "dark":
+            self.theme = "light"
+            self.lang = "en"
+        else:
+            self.theme = "dark"
+            self.lang = "es"
+
+    # ── Auth actions ─────────────────────────────────────────
+    def login_mock(self):
+        """Mock login for Phase 0 — replace with real JWT in Phase 1."""
+        self.is_authenticated = True
+        self.user_name = "Juan"
+        self.user_email = "juan@example.com"
+        self.user_initials = "JU"
+        return rx.redirect("/dashboard")
+
+    def logout(self):
+        self.is_authenticated = False
+        self.user_name = ""
+        self.user_email = ""
+        self.user_initials = ""
+        return rx.redirect("/login")
+
+    # ── Navigation ───────────────────────────────────────────
+    def set_active_nav(self, item: str):
+        self.active_nav = item

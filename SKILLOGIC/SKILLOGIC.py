@@ -1,0 +1,99 @@
+"""
+SKILLOGIC — Application Entry Point
+Registers all pages, applies global styles, bootstraps the Reflex app.
+"""
+
+import reflex as rx
+
+from SKILLOGIC.pages.login import login_page
+from SKILLOGIC.pages.dashboard import dashboard_page
+from SKILLOGIC.styles.theme import GOOGLE_FONTS_URL
+
+# ── Global stylesheet ─────────────────────────────────────────
+# Defines the CSS custom property structure for the dark/light token system
+# that backs the design tokens imported from styles/theme.py.
+
+GLOBAL_STYLES = {
+    "body": {
+        "background": "var(--bg-primary, #0D1117)",
+        "color": "var(--text-primary, #E6EDF3)",
+        "font_family": "'Inter', system-ui, -apple-system, sans-serif",
+        "margin": "0",
+        "padding": "0",
+        "-webkit-font-smoothing": "antialiased",
+        "-moz-osx-font-smoothing": "grayscale",
+    },
+    "*": {
+        "box_sizing": "border-box",
+    },
+    "::selection": {
+        "background": "rgba(124, 58, 237, 0.3)",
+    },
+    # Scrollbar styling (Webkit)
+    "::-webkit-scrollbar": {
+        "width": "6px",
+        "height": "6px",
+    },
+    "::-webkit-scrollbar-track": {
+        "background": "transparent",
+    },
+    "::-webkit-scrollbar-thumb": {
+        "background": "#30363D",
+        "border_radius": "3px",
+    },
+    "::-webkit-scrollbar-thumb:hover": {
+        "background": "#484F58",
+    },
+    # Float animation for hero emoji
+    "@keyframes float": {
+        "0%, 100%": {"transform": "translateY(0px)"},
+        "50%":      {"transform": "translateY(-12px)"},
+    },
+    "@keyframes fadeIn": {
+        "from": {"opacity": "0", "transform": "translateY(-8px)"},
+        "to":   {"opacity": "1", "transform": "translateY(0)"},
+    },
+}
+
+# ── App bootstrap ─────────────────────────────────────────────
+
+app = rx.App(
+    style=GLOBAL_STYLES,
+    stylesheets=[GOOGLE_FONTS_URL],
+    # HTML metadata
+    head_components=[
+        rx.el.meta(charset="UTF-8"),
+        rx.el.meta(name="viewport", content="width=device-width, initial-scale=1.0"),
+        rx.el.meta(
+            name="description",
+            content=(
+                "SKILLOGIC — Aprende Python desde cero hasta nivel profesional. "
+                "Lecciones prácticas, proyectos reales, editor de código integrado."
+            ),
+        ),
+        rx.el.meta(property="og:title", content="SKILLOGIC — Aprende Python"),
+        rx.el.title("SKILLOGIC — Aprende Python"),
+    ],
+)
+
+# ── Page registration ─────────────────────────────────────────
+
+app.add_page(
+    login_page,
+    route="/login",
+    title="SKILLOGIC — Iniciar sesión",
+    description="Inicia sesión en tu cuenta de SKILLOGIC.",
+)
+
+app.add_page(
+    login_page,
+    route="/",
+    title="SKILLOGIC — Bienvenido",
+)
+
+app.add_page(
+    dashboard_page,
+    route="/dashboard",
+    title="SKILLOGIC — Dashboard",
+    description="Tu panel de aprendizaje personalizado.",
+)
