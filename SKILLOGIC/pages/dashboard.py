@@ -112,23 +112,22 @@ def _hero_card() -> rx.Component:
                 align_items="start",
                 flex="1",
             ),
-            # Python logo — animated float + glow
+            # Python logo — bigger, float only, centered
             rx.box(
                 rx.image(
                     src="/python_logo.svg",
-                    width="88px",
-                    height="88px",
+                    width="130px",
+                    height="130px",
                     alt="Python logo",
                 ),
-                style={
-                    "animation": "pythonFloat 5s ease-in-out infinite, pythonGlow 3s ease-in-out infinite",
-                },
+                style={"animation": "pythonFloat 5s ease-in-out infinite"},
                 flex_shrink="0",
                 display="flex",
                 align_items="center",
                 justify_content="center",
             ),
             align="center",
+            justify="between",
             gap=T.SPACE_6,
         ),
         border_radius=T.RADIUS_XL,
