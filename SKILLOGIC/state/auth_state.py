@@ -61,8 +61,12 @@ class AuthState(rx.State):
             self.error_message = "Error interno: Base de datos no configurada."
             return
             
+        login_email = self.email
+        if "@" not in login_email:
+            login_email = f"{login_email}@skillogic.com"
+            
         try:
-            res = client.auth.sign_in_with_password({"email": self.email, "password": self.password})
+            res = client.auth.sign_in_with_password({"email": login_email, "password": self.password})
             if res.user:
                 self.user_id = res.user.id
                 self.user_email = res.user.email
@@ -85,9 +89,13 @@ class AuthState(rx.State):
             self.error_message = "Error interno: Base de datos no configurada."
             return
             
+        signup_email = self.email
+        if "@" not in signup_email:
+            signup_email = f"{signup_email}@skillogic.com"
+            
         try:
             res = client.auth.sign_up({
-                "email": self.email, 
+                "email": signup_email, 
                 "password": self.password,
                 "options": {"data": {"full_name": self.name}}
             })

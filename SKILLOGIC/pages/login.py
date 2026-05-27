@@ -101,15 +101,15 @@ def login_page() -> rx.Component:
                     # Email field
                     rx.vstack(
                         rx.text(
-                            rx.cond(AppState.is_spanish, "Correo electrónico", "Email address"),
+                            rx.cond(AppState.is_spanish, "Nombre de usuario", "Username"),
                             font_size=T.TEXT_SM,
                             font_weight=T.WEIGHT_MEDIUM,
                             color=T.TEXT_SECONDARY,
                             align_self="start",
                         ),
                         rx.el.input(
-                            type="email",
-                            placeholder=rx.cond(AppState.is_spanish, "tu@email.com", "you@email.com"),
+                            type="text",
+                            placeholder=rx.cond(AppState.is_spanish, "ej: admin", "e.g. admin"),
                             id="login-email",
                             width="100%",
                             height="44px",
