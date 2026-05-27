@@ -32,6 +32,7 @@ def app_layout(*page_content: rx.Component) -> rx.Component:
                 overflow_x="hidden",
             ),
             margin_left=T.SIDEBAR_WIDTH,
+            width=f"calc(100% - {T.SIDEBAR_WIDTH})",
             display="flex",
             flex_direction="column",
             min_height="100vh",
@@ -40,6 +41,7 @@ def app_layout(*page_content: rx.Component) -> rx.Component:
         data_theme=AppState.theme,
         display="flex",
         min_height="100vh",
+        width="100%",
         background=T.BG_PRIMARY,
         font_family=T.FONT_BODY,
     )

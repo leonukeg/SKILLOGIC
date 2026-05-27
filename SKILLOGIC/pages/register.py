@@ -1,0 +1,79 @@
+"""
+SKILLOGIC — Register Page
+"""
+
+import reflex as rx
+from SKILLOGIC.state import AppState
+from SKILLOGIC.state.auth_state import AuthState
+from SKILLOGIC.styles import theme as T
+
+def register_page() -> rx.Component:
+    return rx.box(
+        # Background glows
+        rx.box(position="absolute", width="600px", height="600px", border_radius="50%", background=f"radial-gradient(circle, {T.BRAND_LIGHT} 0%, transparent 70%)", top="-200px", right="-100px", pointer_events="none"),
+        rx.box(position="absolute", width="400px", height="400px", border_radius="50%", background="radial-gradient(circle, rgba(249,115,22,0.06) 0%, transparent 70%)", bottom="-100px", left="-100px", pointer_events="none"),
+
+        # Card
+        rx.box(
+            rx.hstack(
+                rx.box(rx.text("⚡", font_size="22px"), width="44px", height="44px", background=f"linear-gradient(135deg, {T.BRAND}, #a855f7)", border_radius=T.RADIUS_LG, display="flex", align_items="center", justify_content="center", box_shadow=T.SHADOW_BRAND),
+                rx.text("SKILLOGIC", font_size=T.TEXT_XL, font_weight=T.WEIGHT_EXTRABOLD, letter_spacing="-0.5px", color=rx.cond(AppState.is_dark, "transparent", "#1F2328"), background=rx.cond(AppState.is_dark, "linear-gradient(135deg, #E6EDF3, #a78bfa)", "none"), background_clip=rx.cond(AppState.is_dark, "text", "initial"), webkit_background_clip=rx.cond(AppState.is_dark, "text", "initial"), webkit_text_fill_color=rx.cond(AppState.is_dark, "transparent", "#1F2328")),
+                align="center", gap=T.SPACE_3, justify="center", margin_bottom=T.SPACE_8,
+            ),
+            rx.text(rx.cond(AppState.is_spanish, "Crea tu cuenta", "Create your account"), font_size=T.TEXT_2XL, font_weight=T.WEIGHT_BOLD, text_align="center", color=T.TEXT_PRIMARY, margin_bottom=T.SPACE_1),
+            rx.text(rx.cond(AppState.is_spanish, "Empieza a aprender Python hoy mismo", "Start learning Python today"), font_size=T.TEXT_SM, color=T.TEXT_MUTED, text_align="center", margin_bottom=T.SPACE_8),
+
+            rx.form(
+                rx.vstack(
+                    # Name field
+                    rx.vstack(
+                        rx.text(rx.cond(AppState.is_spanish, "Nombre", "Name"), font_size=T.TEXT_SM, font_weight=T.WEIGHT_MEDIUM, color=T.TEXT_SECONDARY, align_self="start"),
+                        rx.el.input(type="text", placeholder="Tu nombre", width="100%", height="44px", background=T.BG_ELEVATED, border=f"1px solid {T.BORDER}", border_radius=T.RADIUS_MD, color=T.TEXT_PRIMARY, font_size=T.TEXT_BASE, padding=f"0 {T.SPACE_4}", outline="none", font_family=T.FONT_BODY, on_change=AuthState.set_name, _focus={"border_color": T.BRAND, "box_shadow": f"0 0 0 3px {T.BRAND_LIGHT}"}),
+                        spacing="2", width="100%", margin_bottom=T.SPACE_4,
+                    ),
+
+                    # Email field
+                    rx.vstack(
+                        rx.text(rx.cond(AppState.is_spanish, "Correo electrónico", "Email address"), font_size=T.TEXT_SM, font_weight=T.WEIGHT_MEDIUM, color=T.TEXT_SECONDARY, align_self="start"),
+                        rx.el.input(type="email", placeholder="tu@email.com", width="100%", height="44px", background=T.BG_ELEVATED, border=f"1px solid {T.BORDER}", border_radius=T.RADIUS_MD, color=T.TEXT_PRIMARY, font_size=T.TEXT_BASE, padding=f"0 {T.SPACE_4}", outline="none", font_family=T.FONT_BODY, on_change=AuthState.set_email, _focus={"border_color": T.BRAND, "box_shadow": f"0 0 0 3px {T.BRAND_LIGHT}"}),
+                        spacing="2", width="100%", margin_bottom=T.SPACE_4,
+                    ),
+
+                    # Password field
+                    rx.vstack(
+                        rx.text(rx.cond(AppState.is_spanish, "Contraseña", "Password"), font_size=T.TEXT_SM, font_weight=T.WEIGHT_MEDIUM, color=T.TEXT_SECONDARY, align_self="start"),
+                        rx.el.input(type="password", placeholder="••••••••", width="100%", height="44px", background=T.BG_ELEVATED, border=f"1px solid {T.BORDER}", border_radius=T.RADIUS_MD, color=T.TEXT_PRIMARY, font_size=T.TEXT_BASE, padding=f"0 {T.SPACE_4}", outline="none", font_family=T.FONT_BODY, on_change=AuthState.set_password, _focus={"border_color": T.BRAND, "box_shadow": f"0 0 0 3px {T.BRAND_LIGHT}"}),
+                        spacing="2", width="100%", margin_bottom=T.SPACE_2,
+                    ),
+                    
+                    # Error message
+                    rx.cond(
+                        AuthState.error_message != "",
+                        rx.text(AuthState.error_message, color="red", font_size=T.TEXT_SM, width="100%", text_align="center"),
+                    ),
+
+                    # Submit button
+                    rx.button(
+                        rx.cond(AppState.is_spanish, "Registrarse", "Sign up"),
+                        type="submit",
+                        width="100%", height="48px", background=T.BRAND, color="white", border_radius=T.RADIUS_MD, font_size=T.TEXT_BASE, font_weight=T.WEIGHT_SEMIBOLD, cursor="pointer", box_shadow=T.SHADOW_BRAND, margin_top=T.SPACE_2, transition=f"all {T.EASE_FAST}", _hover={"background": T.BRAND_HOVER, "transform": "translateY(-1px)", "box_shadow": f"0 6px 28px {T.BRAND_GLOW}"},
+                    ),
+                    width="100%",
+                ),
+                on_submit=AuthState.signup,
+                reset_on_submit=False,
+                width="100%",
+            ),
+
+            # Login link
+            rx.hstack(
+                rx.text(rx.cond(AppState.is_spanish, "¿Ya tienes cuenta?", "Already have an account?"), font_size=T.TEXT_SM, color=T.TEXT_MUTED),
+                rx.link(rx.cond(AppState.is_spanish, "Inicia sesión", "Sign in"), href="/login", font_size=T.TEXT_SM, color=T.BRAND, font_weight=T.WEIGHT_MEDIUM, _hover={"color": "#a78bfa"}),
+                justify="center", gap=T.SPACE_2, margin_top=T.SPACE_6,
+            ),
+
+            background=T.BG_SECONDARY, border=f"1px solid {T.BORDER}", border_radius=T.RADIUS_2XL, padding=f"{T.SPACE_10} {T.SPACE_8}", width="100%", max_width="420px", position="relative", z_index="1", box_shadow=T.SHADOW_XL,
+        ),
+
+        data_theme=AppState.theme, display="flex", align_items="center", justify_content="center", min_height="100vh", width="100%", padding=T.SPACE_4, background=T.BG_PRIMARY, font_family=T.FONT_BODY, position="relative", overflow="hidden",
+    )

@@ -6,7 +6,13 @@ Registers all pages, applies global styles, bootstraps the Reflex app.
 import reflex as rx
 
 from SKILLOGIC.pages.login import login_page
+from SKILLOGIC.pages.register import register_page
 from SKILLOGIC.pages.dashboard import dashboard_page
+from SKILLOGIC.pages.admin import admin_page
+from SKILLOGIC.pages.lesson import lesson_page
+from SKILLOGIC.state.curriculum_state import CurriculumState
+from SKILLOGIC.state.auth_state import AuthState
+from SKILLOGIC.state.progress_state import ProgressState
 from SKILLOGIC.styles.theme import GOOGLE_FONTS_URL
 
 # ── Global stylesheet ─────────────────────────────────────────
@@ -95,9 +101,16 @@ app.add_page(
 )
 
 app.add_page(
+    register_page,
+    route="/register",
+    title="SKILLOGIC — Registrarse",
+)
+
+app.add_page(
     login_page,
     route="/",
     title="SKILLOGIC — Bienvenido",
+    on_load=AuthState.on_load,
 )
 
 app.add_page(
@@ -105,4 +118,13 @@ app.add_page(
     route="/dashboard",
     title="SKILLOGIC — Dashboard",
     description="Tu panel de aprendizaje personalizado.",
+    on_load=[AuthState.on_load, CurriculumState.load_data, ProgressState.load_stats],
+)
+
+app.add_page(
+    admin_page,
+    route="/admin",
+    title="SKILLOGIC — Admin",
+    description="Panel de administración de SKILLOGIC.",
+    on_load=[AuthState.on_load, CurriculumState.load_data],
 )

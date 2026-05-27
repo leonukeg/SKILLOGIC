@@ -5,30 +5,14 @@ Hero + learning path + current lesson preview + right panel.
 
 import reflex as rx
 from SKILLOGIC.state import AppState
+from SKILLOGIC.state.curriculum_state import CurriculumState
+from SKILLOGIC.state.progress_state import ProgressState
 from SKILLOGIC.components.layout import app_layout
 from SKILLOGIC.styles import theme as T
 
 # Decorative accents — same across themes
 _VIOLET = "#a855f7"
 _LILAC  = "#a78bfa"
-
-# ── Mock data (will come from DB in Phase 1) ──────────────────
-
-MODULES = [
-    {"emoji": "⌨️", "name_es": "Fundamentos Reales",   "name_en": "Real Fundamentals",   "progress": 100, "status": "completed"},
-    {"emoji": "🔧", "name_es": "Estructuras de Datos",  "name_en": "Data Structures",     "progress": 75,  "status": "active"},
-    {"emoji": "📐", "name_es": "Funciones y Módulos",   "name_en": "Functions & Modules", "progress": 40,  "status": "active"},
-    {"emoji": "🧩", "name_es": "POO",                   "name_en": "OOP",                 "progress": 20,  "status": "upcoming"},
-    {"emoji": "🚀", "name_es": "Proyectos",             "name_en": "Projects",            "progress": 3,   "status": "upcoming"},
-]
-
-PROJECTS = [
-    {"icon": "🔐", "name_es": "Generador de Contraseñas", "name_en": "Password Generator", "level": "intermediate", "progress": 75},
-    {"icon": "🌐", "name_es": "Web Scraper",              "name_en": "Web Scraper",         "level": "basic",        "progress": 0},
-    {"icon": "📋", "name_es": "Lista de Tareas",          "name_en": "Task List",           "level": "intermediate", "progress": 25},
-    {"icon": "📊", "name_es": "Análisis de Datos",        "name_en": "Data Analysis",       "level": "advanced",     "progress": 0},
-]
-
 
 # ── Subcomponents ─────────────────────────────────────────────
 
@@ -153,76 +137,72 @@ def _module_card(mod: dict, index: int) -> rx.Component:
         else T.SUCCESS_LIGHT if status_class == "completed"
         else T.BG_SECONDARY
     )
-    bar_color = T.SUCCESS if status_class == "completed" else T.BRAND
+def _module_card(mod: rx.Var[dict]) -> rx.Component:
+    is_locked = mod["status"] == "locked"
+    is_completed = mod["status"] == "completed"
+    
+    # Colores dinámicos
+    status_color = rx.cond(is_locked, T.TEXT_MUTED, rx.cond(is_completed, T.SUCCESS, T.BRAND))
+    bg_color = rx.cond(is_locked, T.BG_HOVER, rx.cond(is_completed, T.SUCCESS_LIGHT, T.BRAND_LIGHT))
+    border_color = rx.cond(is_locked, T.BORDER, rx.cond(is_completed, "transparent", T.BRAND_MEDIUM))
+    text_color = rx.cond(is_locked, T.TEXT_MUTED, T.TEXT_PRIMARY)
 
     return rx.box(
-        # Emoji icon — wrapped in themed box so it's visible in both dark and light modes
         rx.box(
-            rx.text(mod["emoji"], font_size="22px"),
-            width="40px",
-            height="40px",
-            border_radius=T.RADIUS_MD,
-            # Light mode: subtle dark tint makes emojis pop. Dark mode: transparent.
-            background=rx.cond(AppState.is_dark, "rgba(255,255,255,0.05)", "rgba(0,0,0,0.07)"),
-            border=rx.cond(AppState.is_dark, f"1px solid {T.BORDER_SUBTLE}", "1px solid rgba(0,0,0,0.10)"),
+            rx.icon(tag=mod["icon_tag"].to(str), size=24, color=status_color),
+            width="48px",
+            height="48px",
+            border_radius=T.RADIUS_LG,
+            background=bg_color,
             display="flex",
             align_items="center",
             justify_content="center",
-            flex_shrink="0",
-            margin_bottom=T.SPACE_2,
+            margin_bottom=T.SPACE_4,
+            border=f"1px solid {border_color}",
         ),
         rx.text(
-            f"{index + 1}. ",
             rx.cond(AppState.is_spanish, mod["name_es"], mod["name_en"]),
-            font_size=T.TEXT_SM,
+            font_size=T.TEXT_BASE,
             font_weight=T.WEIGHT_SEMIBOLD,
-            color=T.TEXT_PRIMARY,
-            margin_bottom=T.SPACE_3,
+            color=text_color,
+            margin_bottom=T.SPACE_2,
+            min_height="48px",
             line_height="1.3",
         ),
-        rx.text(
-            f"{mod['progress']}%",
-            font_size=T.TEXT_XS,
-            color=T.TEXT_SECONDARY,
-            margin_bottom=T.SPACE_1,
-            font_weight=T.WEIGHT_MEDIUM,
-        ),
         rx.box(
-            rx.box(
-                height="100%",
-                width=f"{mod['progress']}%",
-                background=bar_color,
-                border_radius=T.RADIUS_FULL,
-            ),
-            height="4px",
+            rx.box(height="100%", width=mod["progress"].to(str) + "%", background=status_color, border_radius=T.RADIUS_FULL),
+            height="6px",
             background=T.BG_HOVER,
             border_radius=T.RADIUS_FULL,
             overflow="hidden",
+            margin_bottom=T.SPACE_2,
         ),
-        flex_shrink="0",
-        width="148px",
-        background=bg,
-        border=f"1px solid {border_color}",
-        border_radius=T.RADIUS_LG,
-        padding=f"{T.SPACE_4} {T.SPACE_3}",
-        cursor="pointer",
+        rx.hstack(
+            rx.text(mod["progress"].to(str) + "%", font_size=T.TEXT_XS, font_weight=T.WEIGHT_BOLD, color=status_color),
+            rx.text(
+                rx.cond(is_locked, rx.cond(AppState.is_spanish, "Bloqueado", "Locked"),
+                rx.cond(is_completed, rx.cond(AppState.is_spanish, "Completado", "Completed"), rx.cond(AppState.is_spanish, "En progreso", "In progreso"))),
+                font_size=T.TEXT_XS, color=T.TEXT_MUTED
+            ),
+            justify="between",
+        ),
+        padding=T.SPACE_5,
+        background=T.BG_SECONDARY,
+        border=f"1px solid {T.BORDER}",
+        border_radius=T.RADIUS_XL,
+        position="relative",
+        overflow="hidden",
+        cursor=rx.cond(is_locked, "not-allowed", "pointer"),
         transition=f"all {T.EASE_BASE}",
         _hover={
-            "transform": "translateY(-2px)",
-            "box_shadow": T.SHADOW_MD,
+            "border_color": rx.cond(is_locked, T.BORDER, T.BORDER_STRONG),
+            "transform": rx.cond(is_locked, "none", "translateY(-4px)"),
+            "box_shadow": rx.cond(is_locked, "none", T.SHADOW_MD),
         },
     )
 
 
 def _learning_path() -> rx.Component:
-    module_cards = [_module_card(mod, i) for i, mod in enumerate(MODULES)]
-    # Interleave connectors
-    items = []
-    for i, card in enumerate(module_cards):
-        items.append(card)
-        if i < len(module_cards) - 1:
-            items.append(rx.text("→", color=T.BORDER, flex_shrink="0", margin_top="20px"))
-
     return rx.box(
         rx.hstack(
             rx.text(
@@ -244,7 +224,7 @@ def _learning_path() -> rx.Component:
             margin_bottom=T.SPACE_4,
         ),
         rx.hstack(
-            *items,
+            rx.foreach(CurriculumState.modules, _module_card),
             gap=T.SPACE_3,
             overflow_x="auto",
             padding_bottom=T.SPACE_2,
@@ -292,7 +272,11 @@ def _current_lesson_preview() -> rx.Component:
             ),
             rx.hstack(
                 rx.box(
-                    rx.text("⭐ 25 XP", font_size=T.TEXT_XS, font_weight=T.WEIGHT_SEMIBOLD, color=T.WARNING),
+                    rx.hstack(
+                        rx.icon(tag="star", size=14, color=T.WARNING),
+                        rx.text("25 XP", font_size=T.TEXT_XS, font_weight=T.WEIGHT_SEMIBOLD, color=T.WARNING),
+                        gap=T.SPACE_1, align="center"
+                    ),
                     background=T.WARNING_LIGHT,
                     border_radius=T.RADIUS_FULL,
                     padding=f"2px {T.SPACE_2}",
@@ -320,32 +304,41 @@ def _current_lesson_preview() -> rx.Component:
 
         # Tabs
         rx.hstack(
-            rx.text(
-                rx.cond(AppState.is_spanish, "📖 Instrucciones", "📖 Instructions"),
+            rx.hstack(
+                rx.icon(tag="book-open", size=16),
+                rx.text(rx.cond(AppState.is_spanish, "Instrucciones", "Instructions")),
                 font_size=T.TEXT_SM,
                 font_weight=T.WEIGHT_MEDIUM,
                 color=T.TEXT_PRIMARY,
                 border_bottom=f"2px solid {T.BRAND}",
                 padding=f"{T.SPACE_3} {T.SPACE_4}",
                 cursor="pointer",
+                align="center",
+                gap=T.SPACE_2,
             ),
-            rx.text(
-                rx.cond(AppState.is_spanish, "💡 Pista", "💡 Hint"),
+            rx.hstack(
+                rx.icon(tag="lightbulb", size=16),
+                rx.text(rx.cond(AppState.is_spanish, "Pista", "Hint")),
                 font_size=T.TEXT_SM,
                 font_weight=T.WEIGHT_MEDIUM,
                 color=T.TEXT_MUTED,
                 padding=f"{T.SPACE_3} {T.SPACE_4}",
                 cursor="pointer",
                 _hover={"color": T.TEXT_SECONDARY},
+                align="center",
+                gap=T.SPACE_2,
             ),
-            rx.text(
-                rx.cond(AppState.is_spanish, "💬 Discusión", "💬 Discussion"),
+            rx.hstack(
+                rx.icon(tag="message-circle", size=16),
+                rx.text(rx.cond(AppState.is_spanish, "Discusión", "Discussion")),
                 font_size=T.TEXT_SM,
                 font_weight=T.WEIGHT_MEDIUM,
                 color=T.TEXT_MUTED,
                 padding=f"{T.SPACE_3} {T.SPACE_4}",
                 cursor="pointer",
                 _hover={"color": T.TEXT_SECONDARY},
+                align="center",
+                gap=T.SPACE_2,
             ),
             border_bottom=f"1px solid {T.BORDER}",
             padding=f"0 {T.SPACE_5}",
@@ -392,7 +385,8 @@ def _current_lesson_preview() -> rx.Component:
                         align="center",
                     ),
                     rx.button(
-                        rx.cond(AppState.is_spanish, "⟳ Reiniciar", "⟳ Reset"),
+                        rx.icon(tag="rotate-cw", size=12),
+                        rx.text(rx.cond(AppState.is_spanish, "Reiniciar", "Reset")),
                         background="transparent",
                         color=T.TEXT_MUTED,
                         font_size=T.TEXT_XS,
@@ -434,8 +428,13 @@ def _current_lesson_preview() -> rx.Component:
                     margin_bottom=T.SPACE_3,
                 ),
                 rx.box(
-                    rx.text("✅ ", rx.cond(AppState.is_spanish, "¡Correcto! 🎉", "Correct! 🎉"),
-                            font_size=T.TEXT_SM, color=T.SUCCESS),
+                    rx.hstack(
+                        rx.icon(tag="check-circle", size=16, color=T.SUCCESS),
+                        rx.text(rx.cond(AppState.is_spanish, "¡Correcto! 🎉", "Correct! 🎉"),
+                                font_size=T.TEXT_SM, color=T.SUCCESS),
+                        align="center",
+                        gap=T.SPACE_2,
+                    ),
                     background=T.SUCCESS_LIGHT,
                     border_radius=T.RADIUS_MD,
                     padding=f"{T.SPACE_2} {T.SPACE_3}",
@@ -463,7 +462,8 @@ def _current_lesson_preview() -> rx.Component:
         # Actions bar
         rx.hstack(
             rx.button(
-                rx.cond(AppState.is_spanish, "💡 Pista", "💡 Hint"),
+                rx.icon(tag="lightbulb", size=14),
+                rx.text(rx.cond(AppState.is_spanish, "Pista", "Hint")),
                 background="transparent",
                 color=T.TEXT_SECONDARY,
                 font_size=T.TEXT_SM,
@@ -474,7 +474,8 @@ def _current_lesson_preview() -> rx.Component:
             ),
             rx.hstack(
                 rx.button(
-                    rx.cond(AppState.is_spanish, "⟳ Reiniciar", "⟳ Reset"),
+                    rx.icon(tag="rotate-cw", size=14),
+                    rx.text(rx.cond(AppState.is_spanish, "Reiniciar", "Reset")),
                     background="transparent",
                     color=T.TEXT_SECONDARY,
                     border=f"1px solid {T.BORDER_STRONG}",
@@ -486,7 +487,8 @@ def _current_lesson_preview() -> rx.Component:
                     _hover={"background": T.BG_HOVER},
                 ),
                 rx.button(
-                    rx.cond(AppState.is_spanish, "▶ Ejecutar", "▶ Run"),
+                    rx.icon(tag="play", size=14),
+                    rx.text(rx.cond(AppState.is_spanish, "Ejecutar", "Run")),
                     background=T.BRAND,
                     color="white",
                     border_radius=T.RADIUS_MD,
@@ -514,82 +516,68 @@ def _current_lesson_preview() -> rx.Component:
     )
 
 
-def _projects_grid() -> rx.Component:
-    level_colors = {
-        "basic":        (T.INFO_LIGHT, T.INFO),
-        "intermediate": (T.WARNING_LIGHT, T.WARNING),
-        "advanced":     (T.ERROR_LIGHT, T.ERROR),
-    }
-    level_labels_es = {"basic": "Básico", "intermediate": "Intermedio", "advanced": "Avanzado"}
-    level_labels_en = {"basic": "Basic", "intermediate": "Intermediate", "advanced": "Advanced"}
+def _project_card(proj: rx.Var[dict]) -> rx.Component:
+    level = proj["level"].to(str)
+    bg = rx.cond(level == "advanced", T.ERROR_LIGHT, rx.cond(level == "intermediate", T.WARNING_LIGHT, T.INFO_LIGHT))
+    fg = rx.cond(level == "advanced", T.ERROR, rx.cond(level == "intermediate", T.WARNING, T.INFO))
 
-    cards = []
-    for proj in PROJECTS:
-        bg, fg = level_colors.get(proj["level"], (T.BRAND_LIGHT, T.BRAND))
-        card = rx.hstack(
+    level_es = rx.cond(level == "advanced", "Avanzado", rx.cond(level == "intermediate", "Intermedio", "Básico"))
+    level_en = rx.cond(level == "advanced", "Advanced", rx.cond(level == "intermediate", "Intermediate", "Basic"))
+
+    return rx.hstack(
+        rx.box(
+            rx.icon(tag="folder", size=20, color=T.TEXT_PRIMARY),
+            width="40px",
+            height="40px",
+            border_radius=T.RADIUS_MD,
+            background=T.BG_HOVER,
+            display="flex",
+            align_items="center",
+            justify_content="center",
+            flex_shrink="0",
+        ),
+        rx.vstack(
+            rx.text(
+                rx.cond(AppState.is_spanish, proj["title_es"], proj["title_en"]),
+                font_size=T.TEXT_SM,
+                font_weight=T.WEIGHT_SEMIBOLD,
+                color=T.TEXT_PRIMARY,
+                white_space="nowrap",
+                overflow="hidden",
+                text_overflow="ellipsis",
+            ),
             rx.box(
-                rx.text(proj["icon"], font_size="20px"),
-                width="40px",
-                height="40px",
-                border_radius=T.RADIUS_MD,
-                background=T.BG_HOVER,
-                display="flex",
-                align_items="center",
-                justify_content="center",
-                flex_shrink="0",
-            ),
-            rx.vstack(
                 rx.text(
-                    rx.cond(AppState.is_spanish, proj["name_es"], proj["name_en"]),
-                    font_size=T.TEXT_SM,
-                    font_weight=T.WEIGHT_SEMIBOLD,
-                    color=T.TEXT_PRIMARY,
-                    white_space="nowrap",
-                    overflow="hidden",
-                    text_overflow="ellipsis",
+                    rx.cond(AppState.is_spanish, level_es, level_en),
+                    font_size=T.TEXT_XS,
+                    font_weight=T.WEIGHT_MEDIUM,
+                    color=fg,
                 ),
-                rx.box(
-                    rx.text(
-                        rx.cond(AppState.is_spanish,
-                            level_labels_es[proj["level"]],
-                            level_labels_en[proj["level"]],
-                        ),
-                        font_size=T.TEXT_XS,
-                        font_weight=T.WEIGHT_MEDIUM,
-                        color=fg,
-                    ),
-                    background=bg,
-                    border_radius=T.RADIUS_FULL,
-                    padding=f"2px {T.SPACE_2}",
-                ),
-                *([
-                    rx.box(
-                        rx.box(height="100%", width=f"{proj['progress']}%", background=T.BRAND, border_radius=T.RADIUS_FULL),
-                        height="4px", background=T.BG_HOVER, border_radius=T.RADIUS_FULL, overflow="hidden",
-                        margin_top="4px",
-                    ),
-                ] if proj["progress"] > 0 else []),
-                spacing="1",
-                align_items="start",
-                flex="1",
-                min_width="0",
+                background=bg,
+                border_radius=T.RADIUS_FULL,
+                padding=f"2px {T.SPACE_2}",
             ),
-            background=T.BG_SECONDARY,
-            border=f"1px solid {T.BORDER}",
-            border_radius=T.RADIUS_LG,
-            padding=T.SPACE_4,
-            cursor="pointer",
-            transition=f"all {T.EASE_BASE}",
-            _hover={
-                "border_color": T.BORDER_STRONG,
-                "transform": "translateY(-2px)",
-                "box_shadow": T.SHADOW_MD,
-            },
-            align="center",
-            gap=T.SPACE_3,
-        )
-        cards.append(card)
+            spacing="1",
+            align_items="start",
+            flex="1",
+            min_width="0",
+        ),
+        background=T.BG_SECONDARY,
+        border=f"1px solid {T.BORDER}",
+        border_radius=T.RADIUS_LG,
+        padding=T.SPACE_4,
+        cursor="pointer",
+        transition=f"all {T.EASE_BASE}",
+        _hover={
+            "border_color": T.BORDER_STRONG,
+            "transform": "translateY(-2px)",
+            "box_shadow": T.SHADOW_MD,
+        },
+        align="center",
+        gap=T.SPACE_3,
+    )
 
+def _projects_grid() -> rx.Component:
     return rx.box(
         rx.hstack(
             rx.text(
@@ -599,10 +587,9 @@ def _projects_grid() -> rx.Component:
                 color=T.TEXT_PRIMARY,
             ),
             rx.text(
-                rx.cond(AppState.is_spanish, "Ver todos →", "See all →"),
+                rx.cond(AppState.is_spanish, "Ver portafolio →", "View portfolio →"),
                 font_size=T.TEXT_SM,
                 color=T.BRAND,
-                font_weight=T.WEIGHT_MEDIUM,
                 cursor="pointer",
                 _hover={"color": "#a78bfa"},
             ),
@@ -611,7 +598,7 @@ def _projects_grid() -> rx.Component:
             margin_bottom=T.SPACE_4,
         ),
         rx.grid(
-            *cards,
+            rx.foreach(CurriculumState.projects, _project_card),
             columns="2",
             gap=T.SPACE_4,
         ),
@@ -620,57 +607,97 @@ def _projects_grid() -> rx.Component:
 
 # ── Right Panel subcomponents ─────────────────────────────────
 
-def _right_streak() -> rx.Component:
+def _right_stats() -> rx.Component:
     return rx.box(
+        # TU PROGRESO Header
         rx.text(
-            rx.cond(AppState.is_spanish, "Racha actual 🔥", "Current streak 🔥"),
-            font_size=T.TEXT_SM,
-            font_weight=T.WEIGHT_SEMIBOLD,
-            color=T.TEXT_PRIMARY,
-            margin_bottom=T.SPACE_3,
+            rx.cond(AppState.is_spanish, "TU PROGRESO", "YOUR PROGRESS"),
+            font_size=T.TEXT_XS, font_weight=T.WEIGHT_BOLD, color=T.TEXT_MUTED, letter_spacing="1px", margin_bottom=T.SPACE_3
         ),
+        # Nivel y XP
+        rx.hstack(
+            rx.box(
+                rx.text(ProgressState.level.to_string(), font_size=T.TEXT_LG, font_weight=T.WEIGHT_EXTRABOLD, color="white"),
+                width="40px", height="40px", border_radius="50%", background=f"linear-gradient(135deg, {T.BRAND}, #a855f7)", display="flex", align_items="center", justify_content="center", box_shadow=T.SHADOW_BRAND,
+            ),
+            rx.spacer(),
+            rx.text(ProgressState.xp.to_string() + " / " + ProgressState.xp_to_next_level.to_string() + " XP", font_size=T.TEXT_SM, font_weight=T.WEIGHT_BOLD, color=T.TEXT_PRIMARY),
+            align="center", margin_bottom=T.SPACE_2
+        ),
+        # Barra principal
+        rx.box(
+            rx.box(width=ProgressState.xp_progress_percent.to_string() + "%", height="100%", background=f"linear-gradient(90deg, {T.BRAND}, #a855f7)", border_radius=T.RADIUS_FULL, transition="width 0.5s ease"),
+            width="100%", height="6px", background=T.BG_ELEVATED, border_radius=T.RADIUS_FULL, overflow="hidden", margin_bottom=T.SPACE_2
+        ),
+        # Rango
+        rx.hstack(
+            rx.icon(tag="award", size=14, color=T.TEXT_MUTED),
+            rx.text("Rango", font_size=T.TEXT_XS, color=T.TEXT_MUTED),
+            rx.spacer(),
+            rx.text(
+                rx.cond(
+                    ProgressState.xp == 0, "Novato", 
+                    rx.cond(ProgressState.level < 5, "Explorer", 
+                    rx.cond(ProgressState.level < 10, "Pioneer", "Master"))
+                ), 
+                font_size=T.TEXT_XS, font_weight=T.WEIGHT_BOLD, color=T.BRAND_LIGHT
+            ),
+            align="center", margin_bottom=T.SPACE_6
+        ),
+
+        # RACHA ACTUAL
         rx.text(
-            AppState.user_streak.to_string() + " ",
-            rx.cond(AppState.is_spanish, "días", "days"),
-            font_size=T.TEXT_4XL,
-            font_weight=T.WEIGHT_EXTRABOLD,
-            color=T.TEXT_PRIMARY,
-            line_height="1",
+            rx.cond(AppState.is_spanish, "RACHA ACTUAL", "CURRENT STREAK"),
+            font_size=T.TEXT_XS, font_weight=T.WEIGHT_BOLD, color=T.TEXT_MUTED, letter_spacing="1px", margin_bottom=T.SPACE_3
         ),
-        rx.text(
-            rx.cond(AppState.is_spanish, "¡Sigue así! 👋", "Keep it up! 👋"),
-            font_size=T.TEXT_SM,
-            color=T.TEXT_MUTED,
-            margin_top="4px",
-            margin_bottom=T.SPACE_4,
+        rx.hstack(
+            rx.icon(tag="flame", size=20, color="#f97316"),
+            rx.text(ProgressState.streak_days.to_string(), font_size=T.TEXT_2XL, font_weight=T.WEIGHT_EXTRABOLD, color="#f97316", line_height="1"),
+            rx.text(rx.cond(AppState.is_spanish, "días", "days"), font_size=T.TEXT_SM, color=T.TEXT_MUTED, align_self="end", margin_bottom="2px"),
+            align="end", gap=T.SPACE_2, margin_bottom=T.SPACE_3
         ),
+        # Dias de la semana (Mock visual)
+        rx.hstack(
+            rx.foreach(
+                ["L", "M", "M", "J", "V", "S", "D"],
+                lambda d, i: rx.vstack(
+                    rx.text(d, font_size="10px", color=T.TEXT_MUTED, font_weight=T.WEIGHT_BOLD),
+                    rx.box(width="24px", height="24px", border_radius="50%", background=rx.cond(i < 4, "#f97316", "transparent"), border=rx.cond(i < 4, "none", f"2px solid {T.BORDER_STRONG}")),
+                    align_items="center", spacing="1"
+                )
+            ),
+            justify="between", margin_bottom=T.SPACE_6
+        ),
+
+        # Proximo Objetivo
+        rx.text("Próximo objetivo", font_size=T.TEXT_XS, color=T.TEXT_MUTED, margin_bottom=T.SPACE_1),
+        rx.text("Completa 3 ejercicios", font_size=T.TEXT_MD, font_weight=T.WEIGHT_BOLD, color=T.TEXT_PRIMARY, margin_bottom=T.SPACE_2),
+        rx.box(
+            rx.box(width="33%", height="100%", background=f"linear-gradient(90deg, {T.BRAND}, #a855f7)", border_radius=T.RADIUS_FULL),
+            width="100%", height="4px", background=T.BG_ELEVATED, border_radius=T.RADIUS_FULL, overflow="hidden", margin_bottom=T.SPACE_6
+        ),
+
         margin_bottom=T.SPACE_5,
-        padding_bottom=T.SPACE_5,
+        padding_bottom=T.SPACE_2,
         border_bottom=f"1px solid {T.BORDER_SUBTLE}",
     )
 
 
 def _right_plan() -> rx.Component:
-    plan_es = [
-        ("✅", "Funciones en Python",       "Lección 5",   True),
-        ("○",  "Desafío: Calculadora",      "Intermedio",  False),
-        ("○",  "Proyecto: Habit Tracker",   "Práctico",    False),
-    ]
-    plan_en = [
-        ("✅", "Functions in Python",       "Lesson 5",    True),
-        ("○",  "Challenge: Calculator",     "Intermediate", False),
-        ("○",  "Project: Habit Tracker",    "Practical",   False),
-    ]
-
-    def plan_item(es_item, en_item) -> rx.Component:
+    def plan_item(item: rx.Var[dict]) -> rx.Component:
+        is_completed = item["completed"] == "True"
         return rx.hstack(
             rx.box(
-                rx.text("✓" if es_item[3] else "", font_size="11px", color="white", font_weight="bold"),
+                rx.icon(
+                    tag=rx.cond(is_completed, "check", "circle"), 
+                    size=12, 
+                    color=rx.cond(is_completed, "white", "transparent")
+                ),
                 width="20px",
                 height="20px",
                 border_radius="50%",
-                background=T.SUCCESS if es_item[3] else "transparent",
-                border=f"2px solid {T.SUCCESS if es_item[3] else T.BORDER}",
+                background=rx.cond(is_completed, T.SUCCESS, "transparent"),
+                border=rx.cond(is_completed, f"2px solid {T.SUCCESS}", f"2px solid {T.BORDER}"),
                 display="flex",
                 align_items="center",
                 justify_content="center",
@@ -678,16 +705,16 @@ def _right_plan() -> rx.Component:
             ),
             rx.vstack(
                 rx.text(
-                    rx.cond(AppState.is_spanish, es_item[1], en_item[1]),
+                    rx.cond(AppState.is_spanish, item["title_es"], item["title_en"]),
                     font_size=T.TEXT_SM,
-                    color=T.TEXT_MUTED if es_item[3] else T.TEXT_PRIMARY,
-                    text_decoration="line-through" if es_item[3] else "none",
+                    color=rx.cond(is_completed, T.TEXT_MUTED, T.TEXT_PRIMARY),
+                    text_decoration=rx.cond(is_completed, "line-through", "none"),
                     white_space="nowrap",
                     overflow="hidden",
                     text_overflow="ellipsis",
                 ),
                 rx.text(
-                    rx.cond(AppState.is_spanish, es_item[2], en_item[2]),
+                    rx.cond(AppState.is_spanish, item["subtitle_es"], item["subtitle_en"]),
                     font_size=T.TEXT_XS,
                     color=T.TEXT_MUTED,
                 ),
@@ -700,6 +727,7 @@ def _right_plan() -> rx.Component:
             gap=T.SPACE_3,
             padding=f"{T.SPACE_2} 0",
             cursor="pointer",
+            on_click=lambda: CurriculumState.toggle_plan_by_title(item["title_en"], ~is_completed),
         )
 
     return rx.box(
@@ -715,9 +743,10 @@ def _right_plan() -> rx.Component:
             ),
             justify="between", align="center", margin_bottom=T.SPACE_3,
         ),
-        plan_item(plan_es[0], plan_en[0]),
-        plan_item(plan_es[1], plan_en[1]),
-        plan_item(plan_es[2], plan_en[2]),
+        rx.vstack(
+            rx.foreach(CurriculumState.todays_plan, plan_item),
+            width="100%",
+        ),
         rx.button(
             rx.cond(AppState.is_spanish, "Continuar plan", "Continue plan"),
             width="100%",
@@ -739,48 +768,56 @@ def _right_plan() -> rx.Component:
 
 
 def _right_challenge() -> rx.Component:
+    dc = CurriculumState.daily_challenge
+    diff = dc["difficulty_level"].to(str)
+    diff_color = rx.cond(
+        diff == "advanced", T.ERROR,
+        rx.cond(diff == "intermediate", T.WARNING, T.SUCCESS)
+    )
+
     return rx.box(
         rx.hstack(
             rx.text(
                 rx.cond(AppState.is_spanish, "Desafío diario", "Daily challenge"),
                 font_size=T.TEXT_SM, font_weight=T.WEIGHT_SEMIBOLD, color=T.TEXT_PRIMARY,
             ),
-            rx.box(
-                rx.text(
-                    rx.cond(AppState.is_spanish, "Nuevo", "New"),
-                    font_size=T.TEXT_XS, font_weight=T.WEIGHT_BOLD, color="white",
+            rx.cond(
+                dc["is_new"].to(bool),
+                rx.box(
+                    rx.text(
+                        rx.cond(AppState.is_spanish, "Nuevo", "New"),
+                        font_size=T.TEXT_XS, font_weight=T.WEIGHT_BOLD, color="white",
+                    ),
+                    background=T.BRAND,
+                    border_radius=T.RADIUS_FULL,
+                    padding=f"2px {T.SPACE_2}",
                 ),
-                background=T.BRAND,
-                border_radius=T.RADIUS_FULL,
-                padding=f"2px {T.SPACE_2}",
+                rx.box(),
             ),
             justify="between", align="center", margin_bottom=T.SPACE_3,
         ),
         rx.box(
             rx.hstack(
                 rx.text(
-                    rx.cond(AppState.is_spanish, "Suma de números pares", "Sum of even numbers"),
+                    rx.cond(AppState.is_spanish, dc["title_es"], dc["title_en"]),
                     font_size=T.TEXT_BASE, font_weight=T.WEIGHT_SEMIBOLD, color=T.TEXT_PRIMARY,
                 ),
             ),
             rx.text(
                 rx.cond(AppState.is_spanish, "Dificultad: ", "Difficulty: "),
                 rx.text.span(
-                    rx.cond(AppState.is_spanish, "Fácil", "Easy"),
-                    color=T.SUCCESS, font_weight=T.WEIGHT_SEMIBOLD,
+                    rx.cond(AppState.is_spanish, dc["difficulty_es"], dc["difficulty_en"]),
+                    color=diff_color, font_weight=T.WEIGHT_SEMIBOLD,
                 ),
                 font_size=T.TEXT_XS, color=T.TEXT_MUTED, margin="4px 0",
             ),
             rx.text(
-                rx.cond(
-                    AppState.is_spanish,
-                    "Crea una función que reciba un número n y devuelva la suma de todos los números pares hasta n.",
-                    "Create a function that receives a number n and returns the sum of all even numbers up to n.",
-                ),
+                rx.cond(AppState.is_spanish, dc["desc_es"], dc["desc_en"]),
                 font_size=T.TEXT_SM, color=T.TEXT_SECONDARY, line_height="1.5", margin_bottom=T.SPACE_3,
             ),
             rx.button(
-                rx.cond(AppState.is_spanish, "▶ Resolver desafío", "▶ Solve challenge"),
+                rx.icon(tag="play", size=14),
+                rx.text(rx.cond(AppState.is_spanish, "Resolver desafío", "Solve challenge")),
                 width="100%",
                 background=T.BRAND,
                 color="white",
@@ -790,6 +827,10 @@ def _right_challenge() -> rx.Component:
                 padding=f"{T.SPACE_2} 0",
                 cursor="pointer",
                 _hover={"background": T.BRAND_HOVER},
+                display="flex",
+                align_items="center",
+                justify_content="center",
+                gap=T.SPACE_2,
             ),
             background=T.BG_HOVER,
             border=f"1px solid {T.BORDER}",
@@ -870,8 +911,9 @@ def dashboard_page() -> rx.Component:
     main_content = rx.box(
         _hero_card(),
         _learning_path(),
-        _current_lesson_preview(),
-        _projects_grid(),
+        # MVP Cleanup
+        # _current_lesson_preview(),
+        # _projects_grid(),
         padding=T.SPACE_6,
         flex="1",
         min_width="0",
@@ -879,10 +921,11 @@ def dashboard_page() -> rx.Component:
     )
 
     right_panel = rx.box(
-        _right_streak(),
-        _right_plan(),
-        _right_challenge(),
-        _right_community(),
+        _right_stats(),
+        # MVP Cleanup
+        # _right_plan(),
+        # _right_challenge(),
+        # _right_community(),
         width=T.RIGHT_PANEL_WIDTH,
         flex_shrink="0",
         border_left=f"1px solid {T.BORDER}",
@@ -894,7 +937,8 @@ def dashboard_page() -> rx.Component:
     return app_layout(
         rx.hstack(
             main_content,
-            right_panel,
+            # MVP Cleanup: right panel hidden for now
+            # right_panel,
             align="stretch",
             gap="0",
             min_height=f"calc(100vh - {T.TOPBAR_HEIGHT})",

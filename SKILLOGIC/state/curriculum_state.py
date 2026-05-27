@@ -1,0 +1,187 @@
+import reflex as rx
+from typing import Any, List, Dict
+from SKILLOGIC.data.curriculum import load_curriculum, save_curriculum
+from SKILLOGIC.lib.supabase_client import fetch_user_profile, update_user_progress
+from SKILLOGIC.state.auth_state import AuthState
+from SKILLOGIC.state.progress_state import ProgressState
+
+class CurriculumState(rx.State):
+    """Holds curriculum data loaded from JSON to make it reactive."""
+    
+    modules: list[dict[str, str]] = []
+    projects: list[dict[str, str]] = []
+    todays_plan: list[dict[str, str]] = []
+    daily_challenge: dict = {}
+    
+    # Form variables for new Module
+    new_module_name_es: str = ""
+    new_module_name_en: str = ""
+    new_module_icon: str = "folder"
+    
+    # Form variables for new Project
+    new_project_title_es: str = ""
+    new_project_title_en: str = ""
+    new_project_desc_es: str = ""
+    new_project_desc_en: str = ""
+    new_project_level: str = "basic"
+    
+    # Form variables for new Lesson
+    new_lesson_title_es: str = ""
+
+    def set_new_module_name_es(self, val: str): self.new_module_name_es = val
+    def set_new_module_icon(self, val: str): self.new_module_icon = val
+    def set_new_project_title_es(self, val: str): self.new_project_title_es = val
+    def set_new_project_desc_es(self, val: str): self.new_project_desc_es = val
+    def set_new_project_level(self, val: str): self.new_project_level = val
+    def set_new_lesson_title_es(self, val: str): self.new_lesson_title_es = val
+
+    async def load_data(self):
+        """Load data from JSON into the state variables, merging with Supabase if logged in."""
+        data = load_curriculum()
+        self.modules = data.get("MODULES", [])
+        self.projects = data.get("PROJECTS", [])
+        self.todays_plan = data.get("TODAYS_PLAN", [])
+        self.daily_challenge = data.get("DAILY_CHALLENGE", {})
+        auth = await self.get_state(AuthState)
+        if not auth.is_authenticated:
+            return rx.redirect("/login")
+            
+        # Si el usuario está logueado, sobreescribimos su progreso
+        profile = fetch_user_profile(auth.user_id)
+        if profile and "progress" in profile:
+            user_prog = profile["progress"]
+            # Mezclar progreso (simplificado para MVP: reemplazamos TODAYS_PLAN u otros)
+            if "todays_plan" in user_prog:
+                self.todays_plan = user_prog["todays_plan"]
+
+    async def save_data(self):
+        """Save the current state back to JSON and to Supabase if logged in."""
+        # 1. Guardar siempre en JSON para persistencia local de la app
+        save_curriculum({
+            "MODULES": self.modules,
+            "PROJECTS": self.projects,
+            "TODAYS_PLAN": self.todays_plan,
+            "DAILY_CHALLENGE": self.daily_challenge
+        })
+        
+        # 2. Si está logueado, guardar su progreso en su perfil de Supabase
+        auth = await self.get_state(AuthState)
+        if auth.is_authenticated:
+            user_prog = {
+                "todays_plan": self.todays_plan,
+                # En el futuro se puede añadir progreso por lección específica
+            }
+            update_user_progress(auth.user_id, user_prog)
+        
+    async def set_plan_title(self, index: int, value: str):
+        self.todays_plan[index]["title_es"] = value
+        self.todays_plan = self.todays_plan
+        return await self.save_data()
+        
+    async def toggle_plan_completion(self, index: int, val: bool):
+        # Asegurar que el estado "completed" se maneje como string ("True"/"False")
+        # ya que list[dict[str, str]] espera strings
+        self.todays_plan[index]["completed"] = "True" if val else "False"
+        self.todays_plan = self.todays_plan
+        
+        if val:
+            progress = await self.get_state(ProgressState)
+            await progress.complete_lesson()
+            
+        return await self.save_data()
+        
+    async def toggle_plan_by_title(self, title_en: str, val: bool):
+        for i, item in enumerate(self.todays_plan):
+            if item.get("title_en") == title_en:
+                self.todays_plan[i]["completed"] = "True" if val else "False"
+                self.todays_plan = self.todays_plan
+                
+                if val:
+                    progress = await self.get_state(ProgressState)
+                    await progress.complete_lesson()
+                break
+                
+        return await self.save_data()
+        
+    async def set_challenge_title(self, value: str):
+        self.daily_challenge["title_es"] = value
+        self.daily_challenge = self.daily_challenge
+        return await self.save_data()
+        
+    async def set_challenge_desc(self, value: str):
+        self.daily_challenge["desc_es"] = value
+        self.daily_challenge = self.daily_challenge
+        return await self.save_data()
+
+    async def add_module(self):
+        if not self.new_module_name_es.strip():
+            return
+        self.modules.append({
+            "icon_tag": self.new_module_icon,
+            "name_es": self.new_module_name_es,
+            "name_en": self.new_module_name_en or self.new_module_name_es,
+            "progress": "0",
+            "status": "locked",
+            "lessons": []
+        })
+        self.modules = self.modules
+        self.new_module_name_es = ""
+        self.new_module_name_en = ""
+        self.new_module_icon = "folder"
+        return await self.save_data()
+        
+    async def remove_module(self, index: int):
+        if 0 <= index < len(self.modules):
+            self.modules.pop(index)
+            self.modules = self.modules
+            return await self.save_data()
+
+    async def add_lesson(self, module_index: int):
+        if not self.new_lesson_title_es.strip():
+            return
+        if 0 <= module_index < len(self.modules):
+            mod = self.modules[module_index]
+            lessons = mod.get("lessons", [])
+            new_id = f"{module_index + 1}.{len(lessons) + 1}"
+            lessons.append({
+                "id": new_id,
+                "title": self.new_lesson_title_es
+            })
+            mod["lessons"] = lessons
+            self.modules = self.modules
+            self.new_lesson_title_es = ""
+            return await self.save_data()
+            
+    async def remove_lesson(self, module_index: int, lesson_index: int):
+        if 0 <= module_index < len(self.modules):
+            mod = self.modules[module_index]
+            lessons = mod.get("lessons", [])
+            if 0 <= lesson_index < len(lessons):
+                lessons.pop(lesson_index)
+                mod["lessons"] = lessons
+                self.modules = self.modules
+                return await self.save_data()
+
+    async def add_project(self):
+        if not self.new_project_title_es.strip():
+            return
+        self.projects.append({
+            "title_es": self.new_project_title_es,
+            "title_en": self.new_project_title_en or self.new_project_title_es,
+            "desc_es": self.new_project_desc_es,
+            "desc_en": self.new_project_desc_en or self.new_project_desc_es,
+            "level": self.new_project_level,
+        })
+        self.projects = self.projects
+        self.new_project_title_es = ""
+        self.new_project_title_en = ""
+        self.new_project_desc_es = ""
+        self.new_project_desc_en = ""
+        self.new_project_level = "basic"
+        return await self.save_data()
+        
+    async def remove_project(self, index: int):
+        if 0 <= index < len(self.projects):
+            self.projects.pop(index)
+            self.projects = self.projects
+            return await self.save_data()

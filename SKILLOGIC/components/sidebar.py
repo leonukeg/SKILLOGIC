@@ -15,7 +15,7 @@ def _nav_item(icon: str, label_es: str, label_en: str, route: str, nav_key: str)
     is_active = AppState.active_nav == nav_key
 
     return rx.box(
-        rx.text(icon, font_size="16px", line_height="1"),
+        rx.icon(tag=icon, size=16),
         rx.text(
             label,
             font_size=T.TEXT_SM,
@@ -106,14 +106,15 @@ def sidebar() -> rx.Component:
 
     # ── Navigation items
     nav = rx.box(
-        _nav_item("🏠", "Inicio",              "Home",          "/dashboard", "home"),
-        _nav_item("🗺️", "Ruta de Aprendizaje", "Learning Path", "/dashboard", "path"),
-        _nav_item("📖", "Lecciones",           "Lessons",       "/dashboard", "lessons"),
-        _nav_item("📁", "Proyectos",           "Projects",      "/dashboard", "projects"),
-        _nav_item("🎯", "Desafíos",            "Challenges",    "/dashboard", "challenges"),
-        _nav_item("⌨️", "Code Lab",            "Code Lab",      "/dashboard", "codelab"),
-        _nav_item("👥", "Comunidad",           "Community",     "/dashboard", "community"),
-        _nav_item("📚", "Recursos",            "Resources",     "/dashboard", "resources"),
+        _nav_item("home",      "Inicio",              "Home",          "/dashboard", "home"),
+        # MVP Cleanup
+        # _nav_item("map",       "Ruta de Aprendizaje", "Learning Path", "/dashboard", "path"),
+        _nav_item("book-open", "Lecciones",           "Lessons",       "/dashboard", "lessons"),
+        # _nav_item("folder",    "Proyectos",           "Projects",      "/dashboard", "projects"),
+        # _nav_item("target",    "Desafíos",            "Challenges",    "/dashboard", "challenges"),
+        # _nav_item("terminal",  "Code Lab",            "Code Lab",      "/dashboard", "codelab"),
+        # _nav_item("users",     "Comunidad",           "Community",     "/dashboard", "community"),
+        # _nav_item("library",   "Recursos",            "Resources",     "/dashboard", "resources"),
         padding=f"{T.SPACE_3} {T.SPACE_2}",
     )
 
@@ -157,7 +158,7 @@ def sidebar() -> rx.Component:
         ),
         xp_bar,
         rx.hstack(
-            rx.text("🏆", font_size="14px"),
+            rx.icon(tag="trophy", size=14, color=T.TEXT_MUTED),
             rx.text(
                 rx.cond(AppState.is_spanish, "Rango", "Rank"),
                 font_size=T.TEXT_XS,
@@ -189,7 +190,7 @@ def sidebar() -> rx.Component:
             margin_bottom=T.SPACE_2,
         ),
         rx.hstack(
-            rx.text("🔥", font_size="18px"),
+            rx.icon(tag="flame", size=18, color=T.STREAK),
             rx.text(
                 AppState.user_streak.to_string(),
                 font_size=T.TEXT_LG,
@@ -281,7 +282,7 @@ def sidebar() -> rx.Component:
         # Logo
         rx.hstack(
             rx.box(
-                rx.text("⚡", font_size="16px"),
+                rx.icon(tag="zap", size=16, color="white"),
                 width="32px",
                 height="32px",
                 background=f"linear-gradient(135deg, {T.BRAND}, #a855f7)",
@@ -314,10 +315,12 @@ def sidebar() -> rx.Component:
             border_bottom=f"1px solid {T.BORDER_SUBTLE}",
         ),
         nav,
-        progress_section,
-        streak_section,
-        objective,
-        cta,
+        # MVP Cleanup: gamification not active yet
+        # progress_section,
+        # streak_section,
+        # MVP Cleanup
+        # objective,
+        # cta,
         width=T.SIDEBAR_WIDTH,
         min_height="100vh",
         background=T.BG_SECONDARY,

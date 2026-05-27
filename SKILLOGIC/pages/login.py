@@ -5,6 +5,7 @@ Auth form with demo access and registration link.
 
 import reflex as rx
 from SKILLOGIC.state import AppState
+from SKILLOGIC.state.auth_state import AuthState
 from SKILLOGIC.styles import theme as T
 
 # Hardcoded accent colors that don't change with theme
@@ -95,94 +96,116 @@ def login_page() -> rx.Component:
                 margin_bottom=T.SPACE_8,
             ),
 
-            # Email field
-            rx.vstack(
-                rx.text(
-                    rx.cond(AppState.is_spanish, "Correo electrónico", "Email address"),
-                    font_size=T.TEXT_SM,
-                    font_weight=T.WEIGHT_MEDIUM,
-                    color=T.TEXT_SECONDARY,
-                    align_self="start",
-                ),
-                rx.el.input(
-                    type="email",
-                    placeholder=rx.cond(AppState.is_spanish, "tu@email.com", "you@email.com"),
-                    id="login-email",
-                    width="100%",
-                    height="44px",
-                    background=T.BG_ELEVATED,
-                    border=f"1px solid {T.BORDER}",
-                    border_radius=T.RADIUS_MD,
-                    color=T.TEXT_PRIMARY,
-                    font_size=T.TEXT_BASE,
-                    padding=f"0 {T.SPACE_4}",
-                    outline="none",
-                    font_family=T.FONT_BODY,
-                    _placeholder={"color": T.TEXT_DISABLED},
-                    _focus={
-                        "border_color": T.BRAND,
-                        "box_shadow": f"0 0 0 3px {T.BRAND_LIGHT}",
-                    },
-                ),
-                spacing="2",
-                width="100%",
-                margin_bottom=T.SPACE_4,
-            ),
+            rx.form(
+                rx.vstack(
+                    # Email field
+                    rx.vstack(
+                        rx.text(
+                            rx.cond(AppState.is_spanish, "Correo electrónico", "Email address"),
+                            font_size=T.TEXT_SM,
+                            font_weight=T.WEIGHT_MEDIUM,
+                            color=T.TEXT_SECONDARY,
+                            align_self="start",
+                        ),
+                        rx.el.input(
+                            type="email",
+                            placeholder=rx.cond(AppState.is_spanish, "tu@email.com", "you@email.com"),
+                            id="login-email",
+                            width="100%",
+                            height="44px",
+                            background=T.BG_ELEVATED,
+                            border=f"1px solid {T.BORDER}",
+                            border_radius=T.RADIUS_MD,
+                            color=T.TEXT_PRIMARY,
+                            font_size=T.TEXT_BASE,
+                            padding=f"0 {T.SPACE_4}",
+                            outline="none",
+                            font_family=T.FONT_BODY,
+                            on_change=AuthState.set_email,
+                            _placeholder={"color": T.TEXT_DISABLED},
+                            _focus={
+                                "border_color": T.BRAND,
+                                "box_shadow": f"0 0 0 3px {T.BRAND_LIGHT}",
+                            },
+                        ),
+                        spacing="2",
+                        width="100%",
+                        margin_bottom=T.SPACE_4,
+                    ),
 
-            # Password field
-            rx.vstack(
-                rx.text(
-                    rx.cond(AppState.is_spanish, "Contraseña", "Password"),
-                    font_size=T.TEXT_SM,
-                    font_weight=T.WEIGHT_MEDIUM,
-                    color=T.TEXT_SECONDARY,
-                    align_self="start",
-                ),
-                rx.el.input(
-                    type="password",
-                    placeholder="••••••••",
-                    id="login-password",
-                    width="100%",
-                    height="44px",
-                    background=T.BG_ELEVATED,
-                    border=f"1px solid {T.BORDER}",
-                    border_radius=T.RADIUS_MD,
-                    color=T.TEXT_PRIMARY,
-                    font_size=T.TEXT_BASE,
-                    padding=f"0 {T.SPACE_4}",
-                    outline="none",
-                    font_family=T.FONT_BODY,
-                    _placeholder={"color": T.TEXT_DISABLED},
-                    _focus={
-                        "border_color": T.BRAND,
-                        "box_shadow": f"0 0 0 3px {T.BRAND_LIGHT}",
-                    },
-                ),
-                spacing="2",
-                width="100%",
-                margin_bottom=T.SPACE_2,
-            ),
+                    # Password field
+                    rx.vstack(
+                        rx.text(
+                            rx.cond(AppState.is_spanish, "Contraseña", "Password"),
+                            font_size=T.TEXT_SM,
+                            font_weight=T.WEIGHT_MEDIUM,
+                            color=T.TEXT_SECONDARY,
+                            align_self="start",
+                        ),
+                        rx.el.input(
+                            type="password",
+                            placeholder="••••••••",
+                            id="login-password",
+                            width="100%",
+                            height="44px",
+                            background=T.BG_ELEVATED,
+                            border=f"1px solid {T.BORDER}",
+                            border_radius=T.RADIUS_MD,
+                            color=T.TEXT_PRIMARY,
+                            font_size=T.TEXT_BASE,
+                            padding=f"0 {T.SPACE_4}",
+                            outline="none",
+                            font_family=T.FONT_BODY,
+                            on_change=AuthState.set_password,
+                            _placeholder={"color": T.TEXT_DISABLED},
+                            _focus={
+                                "border_color": T.BRAND,
+                                "box_shadow": f"0 0 0 3px {T.BRAND_LIGHT}",
+                            },
+                        ),
+                        spacing="2",
+                        width="100%",
+                        margin_bottom=T.SPACE_2,
+                    ),
+                    
+                    # Error message
+                    rx.cond(
+                        AuthState.error_message != "",
+                        rx.text(
+                            AuthState.error_message,
+                            color="red",
+                            font_size=T.TEXT_SM,
+                            width="100%",
+                            text_align="center",
+                        ),
+                    ),
 
-            # Submit button
-            rx.button(
-                rx.cond(AppState.is_spanish, "Iniciar sesión", "Sign in"),
+                    # Submit button
+                    rx.button(
+                        rx.cond(AppState.is_spanish, "Iniciar sesión", "Sign in"),
+                        type="submit",
+                        width="100%",
+                        height="48px",
+                        background=T.BRAND,
+                        color="white",
+                        border_radius=T.RADIUS_MD,
+                        font_size=T.TEXT_BASE,
+                        font_weight=T.WEIGHT_SEMIBOLD,
+                        cursor="pointer",
+                        box_shadow=T.SHADOW_BRAND,
+                        margin_top=T.SPACE_2,
+                        transition=f"all {T.EASE_FAST}",
+                        _hover={
+                            "background": T.BRAND_HOVER,
+                            "transform": "translateY(-1px)",
+                            "box_shadow": f"0 6px 28px {T.BRAND_GLOW}",
+                        },
+                    ),
+                    width="100%",
+                ),
+                on_submit=AuthState.login,
+                reset_on_submit=False,
                 width="100%",
-                height="48px",
-                background=T.BRAND,
-                color="white",
-                border_radius=T.RADIUS_MD,
-                font_size=T.TEXT_BASE,
-                font_weight=T.WEIGHT_SEMIBOLD,
-                cursor="pointer",
-                box_shadow=T.SHADOW_BRAND,
-                margin_top=T.SPACE_2,
-                transition=f"all {T.EASE_FAST}",
-                _hover={
-                    "background": T.BRAND_HOVER,
-                    "transform": "translateY(-1px)",
-                    "box_shadow": f"0 6px 28px {T.BRAND_GLOW}",
-                },
-                on_click=AppState.login_mock,
             ),
 
             # Divider
@@ -201,22 +224,7 @@ def login_page() -> rx.Component:
                 width="100%",
             ),
 
-            # Demo access button
-            rx.button(
-                rx.cond(AppState.is_spanish, "🚀 Entrar con cuenta demo", "🚀 Enter with demo account"),
-                width="100%",
-                height="44px",
-                background="transparent",
-                color=T.TEXT_PRIMARY,
-                border=f"1px solid {T.BORDER_STRONG}",
-                border_radius=T.RADIUS_MD,
-                font_size=T.TEXT_BASE,
-                font_weight=T.WEIGHT_SEMIBOLD,
-                cursor="pointer",
-                transition=f"all {T.EASE_FAST}",
-                _hover={"background": T.BG_HOVER},
-                on_click=AppState.login_mock,
-            ),
+
 
             # Register link
             rx.hstack(

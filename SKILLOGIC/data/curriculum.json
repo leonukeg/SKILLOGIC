@@ -1,0 +1,193 @@
+{
+  "MODULES": [
+    {
+      "icon_tag": "keyboard",
+      "name_es": "Fundamentos Reales",
+      "name_en": "Real Fundamentals",
+      "progress": 0,
+      "status": "active",
+      "lessons": [
+        {
+          "id": "1.1",
+          "title": "Como piensa una computadora + Variables y Tipos"
+        },
+        {
+          "id": "1.2",
+          "title": "Strings en Profundidad"
+        },
+        {
+          "id": "1.3",
+          "title": "Condicionales — Bifurcar el Flujo"
+        },
+        {
+          "id": "1.4",
+          "title": "For Loops y While Loops — Repeticion con Control"
+        },
+        {
+          "id": "1.5",
+          "title": "Debugging — Leer Errores como Programador"
+        }
+      ]
+    },
+    {
+      "icon_tag": "database",
+      "name_es": "Funciones y Abstracciones",
+      "name_en": "Functions & Abstractions",
+      "progress": 0,
+      "status": "locked",
+      "lessons": [
+        {
+          "id": "2.1",
+          "title": "Funciones — La Unidad de Abstraccion"
+        },
+        {
+          "id": "2.2",
+          "title": "Listas — Colecciones Ordenadas y Mutables"
+        },
+        {
+          "id": "2.3",
+          "title": "Dicts y Sets — Mapas y Unicidad"
+        },
+        {
+          "id": "2.4",
+          "title": "Funciones Avanzadas — Lambdas, Map, Filter, Sorted"
+        }
+      ]
+    },
+    {
+      "icon_tag": "terminal",
+      "name_es": "Programas Reales",
+      "name_en": "Real Programs",
+      "progress": 0,
+      "status": "locked",
+      "lessons": [
+        {
+          "id": "3.1",
+          "title": "Archivos e I/O — Persistencia Real"
+        },
+        {
+          "id": "3.2",
+          "title": "Excepciones — Errores como Ciudadanos de Primera Clase"
+        },
+        {
+          "id": "3.3",
+          "title": "POO I — Clases, Objetos y Encapsulamiento"
+        },
+        {
+          "id": "3.4",
+          "title": "POO II — Herencia, Composicion y Clases Abstractas"
+        }
+      ]
+    },
+    {
+      "icon_tag": "code",
+      "name_es": "Código Profesional",
+      "name_en": "Professional Code",
+      "progress": 0,
+      "status": "locked",
+      "lessons": [
+        {
+          "id": "4.1",
+          "title": "APIs y HTTP — Python Conectado al Mundo"
+        },
+        {
+          "id": "4.2",
+          "title": "Decoradores — Funciones que Envuelven Funciones"
+        },
+        {
+          "id": "4.3",
+          "title": "Generators e Iteradores — Datos sin Limites"
+        },
+        {
+          "id": "4.4",
+          "title": "Testing con Pytest — Codigo que Prueba Codigo"
+        }
+      ]
+    },
+    {
+      "icon_tag": "cpu",
+      "name_es": "Proyectos Capstone",
+      "name_en": "Capstone Projects",
+      "progress": 0,
+      "status": "locked",
+      "lessons": []
+    }
+  ],
+  "PROJECTS": [
+    {
+      "level": "basic",
+      "title_es": "Word Frequency Analyzer",
+      "title_en": "Word Frequency Analyzer",
+      "desc_es": "Analizador de texto real para extraer patrones. Módulo 1.",
+      "desc_en": "Real text analyzer to extract patterns. Module 1."
+    },
+    {
+      "level": "basic",
+      "title_es": "Expense Tracker CLI",
+      "title_en": "Expense Tracker CLI",
+      "desc_es": "Gestor de gastos interactivo en terminal. Módulo 2.",
+      "desc_en": "Interactive terminal expense manager. Module 2."
+    },
+    {
+      "level": "intermediate",
+      "title_es": "Task Manager Persistente",
+      "title_en": "Persistent Task Manager",
+      "desc_es": "Sistema de tareas con persistencia JSON. Módulo 3.",
+      "desc_en": "Task system with JSON persistence. Module 3."
+    },
+    {
+      "level": "advanced",
+      "title_es": "API Consumer con Tests",
+      "title_en": "API Consumer with Tests",
+      "desc_es": "Cliente con caché, retry y coverage de test >80%. Módulo 4.",
+      "desc_en": "Client with cache, retry and >80% test coverage. Module 4."
+    },
+    {
+      "level": "advanced",
+      "title_es": "CLI Habit Tracker",
+      "title_en": "CLI Habit Tracker",
+      "desc_es": "Capstone 1: Gestor de hábitos complejo en CLI.",
+      "desc_en": "Capstone 1: Complex CLI habit manager."
+    },
+    {
+      "level": "advanced",
+      "title_es": "Web Scraper",
+      "title_en": "Web Scraper",
+      "desc_es": "Capstone 2: Scraper paginado con exportación CSV.",
+      "desc_en": "Capstone 2: Paginated scraper with CSV export."
+    }
+  ],
+  "TODAYS_PLAN": [
+    {
+      "completed": true,
+      "title_es": "Funciones en Python",
+      "title_en": "Functions in Python",
+      "subtitle_es": "Lección 2.1",
+      "subtitle_en": "Lesson 2.1"
+    },
+    {
+      "completed": false,
+      "title_es": "Desafío: Calculadora",
+      "title_en": "Challenge: Calculator",
+      "subtitle_es": "Intermedio",
+      "subtitle_en": "Intermediate"
+    },
+    {
+      "completed": false,
+      "title_es": "Proyecto: Expense Tracker",
+      "title_en": "Project: Expense Tracker",
+      "subtitle_es": "Práctico",
+      "subtitle_en": "Practical"
+    }
+  ],
+  "DAILY_CHALLENGE": {
+    "is_new": true,
+    "title_es": "Predicción de Diccionarios",
+    "title_en": "Dictionary Prediction",
+    "difficulty_level": "intermediate",
+    "difficulty_es": "Intermedio",
+    "difficulty_en": "Intermediate",
+    "desc_es": "Predice qué devuelve: {**dict1, **dict2} cuando tienen claves en común. (Retrieval Practice M2).",
+    "desc_en": "Predict what it returns: {**dict1, **dict2} when they have common keys. (Retrieval Practice M2)."
+  }
+}
