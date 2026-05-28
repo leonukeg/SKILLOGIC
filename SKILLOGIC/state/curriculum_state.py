@@ -2,15 +2,28 @@ import reflex as rx
 from typing import Any, List, Dict
 from SKILLOGIC.data.curriculum import load_curriculum, save_curriculum
 from SKILLOGIC.lib.supabase_client import fetch_user_profile, update_user_progress
+from pydantic import BaseModel
 from SKILLOGIC.state.auth_state import AuthState
 from SKILLOGIC.state.progress_state import ProgressState
+
+class LessonItem(BaseModel):
+    id: str
+    title: str
+
+class ModuleItem(BaseModel):
+    icon_tag: str
+    name_es: str
+    name_en: str
+    progress: str | int
+    status: str
+    lessons: list[LessonItem]
 
 class CurriculumState(rx.State):
     """Holds curriculum data loaded from JSON to make it reactive."""
     
-    modules: list[dict[str, str]] = []
-    projects: list[dict[str, str]] = []
-    todays_plan: list[dict[str, str]] = []
+    modules: list[ModuleItem] = []
+    projects: list[dict[str, Any]] = []
+    todays_plan: list[dict[str, Any]] = []
     daily_challenge: dict = {}
     
     # Form variables for new Module
@@ -38,10 +51,13 @@ class CurriculumState(rx.State):
     async def load_data(self):
         """Load data from JSON into the state variables, merging with Supabase if logged in."""
         data = load_curriculum()
-        self.modules = data.get("MODULES", [])
+        raw_modules = data.get("MODULES", [])
+        self.modules = [ModuleItem(**m) for m in raw_modules]
+        
         self.projects = data.get("PROJECTS", [])
         self.todays_plan = data.get("TODAYS_PLAN", [])
         self.daily_challenge = data.get("DAILY_CHALLENGE", {})
+        
         auth = await self.get_state(AuthState)
         if not auth.is_authenticated:
             return rx.redirect("/login")
@@ -53,12 +69,58 @@ class CurriculumState(rx.State):
             # Mezclar progreso (simplificado para MVP: reemplazamos TODAYS_PLAN u otros)
             if "todays_plan" in user_prog:
                 self.todays_plan = user_prog["todays_plan"]
+                
+            # Actualizar el progreso y estado de los módulos
+            user_lessons = user_prog.get("lessons", {})
+            previous_completed = True
+            
+            for mod in self.modules:
+                total_lessons = len(mod.lessons)
+                
+                if total_lessons == 0:
+                    if previous_completed:
+                        mod.status = "active"
+                    continue
+                    
+                completed_count = 0.0
+                for lesson in mod.lessons:
+                    lesson_data = user_lessons.get(lesson.id)
+                    if lesson_data:
+                        if lesson_data.get("status") == "completed":
+                            completed_count += 1.0
+                        elif lesson_data.get("status") == "in_progress":
+                            # Calculamos progreso parcial basado en la fase actual (asumiendo 7 fases por lección)
+                            fase_actual = lesson_data.get("phase", 0)
+                            completed_count += min(fase_actual / 7.0, 0.99)
+                        
+                progress_percent = int((completed_count / total_lessons) * 100)
+                mod.progress = str(progress_percent)
+                
+                # Consider complete only if all lessons are fully 1.0
+                if int(completed_count) == total_lessons:
+                    mod.status = "completed"
+                    previous_completed = True
+                elif completed_count > 0:
+                    mod.status = "active"
+                    previous_completed = False
+                elif previous_completed:
+                    mod.status = "active"
+                    previous_completed = False
+                else:
+                    mod.status = "locked"
+                    previous_completed = False
+                    
+            # Forzar actualización en Reflex (ya que modificamos propiedades internas)
+            self.modules = self.modules
 
     async def save_data(self):
         """Save the current state back to JSON and to Supabase if logged in."""
+        # Convert rx.Base objects to dict for JSON serialization
+        modules_list = [m.dict() if hasattr(m, "dict") else dict(m) for m in self.modules]
+        
         # 1. Guardar siempre en JSON para persistencia local de la app
         save_curriculum({
-            "MODULES": self.modules,
+            "MODULES": modules_list,
             "PROJECTS": self.projects,
             "TODAYS_PLAN": self.todays_plan,
             "DAILY_CHALLENGE": self.daily_challenge
@@ -116,14 +178,14 @@ class CurriculumState(rx.State):
     async def add_module(self):
         if not self.new_module_name_es.strip():
             return
-        self.modules.append({
-            "icon_tag": self.new_module_icon,
-            "name_es": self.new_module_name_es,
-            "name_en": self.new_module_name_en or self.new_module_name_es,
-            "progress": "0",
-            "status": "locked",
-            "lessons": []
-        })
+        self.modules.append(ModuleItem(
+            icon_tag=self.new_module_icon,
+            name_es=self.new_module_name_es,
+            name_en=self.new_module_name_en or self.new_module_name_es,
+            progress="0",
+            status="locked",
+            lessons=[]
+        ))
         self.modules = self.modules
         self.new_module_name_es = ""
         self.new_module_name_en = ""
@@ -141,13 +203,13 @@ class CurriculumState(rx.State):
             return
         if 0 <= module_index < len(self.modules):
             mod = self.modules[module_index]
-            lessons = mod.get("lessons", [])
+            lessons = getattr(mod, "lessons", [])
             new_id = f"{module_index + 1}.{len(lessons) + 1}"
-            lessons.append({
-                "id": new_id,
-                "title": self.new_lesson_title_es
-            })
-            mod["lessons"] = lessons
+            lessons.append(LessonItem(
+                id=new_id,
+                title=self.new_lesson_title_es
+            ))
+            mod.lessons = lessons
             self.modules = self.modules
             self.new_lesson_title_es = ""
             return await self.save_data()
@@ -155,10 +217,10 @@ class CurriculumState(rx.State):
     async def remove_lesson(self, module_index: int, lesson_index: int):
         if 0 <= module_index < len(self.modules):
             mod = self.modules[module_index]
-            lessons = mod.get("lessons", [])
+            lessons = getattr(mod, "lessons", [])
             if 0 <= lesson_index < len(lessons):
                 lessons.pop(lesson_index)
-                mod["lessons"] = lessons
+                mod.lessons = lessons
                 self.modules = self.modules
                 return await self.save_data()
 

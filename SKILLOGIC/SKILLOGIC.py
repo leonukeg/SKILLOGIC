@@ -10,7 +10,10 @@ from SKILLOGIC.pages.register import register_page
 from SKILLOGIC.pages.dashboard import dashboard_page
 from SKILLOGIC.pages.admin import admin_page
 from SKILLOGIC.pages.lesson import lesson_page
+from SKILLOGIC.pages.update_password import update_password_page
 from SKILLOGIC.state.curriculum_state import CurriculumState
+from SKILLOGIC.state.admin_users_state import AdminUsersState
+from SKILLOGIC.state.update_password_state import UpdatePasswordState
 from SKILLOGIC.state.auth_state import AuthState
 from SKILLOGIC.state.progress_state import ProgressState
 from SKILLOGIC.styles.theme import GOOGLE_FONTS_URL
@@ -126,5 +129,13 @@ app.add_page(
     route="/admin",
     title="SKILLOGIC — Admin",
     description="Panel de administración de SKILLOGIC.",
-    on_load=[AuthState.on_load, CurriculumState.load_data],
+    on_load=[AuthState.on_load, CurriculumState.load_data, AdminUsersState.load_users],
+)
+
+app.add_page(
+    update_password_page,
+    route="/update-password",
+    title="SKILLOGIC — Actualizar Contraseña",
+    description="Actualiza tu contraseña de forma segura.",
+    on_load=UpdatePasswordState.on_load,
 )

@@ -7,18 +7,30 @@ load_dotenv()
 # Initialize the client from environment variables
 url: str = os.getenv("SUPABASE_URL", "")
 key: str = os.getenv("SUPABASE_ANON_KEY", "")
+service_role_key: str = os.getenv("SUPABASE_SERVICE_ROLE_KEY", "")
 
 # We only create the client if the URL and KEY are present
 if url and key and key != "AQUI_VA_TU_CLAVE_ANONIMA":
     supabase: Client = create_client(url, key)
 else:
     supabase = None
+    
+if url and service_role_key:
+    supabase_admin: Client = create_client(url, service_role_key)
+else:
+    supabase_admin = None
 
 def get_supabase() -> Client:
-    """Returns the supabase client instance."""
+    """Returns the supabase client instance (Anon Key)."""
     if not supabase:
-        print("WARNING: Supabase no está configurado correctamente en el .env.")
+        print("WARNING: Supabase ANON_KEY no está configurado correctamente en el .env.")
     return supabase
+
+def get_supabase_admin() -> Client:
+    """Returns the supabase admin client instance (Service Role Key)."""
+    if not supabase_admin:
+        print("WARNING: SUPABASE_SERVICE_ROLE_KEY no está configurado en el .env.")
+    return supabase_admin
 
 def fetch_user_profile(user_id: str) -> dict:
     """Obtiene el perfil del usuario (incluyendo el progreso)."""

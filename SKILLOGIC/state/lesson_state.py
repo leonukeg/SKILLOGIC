@@ -22,8 +22,6 @@ PHASES = [
 
 class LessonState(rx.State):
     """Manages the state for the interactive learning session."""
-    
-    current_lesson_id: str = "1.1"
     current_phase_index: int = 0
     
     # Code editor state
@@ -59,7 +57,6 @@ class LessonState(rx.State):
         return self.is_success
         
     async def load_lesson(self):
-        self.current_lesson_id = self.router.page.params.get("lesson_id", "1.1")
         target_phase = 0
         
         auth = await self.get_state(AuthState)
@@ -81,7 +78,7 @@ class LessonState(rx.State):
             if profile:
                 prog = profile.get("progress") or {}
                 lessons = prog.get("lessons", {})
-                lesson_data = lessons.get(self.current_lesson_id)
+                lesson_data = lessons.get(self.lesson_id)
                 if lesson_data and lesson_data.get("status") == "in_progress":
                     target_phase = lesson_data.get("phase", 0)
         
@@ -100,7 +97,7 @@ class LessonState(rx.State):
         prog = profile.get("progress") or {}
         lessons = prog.get("lessons", {})
         
-        lessons[self.current_lesson_id] = {
+        lessons[self.lesson_id] = {
             "status": "completed" if completed else "in_progress",
             "phase": self.current_phase_index
         }

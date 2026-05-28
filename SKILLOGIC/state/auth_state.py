@@ -10,6 +10,7 @@ class AuthState(rx.State):
     
     user_id: str = ""
     user_email: str = ""
+    role: str = "basic"
     error_message: str = ""
     
     # Cookie para persistir la sesión de Auth
@@ -39,6 +40,12 @@ class AuthState(rx.State):
     def is_authenticated(self) -> bool:
         return self.user_id != ""
         
+    @rx.var
+    def is_master(self) -> bool:
+        # We fetch the role from the profile data dynamically, but we can also store it in the state.
+        # Let's temporarily store role in AuthState for fast UI.
+        return self.user_email in ["admin@skillogic.com", "chemaruan@gmail.com"] or getattr(self, "role", "") == "master"
+        
     def set_email(self, val: str):
         self.email = val
         self.error_message = ""
@@ -63,7 +70,12 @@ class AuthState(rx.State):
             
         login_email = self.email
         if "@" not in login_email:
-            login_email = f"{login_email}@skillogic.com"
+            if login_email == "admin":
+                login_email = "admin@skillogic.com"
+            elif login_email == "leonukeg":
+                login_email = "chemaruan@gmail.com"
+            else:
+                login_email = f"{login_email}@skillogic.com"
             
         try:
             res = client.auth.sign_in_with_password({"email": login_email, "password": self.password})
@@ -72,6 +84,18 @@ class AuthState(rx.State):
                 self.user_email = res.user.email
                 self.auth_token = res.session.access_token
                 self.error_message = ""
+                
+                # Update email in profiles table to ensure it's visible
+                try:
+                    profile = fetch_user_profile(res.user.id)
+                    if profile:
+                        prog = profile.get("progress") or {}
+                        # Guardamos el rol en el estado local si existe
+                        self.role = prog.get("role", "basic")
+                        # Actualizamos el email en supabase
+                        client.table("profiles").update({"email": res.user.email}).eq("id", res.user.id).execute()
+                except Exception as ex:
+                    print("Error updating email on login:", ex)
                 return rx.redirect("/dashboard")
         except Exception as e:
             if "Invalid login credentials" in str(e):
@@ -102,12 +126,15 @@ class AuthState(rx.State):
             if res.user:
                 self.user_id = res.user.id
                 self.user_email = res.user.email
+                self.auth_token = res.session.access_token if res.session else ""
+                self.role = "basic"
+                self.error_message = ""
                 
-                # Crear la fila en profiles manualmente
+                # Auto-create profile with email
                 try:
                     client.table("profiles").insert({
                         "id": self.user_id,
-                        "email": self.email,
+                        "email": self.user_email,
                         "progress": {},
                         "streak": 0,
                         "xp": 0

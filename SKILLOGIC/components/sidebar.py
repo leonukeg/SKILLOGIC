@@ -6,6 +6,7 @@ UI-only: reads from AppState, dispatches AppState events.
 
 import reflex as rx
 from SKILLOGIC.state import AppState
+from SKILLOGIC.state.auth_state import AuthState
 from SKILLOGIC.styles import theme as T
 
 
@@ -107,14 +108,32 @@ def sidebar() -> rx.Component:
     # ── Navigation items
     nav = rx.box(
         _nav_item("home",      "Inicio",              "Home",          "/dashboard", "home"),
-        # MVP Cleanup
-        # _nav_item("map",       "Ruta de Aprendizaje", "Learning Path", "/dashboard", "path"),
         _nav_item("book-open", "Lecciones",           "Lessons",       "/dashboard", "lessons"),
-        # _nav_item("folder",    "Proyectos",           "Projects",      "/dashboard", "projects"),
-        # _nav_item("target",    "Desafíos",            "Challenges",    "/dashboard", "challenges"),
-        # _nav_item("terminal",  "Code Lab",            "Code Lab",      "/dashboard", "codelab"),
-        # _nav_item("users",     "Comunidad",           "Community",     "/dashboard", "community"),
-        # _nav_item("library",   "Recursos",            "Resources",     "/dashboard", "resources"),
+        
+        # Settings menu for master users
+        rx.cond(
+            AuthState.is_master,
+            rx.accordion.root(
+                rx.accordion.item(
+                    header=rx.hstack(
+                        rx.icon(tag="settings", size=16),
+                        rx.text(rx.cond(AppState.is_spanish, "Ajustes", "Settings"), font_size=T.TEXT_SM, font_weight=T.WEIGHT_MEDIUM),
+                        align="center", gap=T.SPACE_3, padding=f"{T.SPACE_2} {T.SPACE_3}",
+                        color=T.TEXT_SECONDARY, _hover={"color": T.TEXT_PRIMARY},
+                    ),
+                    content=rx.vstack(
+                        _nav_item("users", "Usuarios", "Users", "/admin", "admin_users"),
+                        padding_left=T.SPACE_4,
+                    ),
+                    value="settings",
+                    border_bottom="none",
+                ),
+                width="100%", collapsible=True, margin_top=T.SPACE_4, border_top=f"1px solid {T.BORDER_SUBTLE}", padding_top=T.SPACE_2,
+                variant="ghost",
+                color_scheme="gray",
+            )
+        ),
+        
         padding=f"{T.SPACE_3} {T.SPACE_2}",
     )
 

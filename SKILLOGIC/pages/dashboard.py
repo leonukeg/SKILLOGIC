@@ -903,17 +903,130 @@ def _right_community() -> rx.Component:
     )
 
 
+from SKILLOGIC.state.curriculum_state import CurriculumState, ModuleItem, LessonItem
+
+def _lesson_row(lesson: rx.Var[LessonItem], is_locked: rx.Var[bool]) -> rx.Component:
+    return rx.hstack(
+        rx.box(
+            rx.icon(tag=rx.cond(is_locked, "lock", "play-circle"), size=18, color=rx.cond(is_locked, T.TEXT_MUTED, T.BRAND)),
+            width="36px", height="36px", border_radius=T.RADIUS_MD, background=rx.cond(is_locked, T.BG_HOVER, T.BRAND_LIGHT),
+            display="flex", align_items="center", justify_content="center", flex_shrink="0"
+        ),
+        rx.vstack(
+            rx.text(
+                lesson.title,
+                font_size=T.TEXT_SM, font_weight=T.WEIGHT_SEMIBOLD, color=rx.cond(is_locked, T.TEXT_MUTED, T.TEXT_PRIMARY)
+            ),
+            rx.text(
+                "Lección " + lesson.id.to(str),
+                font_size=T.TEXT_XS, color=T.TEXT_MUTED
+            ),
+            spacing="1", align_items="start", flex="1"
+        ),
+        rx.button(
+            rx.cond(is_locked, "Bloqueado", "Comenzar"),
+            disabled=is_locked,
+            background=rx.cond(is_locked, T.BG_HOVER, T.BRAND),
+            color=rx.cond(is_locked, T.TEXT_MUTED, "white"),
+            border_radius=T.RADIUS_SM,
+            font_size=T.TEXT_XS,
+            font_weight=T.WEIGHT_SEMIBOLD,
+            padding=f"{T.SPACE_2} {T.SPACE_4}",
+            cursor=rx.cond(is_locked, "not-allowed", "pointer"),
+            on_click=rx.redirect("/lesson/" + lesson.id.to(str)),
+            _hover={"background": rx.cond(is_locked, T.BG_HOVER, T.BRAND_HOVER)}
+        ),
+        background=T.BG_SECONDARY,
+        border=f"1px solid {T.BORDER}",
+        border_radius=T.RADIUS_LG,
+        padding=T.SPACE_4,
+        align="center",
+        gap=T.SPACE_4,
+        width="100%",
+        transition=f"all {T.EASE_BASE}",
+        _hover={
+            "border_color": rx.cond(is_locked, T.BORDER, T.BORDER_STRONG),
+            "transform": rx.cond(is_locked, "none", "translateY(-1px)"),
+            "box_shadow": rx.cond(is_locked, "none", T.SHADOW_SM),
+        }
+    )
+
+def _module_lessons_section(mod: rx.Var[ModuleItem]) -> rx.Component:
+    is_locked = mod.status == "locked"
+    
+    return rx.box(
+        # Module header
+        rx.hstack(
+            rx.icon(tag=mod.icon_tag.to(str), size=20, color=rx.cond(is_locked, T.TEXT_MUTED, T.BRAND)),
+            rx.text(
+                rx.cond(AppState.is_spanish, mod.name_es, mod.name_en),
+                font_size=T.TEXT_LG,
+                font_weight=T.WEIGHT_BOLD,
+                color=rx.cond(is_locked, T.TEXT_MUTED, T.TEXT_PRIMARY),
+            ),
+            align="center",
+            gap=T.SPACE_2,
+            margin_bottom=T.SPACE_4,
+            padding_bottom=T.SPACE_2,
+            border_bottom=f"1px solid {T.BORDER_SUBTLE}",
+        ),
+        # Lessons list
+        rx.vstack(
+            rx.foreach(
+                mod.lessons,
+                lambda lesson: _lesson_row(lesson, is_locked)
+            ),
+            spacing="3",
+            width="100%",
+        ),
+        margin_bottom=T.SPACE_8,
+        width="100%",
+    )
+
+def _lessons_view() -> rx.Component:
+    return rx.box(
+        rx.text(
+            rx.cond(AppState.is_spanish, "Todas las Lecciones", "All Lessons"),
+            font_size=T.TEXT_2XL,
+            font_weight=T.WEIGHT_EXTRABOLD,
+            color=T.TEXT_PRIMARY,
+            margin_bottom=T.SPACE_2,
+        ),
+        rx.text(
+            rx.cond(AppState.is_spanish, "Explora el plan de estudios completo.", "Explore the full curriculum."),
+            font_size=T.TEXT_BASE,
+            color=T.TEXT_SECONDARY,
+            margin_bottom=T.SPACE_8,
+        ),
+        rx.vstack(
+            rx.foreach(CurriculumState.modules, _module_lessons_section),
+            width="100%",
+        ),
+        width="100%",
+        max_width="800px",
+        margin="0 auto",
+    )
+
+
 # ── Main dashboard page ───────────────────────────────────────
 
 def dashboard_page() -> rx.Component:
     """Full dashboard with main content + right panel."""
 
     main_content = rx.box(
-        _hero_card(),
-        _learning_path(),
-        # MVP Cleanup
-        # _current_lesson_preview(),
-        # _projects_grid(),
+        rx.match(
+            AppState.active_nav,
+            ("home", rx.box(
+                _hero_card(),
+                _learning_path(),
+            )),
+            ("lessons", _lessons_view()),
+            # default
+            rx.box(
+                _hero_card(),
+                _learning_path(),
+            )
+        ),
         padding=T.SPACE_6,
         flex="1",
         min_width="0",

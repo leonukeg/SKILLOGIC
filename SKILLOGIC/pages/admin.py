@@ -1,5 +1,6 @@
 import reflex as rx
 from SKILLOGIC.state.curriculum_state import CurriculumState
+from SKILLOGIC.state.admin_users_state import AdminUsersState
 from SKILLOGIC.components.layout import app_layout
 from SKILLOGIC.styles import theme as T
 
@@ -189,6 +190,183 @@ def _admin_daily() -> rx.Component:
         width="100%", align_items="start", max_width="600px",
     )
 
+def _user_modal() -> rx.Component:
+    """Modal de detalles del usuario."""
+    return rx.dialog.root(
+        rx.dialog.content(
+            rx.dialog.title("Perfil de Usuario"),
+            rx.dialog.description("Visualiza y gestiona los detalles y privilegios de este usuario.", margin_bottom=T.SPACE_4),
+            
+            rx.vstack(
+                # Información
+                rx.hstack(
+                    rx.vstack(
+                        rx.hstack(
+                            rx.text("Email de Acceso (Usuario)", font_size=T.TEXT_XS, color=T.TEXT_MUTED),
+                            rx.spacer(),
+                            rx.cond(AdminUsersState.email_edit_success, rx.text("¡Guardado!", font_size="10px", color=T.SUCCESS)),
+                            rx.cond(AdminUsersState.email_edit_error != "", rx.text(AdminUsersState.email_edit_error, font_size="10px", color=T.ERROR)),
+                            width="100%"
+                        ),
+                        rx.hstack(
+                            rx.input(
+                                value=AdminUsersState.editing_email, 
+                                on_change=AdminUsersState.set_editing_email,
+                                width="100%", 
+                                background=T.BG_SECONDARY
+                            ),
+                            rx.button(
+                                rx.cond(AdminUsersState.is_saving_email, rx.spinner(size="2"), rx.icon("save", size=16)),
+                                on_click=AdminUsersState.save_user_email,
+                                disabled=AdminUsersState.is_saving_email,
+                                color_scheme="purple",
+                                variant="solid",
+                                cursor="pointer"
+                            ),
+                            width="100%"
+                        ),
+                        width="100%",
+                        align_items="start"
+                    ),
+                    rx.vstack(
+                        rx.text("Recuperación", font_size=T.TEXT_XS, color=T.TEXT_MUTED),
+                        rx.button(
+                            "Enviar enlace de reseteo",
+                            on_click=AdminUsersState.send_reset_email,
+                            disabled=AdminUsersState.reset_email_sent,
+                            color_scheme=rx.cond(AdminUsersState.reset_email_sent, "green", "blue"),
+                            variant="soft",
+                            width="100%",
+                            cursor="pointer"
+                        ),
+                        rx.cond(AdminUsersState.reset_email_sent, rx.text("¡Email enviado con éxito!", font_size="10px", color="green")),
+                        rx.cond(AdminUsersState.reset_email_error != "", rx.text(AdminUsersState.reset_email_error, font_size="10px", color="red")),
+                        width="100%",
+                        align_items="start"
+                    ),
+                    width="100%", spacing="3", align_items="start"
+                ),
+                
+                rx.text("Nota: El usuario recibirá un correo oficial de Supabase con un enlace seguro.", font_size="10px", color=T.TEXT_MUTED),
+                
+                rx.divider(margin_top=T.SPACE_4, margin_bottom=T.SPACE_2),
+                
+                # Gestión
+                rx.heading("Privilegios y Progreso", size="3"),
+                
+                rx.hstack(
+                    rx.vstack(
+                        rx.text("Rol de Sistema", font_weight="bold"),
+                        rx.text("El rol master permite ver el panel de administración.", font_size=T.TEXT_XS, color=T.TEXT_MUTED),
+                        align_items="start"
+                    ),
+                    rx.spacer(),
+                    rx.button(
+                        rx.cond(AdminUsersState.selected_user["role"] == "master", "Revocar Máster", "Otorgar Máster"),
+                        on_click=AdminUsersState.toggle_selected_role,
+                        color_scheme=rx.cond(AdminUsersState.selected_user["role"] == "master", "orange", "purple"),
+                        variant="soft",
+                        cursor="pointer"
+                    ),
+                    width="100%", align="center", padding=T.SPACE_3, background=T.BG_SECONDARY, border_radius=T.RADIUS_MD,
+                ),
+                
+                rx.hstack(
+                    rx.vstack(
+                        rx.text("Resetear Cuenta", font_weight="bold", color="red"),
+                        rx.text("Borra todo el progreso, XP y racha del usuario.", font_size=T.TEXT_XS, color=T.TEXT_MUTED),
+                        align_items="start"
+                    ),
+                    rx.spacer(),
+                    rx.dialog.root(
+                        rx.dialog.trigger(rx.button("Reset Total", color_scheme="red", cursor="pointer")),
+                        rx.dialog.content(
+                            rx.dialog.title("¿Estás seguro?"),
+                            rx.dialog.description("Esta acción borrará todas las lecciones completadas y el XP de este usuario. No se puede deshacer."),
+                            rx.hstack(
+                                rx.dialog.close(rx.button("Cancelar", variant="soft", color_scheme="gray")),
+                                rx.dialog.close(rx.button("Sí, Resetear", color_scheme="red", on_click=AdminUsersState.reset_selected_progress)),
+                                justify="end", margin_top=T.SPACE_4, gap=T.SPACE_2
+                            )
+                        )
+                    ),
+                    width="100%", align="center", padding=T.SPACE_3, background="rgba(239,68,68,0.1)", border_radius=T.RADIUS_MD, margin_top=T.SPACE_2,
+                ),
+                
+                width="100%", align_items="start", spacing="3"
+            ),
+            
+            rx.hstack(
+                rx.dialog.close(
+                    rx.button(
+                        "Cerrar",
+                        variant="soft",
+                        color_scheme="gray",
+                        on_click=AdminUsersState.close_user_modal,
+                    ),
+                ),
+                justify="end",
+                margin_top=T.SPACE_6,
+            ),
+            max_width="500px",
+            background=T.BG_PRIMARY,
+        ),
+        open=AdminUsersState.is_modal_open,
+        on_open_change=lambda is_open: rx.cond(is_open, rx.console_log("open"), AdminUsersState.close_user_modal)
+    )
+
+def _admin_users() -> rx.Component:
+    return rx.box(
+        rx.hstack(
+            rx.heading("Gestión de Usuarios", size="5"),
+            rx.button(
+                rx.icon("refresh-cw", size=16),
+                "Refrescar", 
+                on_click=AdminUsersState.load_users,
+                variant="soft",
+                cursor="pointer",
+            ),
+            justify="between",
+            align="center",
+            margin_bottom=T.SPACE_4,
+        ),
+        rx.cond(
+            AdminUsersState.is_loading,
+            rx.center(rx.spinner(size="3"), height="200px"),
+            rx.vstack(
+                rx.foreach(
+                    AdminUsersState.users,
+                    lambda user: rx.hstack(
+                        rx.vstack(
+                            rx.text(user["email"].to(str), font_weight="bold"),
+                            rx.hstack(
+                                rx.badge(user["role"].to(str), color_scheme=rx.cond(user["role"] == "master", "purple", "gray")),
+                                rx.text(f"XP: {user['xp'].to(str)} | Racha: {user['streak'].to(str)}", font_size=T.TEXT_XS, color=T.TEXT_MUTED),
+                                gap=T.SPACE_2,
+                            ),
+                            align_items="start",
+                            flex="1",
+                        ),
+                        rx.button(
+                            rx.icon("eye", size=16),
+                            on_click=lambda _: AdminUsersState.open_user_modal(user),
+                            color_scheme="gray",
+                            variant="ghost",
+                            cursor="pointer",
+                        ),
+                        width="100%", align="center", padding=T.SPACE_4,
+                        border=f"1px solid {T.BORDER}", border_radius=T.RADIUS_MD,
+                        background=T.BG_SECONDARY,
+                        _hover={"border_color": T.BRAND_MEDIUM}
+                    )
+                ),
+                width="100%", spacing="3",
+            )
+        ),
+        _user_modal(),
+        width="100%",
+    )
+
 
 def admin_page() -> rx.Component:
     return app_layout(
@@ -198,15 +376,17 @@ def admin_page() -> rx.Component:
             
             rx.tabs.root(
                 rx.tabs.list(
+                    rx.tabs.trigger("Usuarios", value="users"),
                     rx.tabs.trigger("Módulos", value="modules"),
                     rx.tabs.trigger("Proyectos", value="projects"),
                     rx.tabs.trigger("Día a Día", value="daily"),
                     margin_bottom=T.SPACE_6,
                 ),
+                rx.tabs.content(_admin_users(), value="users"),
                 rx.tabs.content(_admin_modules(), value="modules"),
                 rx.tabs.content(_admin_projects(), value="projects"),
                 rx.tabs.content(_admin_daily(), value="daily"),
-                default_value="modules",
+                default_value="users",
             ),
             
             padding=T.SPACE_8,
