@@ -24,6 +24,17 @@ def topbar() -> rx.Component:
         # ... (Search box disabled) ...
         # ),
 
+        # Mobile Menu Toggle (Visible only on mobile)
+        rx.box(
+            rx.icon("menu", size=24, color=T.TEXT_PRIMARY),
+            display=["flex", "flex", "none"],
+            cursor="pointer",
+            padding=T.SPACE_2,
+            border_radius=T.RADIUS_MD,
+            _hover={"background": T.BG_HOVER},
+            # TODO: Add on_click for mobile menu drawer
+        ),
+
         # Spacer
         rx.spacer(),
 

@@ -344,7 +344,7 @@ def sidebar() -> rx.Component:
         min_height="100vh",
         background=T.BG_SECONDARY,
         border_right=f"1px solid {T.BORDER}",
-        display="flex",
+        display=["none", "none", "flex"],
         flex_direction="column",
         position="fixed",
         top="0",

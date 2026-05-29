@@ -18,7 +18,7 @@ _LILAC  = "#a78bfa"
 
 def _hero_card() -> rx.Component:
     return rx.box(
-        rx.hstack(
+        rx.flex(
             # Content
             rx.vstack(
                 rx.text(
@@ -29,22 +29,27 @@ def _hero_card() -> rx.Component:
                     line_height="1.2",
                     letter_spacing="-0.5px",
                 ),
-                rx.text(
-                    rx.cond(AppState.is_spanish, "Construye el futuro. 🚀", "Build the future. 🚀"),
+                rx.hstack(
+                    rx.text(
+                        rx.cond(AppState.is_spanish, "Construye el futuro.", "Build the future."),
+                        # Dark: fancy gradient clip text. Light: solid deep-purple (always readable)
+                        color=rx.cond(AppState.is_dark, "transparent", "#5B21B6"),
+                        background=rx.cond(
+                            AppState.is_dark,
+                            "linear-gradient(90deg, #a78bfa, #7C3AED)",
+                            "none",
+                        ),
+                        background_clip=rx.cond(AppState.is_dark, "text", "initial"),
+                        webkit_background_clip=rx.cond(AppState.is_dark, "text", "initial"),
+                        webkit_text_fill_color=rx.cond(AppState.is_dark, "transparent", "#5B21B6"),
+                    ),
+                    rx.text("🚀"),
                     font_size=T.TEXT_3XL,
                     font_weight=T.WEIGHT_EXTRABOLD,
-                    # Dark: fancy gradient clip text. Light: solid deep-purple (always readable)
-                    color=rx.cond(AppState.is_dark, "transparent", "#5B21B6"),
-                    background=rx.cond(
-                        AppState.is_dark,
-                        "linear-gradient(90deg, #a78bfa, #7C3AED)",
-                        "none",
-                    ),
-                    background_clip=rx.cond(AppState.is_dark, "text", "initial"),
-                    webkit_background_clip=rx.cond(AppState.is_dark, "text", "initial"),
-                    webkit_text_fill_color=rx.cond(AppState.is_dark, "transparent", "#5B21B6"),
                     line_height="1.2",
                     letter_spacing="-0.5px",
+                    spacing="2",
+                    align="center",
                 ),
                 rx.text(
                     rx.cond(
@@ -96,22 +101,45 @@ def _hero_card() -> rx.Component:
                 align_items="start",
                 flex="1",
             ),
-            # Python logo — bigger, float only, centered
+            # Python logo — Majestic and integrated
             rx.box(
+                # Background glow
+                rx.box(
+                    position="absolute",
+                    width="250px",
+                    height="250px",
+                    background="radial-gradient(circle, rgba(124, 58, 237, 0.3) 0%, transparent 70%)",
+                    border_radius="50%",
+                    top="50%",
+                    left="50%",
+                    transform="translate(-50%, -50%)",
+                    filter="blur(20px)",
+                    z_index="0"
+                ),
                 rx.image(
                     src="/python_logo.svg",
-                    width="130px",
-                    height="130px",
+                    width="240px",
+                    height="240px",
                     alt="Python logo",
+                    z_index="1",
+                    style={
+                        "animation": "pythonFloat 6s ease-in-out infinite",
+                        "filter": "drop-shadow(0 20px 30px rgba(0,0,0,0.4))"
+                    }
                 ),
-                style={"animation": "pythonFloat 5s ease-in-out infinite"},
+                position="relative",
                 flex_shrink="0",
                 display="flex",
                 align_items="center",
                 justify_content="center",
+                margin_right="-20px", # Bleed off the right edge a bit
+                margin_top="-30px",
+                margin_bottom="-30px",
+                z_index="1"
             ),
             align="center",
             justify="between",
+            direction=["column-reverse", "column-reverse", "row"],
             gap=T.SPACE_6,
         ),
         border_radius=T.RADIUS_XL,
@@ -223,11 +251,11 @@ def _learning_path() -> rx.Component:
             align="center",
             margin_bottom=T.SPACE_4,
         ),
-        rx.hstack(
+        rx.grid(
             rx.foreach(CurriculumState.modules, _module_card),
-            gap=T.SPACE_3,
-            overflow_x="auto",
-            padding_bottom=T.SPACE_2,
+            columns=["1", "2", "3", "3"],
+            gap=T.SPACE_4,
+            width="100%",
         ),
         margin_bottom=T.SPACE_6,
     )

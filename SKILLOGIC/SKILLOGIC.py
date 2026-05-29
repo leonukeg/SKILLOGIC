@@ -16,6 +16,7 @@ from SKILLOGIC.state.admin_users_state import AdminUsersState
 from SKILLOGIC.state.update_password_state import UpdatePasswordState
 from SKILLOGIC.state.auth_state import AuthState
 from SKILLOGIC.state.progress_state import ProgressState
+from SKILLOGIC.state.app_state import AppState
 from SKILLOGIC.styles.theme import GOOGLE_FONTS_URL
 
 # ── Global stylesheet ─────────────────────────────────────────
@@ -121,7 +122,7 @@ app.add_page(
     route="/dashboard",
     title="SKILLOGIC — Dashboard",
     description="Tu panel de aprendizaje personalizado.",
-    on_load=[AuthState.on_load, CurriculumState.load_data, ProgressState.load_stats],
+    on_load=[AppState.set_home_active, AuthState.on_load, CurriculumState.load_data, ProgressState.load_stats],
 )
 
 app.add_page(

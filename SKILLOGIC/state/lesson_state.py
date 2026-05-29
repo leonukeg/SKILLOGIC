@@ -177,11 +177,15 @@ class LessonState(rx.State):
             self.is_success = False
             self.feedback_message = "Aún no. Piensa en el orden lógico: primero pides, luego guardas, luego operas, y al final muestras."
 
-    def run_code(self):
+    async def run_code(self):
         """Executes the Python code locally and captures stdout and errors."""
         self.terminal_output = ""
         self.is_success = False
         self.feedback_message = ""
+        
+        from SKILLOGIC.state.auth_state import AuthState
+        auth = await self.get_state(AuthState)
+        default_input = auth.user_email.split("@")[0].capitalize() if auth.user_email else "Estudiante"
         
         if not self.user_code.strip():
             self.terminal_output = "No hay código para ejecutar."
@@ -211,8 +215,8 @@ class LessonState(rx.State):
                         val = inputs_to_mock.pop(0)
                         print(val) # Echo the input
                         return val
-                    print("TEST_INPUT")
-                    return "TEST_INPUT"
+                    print(default_input)
+                    return default_input
                     
                 namespace['input'] = mock_input
                 

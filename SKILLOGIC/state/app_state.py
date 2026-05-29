@@ -37,6 +37,10 @@ class AppState(rx.State):
 
     # ── Navigation ────────────────────────────────────────────
     active_nav: str = "home"
+    
+    def set_home_active(self):
+        if self.active_nav not in ["home", "lessons"]:
+            self.active_nav = "home"
 
     # ── Computed helpers ──────────────────────────────────────
     @rx.var

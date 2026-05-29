@@ -14,14 +14,19 @@ class AdminUsersState(rx.State):
     
     # State for email editing
     editing_email: str = ""
-    email_edit_success: bool = False
-    email_edit_error: str = ""
-    is_saving_email: bool = False
+    editing_name: str = ""
+    profile_edit_success: bool = False
+    profile_edit_error: str = ""
+    is_saving_profile: bool = False
     
     reset_email_sent: bool = False
     reset_email_error: str = ""
     
     async def load_users(self):
+        from SKILLOGIC.state.app_state import AppState
+        app_state = await self.get_state(AppState)
+        app_state.active_nav = "admin_users"
+        
         auth = await self.get_state(AuthState)
         if getattr(auth, "role", "basic") != "master" and auth.user_email not in ["admin@skillogic.com", "chemaruan@gmail.com"]:
             return # No es master, no carga
@@ -44,10 +49,12 @@ class AdminUsersState(rx.State):
                         
                     formatted_users.append({
                         "id": p["id"],
+                        "name": p.get("full_name", p.get("email", "Sin nombre").split("@")[0]),
                         "email": p.get("email", "Sin email"),
                         "role": role,
                         "xp": p.get("xp", 0),
                         "streak": p.get("streak", 0),
+                        "completed_lessons": len(prog.get("lessons", {})),
                     })
                 
                 self.users = formatted_users
@@ -62,11 +69,12 @@ class AdminUsersState(rx.State):
         self.reset_email_sent = False
         self.reset_email_error = ""
         
-        # Reset email editing state
+        # Reset profile editing state
         self.editing_email = user.get("email", "")
-        self.email_edit_success = False
-        self.email_edit_error = ""
-        self.is_saving_email = False
+        self.editing_name = user.get("name", "")
+        self.profile_edit_success = False
+        self.profile_edit_error = ""
+        self.is_saving_profile = False
         
     def close_user_modal(self):
         self.is_modal_open = False
@@ -74,48 +82,61 @@ class AdminUsersState(rx.State):
 
     def set_editing_email(self, val: str):
         self.editing_email = val
-        self.email_edit_success = False
-        self.email_edit_error = ""
+        self.profile_edit_success = False
+        self.profile_edit_error = ""
+        
+    def set_editing_name(self, val: str):
+        self.editing_name = val
+        self.profile_edit_success = False
+        self.profile_edit_error = ""
 
-    def save_user_email(self):
+    def save_user_profile(self):
         if not self.selected_user: return
         user_id = self.selected_user["id"]
         
         if not self.editing_email or "@" not in self.editing_email:
-            self.email_edit_error = "Introduce un correo válido."
+            self.profile_edit_error = "Introduce un correo válido."
+            return
+            
+        if not self.editing_name:
+            self.profile_edit_error = "Introduce un nombre válido."
             return
             
         admin_client = get_supabase_admin()
         if not admin_client:
-            self.email_edit_error = "Llave de servicio no configurada."
+            self.profile_edit_error = "Llave de servicio no configurada."
             return
             
-        self.is_saving_email = True
+        self.is_saving_profile = True
         try:
             # 1. Update in Auth (requires SERVICE_ROLE_KEY)
             admin_client.auth.admin.update_user_by_id(
                 user_id, 
-                {"email": self.editing_email, "user_metadata": {"email": self.editing_email}}
+                {"email": self.editing_email, "user_metadata": {"full_name": self.editing_name}}
             )
             
             # 2. Update in Public Profiles Table (requires SERVICE_ROLE_KEY to bypass RLS)
-            # Or we can do it with normal client if RLS allows it (but usually it doesn't for other users)
-            admin_client.table("profiles").update({"email": self.editing_email}).eq("id", user_id).execute()
+            admin_client.table("profiles").update({
+                "email": self.editing_email,
+                "full_name": self.editing_name
+            }).eq("id", user_id).execute()
             
             # 3. Update local state
             for u in self.users:
                 if u["id"] == user_id:
                     u["email"] = self.editing_email
+                    u["name"] = self.editing_name
                     self.selected_user["email"] = self.editing_email
+                    self.selected_user["name"] = self.editing_name
             
             self.users = self.users
-            self.email_edit_success = True
-            self.email_edit_error = ""
+            self.profile_edit_success = True
+            self.profile_edit_error = ""
         except Exception as e:
-            self.email_edit_error = f"Error: {str(e)}"
-            self.email_edit_success = False
+            self.profile_edit_error = f"Error: {str(e)}"
+            self.profile_edit_success = False
             
-        self.is_saving_email = False
+        self.is_saving_profile = False
 
     def send_reset_email(self):
         if not self.selected_user: return
@@ -186,6 +207,8 @@ class AdminUsersState(rx.State):
                 if u["id"] == user_id:
                     u["xp"] = 0
                     u["streak"] = 0
+                    u["completed_lessons"] = 0
                     self.selected_user["xp"] = 0
                     self.selected_user["streak"] = 0
+                    self.selected_user["completed_lessons"] = 0
             self.users = self.users
