@@ -11,6 +11,9 @@ from SKILLOGIC.pages.dashboard import dashboard_page
 from SKILLOGIC.pages.admin import admin_page
 from SKILLOGIC.pages.lesson import lesson_page
 from SKILLOGIC.pages.update_password import update_password_page
+from SKILLOGIC.pages.katas_list import katas_list_page
+from SKILLOGIC.pages.kata_solver import kata_page
+from SKILLOGIC.pages.landing import landing_page
 from SKILLOGIC.state.curriculum_state import CurriculumState
 from SKILLOGIC.state.admin_users_state import AdminUsersState
 from SKILLOGIC.state.update_password_state import UpdatePasswordState
@@ -110,12 +113,7 @@ app.add_page(
     title="SKILLOGIC — Registrarse",
 )
 
-app.add_page(
-    login_page,
-    route="/",
-    title="SKILLOGIC — Bienvenido",
-    on_load=AuthState.on_load,
-)
+# app.add_page for landing is not needed because it uses @rx.page(route="/") in landing.py
 
 app.add_page(
     dashboard_page,

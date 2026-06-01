@@ -27,7 +27,7 @@ def topbar() -> rx.Component:
         # Mobile Menu Toggle (Visible only on mobile)
         rx.box(
             rx.icon("menu", size=24, color=T.TEXT_PRIMARY),
-            display=["flex", "flex", "none"],
+            display=rx.breakpoints(initial="flex", lg="none"),
             cursor="pointer",
             padding=T.SPACE_2,
             border_radius=T.RADIUS_MD,

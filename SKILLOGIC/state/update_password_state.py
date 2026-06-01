@@ -13,9 +13,9 @@ class UpdatePasswordState(rx.State):
     
     async def on_load(self):
         # Capturamos el código PKCE o el access_token del implicit flow
-        code = self.router.page.params.get("code")
-        access_token = self.router.page.params.get("access_token")
-        refresh_token = self.router.page.params.get("refresh_token")
+        code = self.router._page.params.get("code")
+        access_token = self.router._page.params.get("access_token")
+        refresh_token = self.router._page.params.get("refresh_token")
         
         client = get_supabase()
         if not client: return

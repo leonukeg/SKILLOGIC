@@ -339,17 +339,17 @@ def lesson_page() -> rx.Component:
     content = rx.flex(
         rx.box(
             render_content(),
-            width=["100%", "100%", "40%"],
-            min_height=["50vh", "50vh", "100%"]
+            width=rx.breakpoints(initial="100%", lg="40%"),
+            min_height=rx.breakpoints(initial="50vh", lg="100%")
         ),
         rx.box(
             render_workspace(),
-            width=["100%", "100%", "60%"],
-            min_height=["50vh", "50vh", "100%"]
+            width=rx.breakpoints(initial="100%", lg="60%"),
+            min_height=rx.breakpoints(initial="50vh", lg="100%")
         ),
         width="100%",
-        height=["auto", "auto", f"calc(100vh - {T.TOPBAR_HEIGHT})"],
-        direction=["column", "column", "row"],
+        height=rx.breakpoints(initial="auto", lg=f"calc(100vh - {T.TOPBAR_HEIGHT})"),
+        direction=rx.breakpoints(initial="column", lg="row"),
         align="stretch",
         spacing="0" # Ensure no gap between panels
     )

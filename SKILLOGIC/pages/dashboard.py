@@ -139,7 +139,7 @@ def _hero_card() -> rx.Component:
             ),
             align="center",
             justify="between",
-            direction=["column-reverse", "column-reverse", "row"],
+            direction=rx.breakpoints(initial="column-reverse", lg="row"),
             gap=T.SPACE_6,
         ),
         border_radius=T.RADIUS_XL,
@@ -177,47 +177,47 @@ def _module_card(mod: rx.Var[dict]) -> rx.Component:
 
     return rx.box(
         rx.box(
-            rx.icon(tag=mod["icon_tag"].to(str), size=24, color=status_color),
-            width="48px",
-            height="48px",
-            border_radius=T.RADIUS_LG,
+            rx.icon(tag=mod["icon_tag"].to(str), size=20, color=status_color),
+            width="36px",
+            height="36px",
+            border_radius=T.RADIUS_MD,
             background=bg_color,
             display="flex",
             align_items="center",
             justify_content="center",
-            margin_bottom=T.SPACE_4,
+            margin_bottom=T.SPACE_3,
             border=f"1px solid {border_color}",
         ),
         rx.text(
             rx.cond(AppState.is_spanish, mod["name_es"], mod["name_en"]),
-            font_size=T.TEXT_BASE,
+            font_size=T.TEXT_SM,
             font_weight=T.WEIGHT_SEMIBOLD,
             color=text_color,
             margin_bottom=T.SPACE_2,
-            min_height="48px",
-            line_height="1.3",
+            min_height="40px",
+            line_height="1.2",
         ),
         rx.box(
             rx.box(height="100%", width=mod["progress"].to(str) + "%", background=status_color, border_radius=T.RADIUS_FULL),
-            height="6px",
+            height="4px",
             background=T.BG_HOVER,
             border_radius=T.RADIUS_FULL,
             overflow="hidden",
             margin_bottom=T.SPACE_2,
         ),
         rx.hstack(
-            rx.text(mod["progress"].to(str) + "%", font_size=T.TEXT_XS, font_weight=T.WEIGHT_BOLD, color=status_color),
+            rx.text(mod["progress"].to(str) + "%", font_size="10px", font_weight=T.WEIGHT_BOLD, color=status_color),
             rx.text(
                 rx.cond(is_locked, rx.cond(AppState.is_spanish, "Bloqueado", "Locked"),
-                rx.cond(is_completed, rx.cond(AppState.is_spanish, "Completado", "Completed"), rx.cond(AppState.is_spanish, "En progreso", "In progreso"))),
-                font_size=T.TEXT_XS, color=T.TEXT_MUTED
+                rx.cond(is_completed, rx.cond(AppState.is_spanish, "Completado", "Completed"), rx.cond(AppState.is_spanish, "En progreso", "In progress"))),
+                font_size="10px", color=T.TEXT_MUTED
             ),
             justify="between",
         ),
-        padding=T.SPACE_5,
+        padding=T.SPACE_4,
         background=T.BG_SECONDARY,
         border=f"1px solid {T.BORDER}",
-        border_radius=T.RADIUS_XL,
+        border_radius=T.RADIUS_LG,
         position="relative",
         overflow="hidden",
         cursor=rx.cond(is_locked, "not-allowed", "pointer"),
@@ -253,8 +253,8 @@ def _learning_path() -> rx.Component:
         ),
         rx.grid(
             rx.foreach(CurriculumState.modules, _module_card),
-            columns=["1", "2", "3", "3"],
-            gap=T.SPACE_4,
+            columns=rx.breakpoints(initial="2", sm="3", lg="5"),
+            gap=T.SPACE_3,
             width="100%",
         ),
         margin_bottom=T.SPACE_6,
@@ -705,6 +705,38 @@ def _right_stats() -> rx.Component:
             width="100%", height="4px", background=T.BG_ELEVATED, border_radius=T.RADIUS_FULL, overflow="hidden", margin_bottom=T.SPACE_6
         ),
 
+        # DISTRIBUCIÓN DE XP
+        rx.text(
+            rx.cond(AppState.is_spanish, "DISTRIBUCIÓN DE XP", "XP DISTRIBUTION"),
+            font_size=T.TEXT_XS, font_weight=T.WEIGHT_BOLD, color=T.TEXT_MUTED, letter_spacing="1px", margin_bottom=T.SPACE_3, margin_top=T.SPACE_4
+        ),
+        rx.vstack(
+            rx.hstack(
+                rx.icon(tag="book-open", size=14, color=T.INFO),
+                rx.text(rx.cond(AppState.is_spanish, "Lecciones", "Lessons"), font_size=T.TEXT_SM, color=T.TEXT_SECONDARY),
+                rx.spacer(),
+                rx.text(ProgressState.lessons_xp_earned.to_string() + " XP", font_size=T.TEXT_SM, font_weight=T.WEIGHT_BOLD, color=T.TEXT_PRIMARY),
+                width="100%", align="center"
+            ),
+            rx.hstack(
+                rx.icon(tag="code", size=14, color=T.SUCCESS),
+                rx.text("Katas", font_size=T.TEXT_SM, color=T.TEXT_SECONDARY),
+                rx.spacer(),
+                rx.text(ProgressState.katas_xp_earned.to_string() + " XP", font_size=T.TEXT_SM, font_weight=T.WEIGHT_BOLD, color=T.TEXT_PRIMARY),
+                width="100%", align="center"
+            ),
+            rx.hstack(
+                rx.icon(tag="flame", size=14, color="#f97316"),
+                rx.text(rx.cond(AppState.is_spanish, "Rachas", "Streaks"), font_size=T.TEXT_SM, color=T.TEXT_SECONDARY),
+                rx.spacer(),
+                rx.text(ProgressState.streak_xp_earned.to_string() + " XP", font_size=T.TEXT_SM, font_weight=T.WEIGHT_BOLD, color=T.TEXT_PRIMARY),
+                width="100%", align="center"
+            ),
+            width="100%",
+            spacing="2",
+            margin_bottom=T.SPACE_4
+        ),
+
         margin_bottom=T.SPACE_5,
         padding_bottom=T.SPACE_2,
         border_bottom=f"1px solid {T.BORDER_SUBTLE}",
@@ -1036,6 +1068,86 @@ def _lessons_view() -> rx.Component:
     )
 
 
+def _points_distribution_widget() -> rx.Component:
+    """A large, horizontal widget showing how XP was earned."""
+    return rx.box(
+        rx.text(
+            rx.cond(AppState.is_spanish, "Análisis de Experiencia (XP)", "Experience Analysis (XP)"),
+            font_size=T.TEXT_MD, font_weight=T.WEIGHT_SEMIBOLD, color=T.TEXT_PRIMARY, margin_bottom=T.SPACE_4
+        ),
+        rx.flex(
+            # Lecciones
+            rx.box(
+                rx.hstack(
+                    rx.box(rx.icon(tag="book-open", size=28, color=T.INFO), padding=T.SPACE_3, background=T.INFO_LIGHT, border_radius=T.RADIUS_LG),
+                    rx.vstack(
+                        rx.text(ProgressState.lessons_xp_earned.to_string(), font_size=T.TEXT_3XL, font_weight=T.WEIGHT_EXTRABOLD, color=T.TEXT_PRIMARY, line_height="1"),
+                        rx.text(rx.cond(AppState.is_spanish, "Puntos de Teoría", "Theory Points"), font_size=T.TEXT_SM, color=T.TEXT_MUTED),
+                        spacing="1"
+                    ),
+                    gap=T.SPACE_4,
+                    align="center"
+                ),
+                flex="1",
+                padding=T.SPACE_5,
+                background=T.BG_SECONDARY,
+                border=f"1px solid {T.BORDER}",
+                border_radius=T.RADIUS_XL,
+                box_shadow=T.SHADOW_SM,
+                transition=f"all {T.EASE_BASE}",
+                _hover={"transform": "translateY(-2px)", "box_shadow": T.SHADOW_MD, "border_color": T.BORDER_STRONG}
+            ),
+            # Katas
+            rx.box(
+                rx.hstack(
+                    rx.box(rx.icon(tag="code", size=28, color=T.SUCCESS), padding=T.SPACE_3, background=T.SUCCESS_LIGHT, border_radius=T.RADIUS_LG),
+                    rx.vstack(
+                        rx.text(ProgressState.katas_xp_earned.to_string(), font_size=T.TEXT_3XL, font_weight=T.WEIGHT_EXTRABOLD, color=T.TEXT_PRIMARY, line_height="1"),
+                        rx.text(rx.cond(AppState.is_spanish, "Puntos de Katas", "Katas Points"), font_size=T.TEXT_SM, color=T.TEXT_MUTED),
+                        spacing="1"
+                    ),
+                    gap=T.SPACE_4,
+                    align="center"
+                ),
+                flex="1",
+                padding=T.SPACE_5,
+                background=T.BG_SECONDARY,
+                border=f"1px solid {T.BORDER}",
+                border_radius=T.RADIUS_XL,
+                box_shadow=T.SHADOW_SM,
+                transition=f"all {T.EASE_BASE}",
+                _hover={"transform": "translateY(-2px)", "box_shadow": T.SHADOW_MD, "border_color": T.BORDER_STRONG}
+            ),
+            # Rachas
+            rx.box(
+                rx.hstack(
+                    rx.box(rx.icon(tag="flame", size=28, color="#f97316"), padding=T.SPACE_3, background="rgba(249, 115, 22, 0.1)", border_radius=T.RADIUS_LG),
+                    rx.vstack(
+                        rx.text(ProgressState.streak_xp_earned.to_string(), font_size=T.TEXT_3XL, font_weight=T.WEIGHT_EXTRABOLD, color=T.TEXT_PRIMARY, line_height="1"),
+                        rx.text(rx.cond(AppState.is_spanish, "Puntos por Racha", "Streak Points"), font_size=T.TEXT_SM, color=T.TEXT_MUTED),
+                        spacing="1"
+                    ),
+                    gap=T.SPACE_4,
+                    align="center"
+                ),
+                flex="1",
+                padding=T.SPACE_5,
+                background=T.BG_SECONDARY,
+                border=f"1px solid {T.BORDER}",
+                border_radius=T.RADIUS_XL,
+                box_shadow=T.SHADOW_SM,
+                transition=f"all {T.EASE_BASE}",
+                _hover={"transform": "translateY(-2px)", "box_shadow": T.SHADOW_MD, "border_color": T.BORDER_STRONG}
+            ),
+            direction=rx.breakpoints(initial="column", md="row"),
+            gap=T.SPACE_4,
+            width="100%",
+        ),
+        margin_bottom=T.SPACE_8,
+        width="100%"
+    )
+
+
 # ── Main dashboard page ───────────────────────────────────────
 
 def dashboard_page() -> rx.Component:
@@ -1047,12 +1159,14 @@ def dashboard_page() -> rx.Component:
             ("home", rx.box(
                 _hero_card(),
                 _learning_path(),
+                _points_distribution_widget(),
             )),
             ("lessons", _lessons_view()),
             # default
             rx.box(
                 _hero_card(),
                 _learning_path(),
+                _points_distribution_widget(),
             )
         ),
         padding=T.SPACE_6,

@@ -1,5 +1,5 @@
 import reflex as rx
-from SKILLOGIC.lib.supabase_client import get_supabase
+from SKILLOGIC.lib.supabase_client import get_supabase, fetch_user_profile
 
 class AuthState(rx.State):
     """Maneja el estado de la autenticación de Supabase."""

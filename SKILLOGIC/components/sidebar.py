@@ -7,6 +7,7 @@ UI-only: reads from AppState, dispatches AppState events.
 import reflex as rx
 from SKILLOGIC.state import AppState
 from SKILLOGIC.state.auth_state import AuthState
+from SKILLOGIC.state.progress_state import ProgressState
 from SKILLOGIC.styles import theme as T
 
 
@@ -68,14 +69,13 @@ def _streak_dot(label_es: str, label_en: str, active_var) -> rx.Component:
 
 
 def _streak_calendar() -> rx.Component:
-    """Weekly streak calendar — static 7 days, reads AppState.streak_days[i] directly."""
-    # ES / EN day names for each position (0=Mon ... 6=Sun)
+    """Weekly streak calendar — visual based on ProgressState.streak_days."""
     pairs = [
         ("L", "M"), ("M", "T"), ("M", "W"), ("J", "T"),
         ("V", "F"), ("S", "S"), ("D", "S"),
     ]
     dots = [
-        _streak_dot(es, en, AppState.streak_days[i])
+        _streak_dot(es, en, ProgressState.streak_days > i)
         for i, (es, en) in enumerate(pairs)
     ]
     return rx.grid(
@@ -83,6 +83,79 @@ def _streak_calendar() -> rx.Component:
         columns="7",
         gap=T.SPACE_1,
         margin_top=T.SPACE_2,
+        width="100%",
+    )
+
+
+def _objective_widget() -> rx.Component:
+    """Componente dinámico de objetivos de gamificación."""
+    completed_count = ProgressState.completed_katas.length()
+    
+    # Próximo objetivo: si es 0 -> resolver 1, si es < 3 -> resolver 3, si es < 8 -> resolver 8
+    target = rx.cond(
+        completed_count == 0,
+        1,
+        rx.cond(completed_count < 3, 3, 8)
+    )
+    
+    objective_text_es = rx.cond(
+        completed_count == 0,
+        "Resuelve tu primer Kata",
+        rx.cond(
+            completed_count < 3,
+            "Completa 3 Katas",
+            rx.cond(completed_count < 8, "Completa todos los Katas", "¡Maestro de Katas!")
+        )
+    )
+    
+    objective_text_en = rx.cond(
+        completed_count == 0,
+        "Solve your first Kata",
+        rx.cond(
+            completed_count < 3,
+            "Complete 3 Katas",
+            rx.cond(completed_count < 8, "Complete all Katas", "Katas Master!")
+        )
+    )
+    
+    objective_text = rx.cond(AppState.is_spanish, objective_text_es, objective_text_en)
+    
+    # Calcular porcentaje para la barra de progreso
+    percent = rx.cond(
+        target > 0,
+        ((completed_count * 100) / target).to(int),
+        100
+    )
+    
+    return rx.box(
+        rx.text(
+            rx.cond(AppState.is_spanish, "Próximo objetivo", "Next objective"),
+            font_size=T.TEXT_XS,
+            color=T.TEXT_MUTED,
+            margin_bottom=T.SPACE_1,
+        ),
+        rx.text(
+            objective_text,
+            font_size=T.TEXT_SM,
+            font_weight=T.WEIGHT_SEMIBOLD,
+            color=T.TEXT_PRIMARY,
+            margin_bottom=T.SPACE_2,
+        ),
+        rx.box(
+            rx.box(
+                height="100%",
+                width=percent.to_string() + "%",
+                background=T.BRAND,
+                border_radius=T.RADIUS_FULL,
+                transition=f"width {T.EASE_SLOW}",
+            ),
+            height="4px",
+            background=T.BG_HOVER,
+            border_radius=T.RADIUS_FULL,
+            overflow="hidden",
+        ),
+        padding=f"{T.SPACE_3} {T.SPACE_4}",
+        border_top=f"1px solid {T.BORDER_SUBTLE}",
     )
 
 
@@ -95,7 +168,7 @@ def sidebar() -> rx.Component:
             height="100%",
             border_radius=T.RADIUS_FULL,
             background=f"linear-gradient(90deg, {T.BRAND}, #a855f7)",
-            width=AppState.xp_percent.to_string() + "%",
+            width=ProgressState.xp_progress_percent.to_string() + "%",
             transition=f"width {T.EASE_SLOW}",
         ),
         height="6px",
@@ -109,6 +182,7 @@ def sidebar() -> rx.Component:
     nav = rx.box(
         _nav_item("home",      "Inicio",              "Home",          "/dashboard", "home"),
         _nav_item("book-open", "Lecciones",           "Lessons",       "/dashboard", "lessons"),
+        _nav_item("swords",    "Katas",               "Katas",         "/katas",     "katas"),
         
         # Settings menu for master users
         rx.cond(
@@ -151,7 +225,7 @@ def sidebar() -> rx.Component:
         rx.hstack(
             rx.box(
                 rx.text(
-                    AppState.user_level.to_string(),
+                    ProgressState.level.to_string(),
                     color="white",
                     font_size=T.TEXT_XS,
                     font_weight=T.WEIGHT_BOLD,
@@ -167,7 +241,7 @@ def sidebar() -> rx.Component:
                 flex_shrink="0",
             ),
             rx.text(
-                AppState.user_xp.to_string() + " / " + AppState.user_xp_to_next.to_string() + " XP",
+                ProgressState.xp.to_string() + " / " + ProgressState.xp_to_next_level.to_string() + " XP",
                 font_size=T.TEXT_SM,
                 font_weight=T.WEIGHT_SEMIBOLD,
                 color=T.TEXT_SECONDARY,
@@ -184,7 +258,11 @@ def sidebar() -> rx.Component:
                 color=T.TEXT_MUTED,
             ),
             rx.text(
-                AppState.user_rank,
+                rx.cond(
+                    ProgressState.xp == 0, "Novato", 
+                    rx.cond(ProgressState.level < 5, "Explorer", 
+                    rx.cond(ProgressState.level < 10, "Pioneer", "Master"))
+                ),
                 font_size=T.TEXT_XS,
                 font_weight=T.WEIGHT_SEMIBOLD,
                 color=T.TEXT_SECONDARY,
@@ -192,7 +270,46 @@ def sidebar() -> rx.Component:
             ),
             align="center",
             gap=T.SPACE_2,
+            margin_bottom=T.SPACE_4,
         ),
+        
+        # DISTRIBUCIÓN DE XP
+        rx.box(
+            rx.text(
+                rx.cond(AppState.is_spanish, "DISTRIBUCIÓN", "XP DISTRIBUTION"),
+                font_size="9px", font_weight=T.WEIGHT_BOLD, color=T.TEXT_MUTED, letter_spacing="1px", margin_bottom=T.SPACE_2
+            ),
+            rx.vstack(
+                rx.hstack(
+                    rx.icon(tag="book-open", size=12, color=T.INFO),
+                    rx.text(rx.cond(AppState.is_spanish, "Teoría", "Theory"), font_size="10px", color=T.TEXT_SECONDARY),
+                    rx.spacer(),
+                    rx.text(ProgressState.lessons_xp_earned.to_string() + " XP", font_size="10px", font_weight=T.WEIGHT_BOLD, color=T.TEXT_PRIMARY),
+                    width="100%", align="center"
+                ),
+                rx.hstack(
+                    rx.icon(tag="code", size=12, color=T.SUCCESS),
+                    rx.text("Katas", font_size="10px", color=T.TEXT_SECONDARY),
+                    rx.spacer(),
+                    rx.text(ProgressState.katas_xp_earned.to_string() + " XP", font_size="10px", font_weight=T.WEIGHT_BOLD, color=T.TEXT_PRIMARY),
+                    width="100%", align="center"
+                ),
+                rx.hstack(
+                    rx.icon(tag="flame", size=12, color="#f97316"),
+                    rx.text(rx.cond(AppState.is_spanish, "Racha", "Streak"), font_size="10px", color=T.TEXT_SECONDARY),
+                    rx.spacer(),
+                    rx.text(ProgressState.streak_xp_earned.to_string() + " XP", font_size="10px", font_weight=T.WEIGHT_BOLD, color=T.TEXT_PRIMARY),
+                    width="100%", align="center"
+                ),
+                width="100%",
+                spacing="1",
+            ),
+            background=T.BG_ELEVATED,
+            padding=T.SPACE_3,
+            border_radius=T.RADIUS_MD,
+            border=f"1px solid {T.BORDER}",
+        ),
+        
         padding=f"{T.SPACE_3} {T.SPACE_4}",
         border_top=f"1px solid {T.BORDER_SUBTLE}",
     )
@@ -211,7 +328,7 @@ def sidebar() -> rx.Component:
         rx.hstack(
             rx.icon(tag="flame", size=18, color=T.STREAK),
             rx.text(
-                AppState.user_streak.to_string(),
+                ProgressState.streak_days.to_string(),
                 font_size=T.TEXT_LG,
                 font_weight=T.WEIGHT_BOLD,
                 color=T.STREAK,
@@ -228,37 +345,6 @@ def sidebar() -> rx.Component:
             gap=T.SPACE_1,
         ),
         _streak_calendar(),
-        padding=f"{T.SPACE_3} {T.SPACE_4}",
-        border_top=f"1px solid {T.BORDER_SUBTLE}",
-    )
-
-    # ── Objective widget
-    objective = rx.box(
-        rx.text(
-            rx.cond(AppState.is_spanish, "Próximo objetivo", "Next objective"),
-            font_size=T.TEXT_XS,
-            color=T.TEXT_MUTED,
-            margin_bottom=T.SPACE_1,
-        ),
-        rx.text(
-            rx.cond(AppState.is_spanish, "Completa 3 ejercicios", "Complete 3 exercises"),
-            font_size=T.TEXT_SM,
-            font_weight=T.WEIGHT_SEMIBOLD,
-            color=T.TEXT_PRIMARY,
-            margin_bottom=T.SPACE_2,
-        ),
-        rx.box(
-            rx.box(
-                height="100%",
-                width="33%",
-                background=T.BRAND,
-                border_radius=T.RADIUS_FULL,
-            ),
-            height="4px",
-            background=T.BG_HOVER,
-            border_radius=T.RADIUS_FULL,
-            overflow="hidden",
-        ),
         padding=f"{T.SPACE_3} {T.SPACE_4}",
         border_top=f"1px solid {T.BORDER_SUBTLE}",
     )
@@ -334,17 +420,15 @@ def sidebar() -> rx.Component:
             border_bottom=f"1px solid {T.BORDER_SUBTLE}",
         ),
         nav,
-        # MVP Cleanup: gamification not active yet
-        # progress_section,
-        # streak_section,
-        # MVP Cleanup
-        # objective,
-        # cta,
+        progress_section,
+        streak_section,
+        _objective_widget(),
+        cta,
         width=T.SIDEBAR_WIDTH,
         min_height="100vh",
         background=T.BG_SECONDARY,
         border_right=f"1px solid {T.BORDER}",
-        display=["none", "none", "flex"],
+        display=rx.breakpoints(initial="none", lg="flex"),
         flex_direction="column",
         position="fixed",
         top="0",

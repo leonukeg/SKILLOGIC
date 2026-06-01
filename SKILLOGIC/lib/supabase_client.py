@@ -71,6 +71,20 @@ def fetch_user_stats(user_id: str) -> dict:
     response = client.table("user_stats").select("*").eq("user_id", user_id).execute()
     if response.data and len(response.data) > 0:
         return response.data[0]
+        
+    # Auto-create if it doesn't exist
+    try:
+        new_stats = {
+            "user_id": user_id,
+            "xp": 0,
+            "level": 1,
+            "streak_days": 0
+        }
+        client.table("user_stats").insert(new_stats).execute()
+        return new_stats
+    except Exception as e:
+        print("Error auto-creating user_stats:", e)
+        
     return {}
 
 def update_user_stats(user_id: str, stats_data: dict):
