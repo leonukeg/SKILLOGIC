@@ -14,6 +14,7 @@ from SKILLOGIC.pages.update_password import update_password_page
 from SKILLOGIC.pages.katas_list import katas_list_page
 from SKILLOGIC.pages.kata_solver import kata_page
 from SKILLOGIC.pages.landing import landing_page
+from SKILLOGIC.pages.roadmap import roadmap_page
 from SKILLOGIC.state.curriculum_state import CurriculumState
 from SKILLOGIC.state.admin_users_state import AdminUsersState
 from SKILLOGIC.state.update_password_state import UpdatePasswordState
