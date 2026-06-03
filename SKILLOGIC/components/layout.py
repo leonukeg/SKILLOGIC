@@ -22,7 +22,15 @@ def app_layout(*page_content: rx.Component) -> rx.Component:
     data_theme drives the CSS custom property theme switch.
     """
     return rx.box(
-        sidebar(),
+        rx.box(
+            sidebar(),
+            display=rx.breakpoints(initial="none", lg="flex"),
+            position="fixed",
+            top="0",
+            left="0",
+            bottom="0",
+            z_index="10",
+        ),
         rx.box(
             topbar(),
             rx.box(

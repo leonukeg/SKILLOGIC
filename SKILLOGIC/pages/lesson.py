@@ -6,17 +6,36 @@ import SKILLOGIC.styles.theme as T
 def render_content() -> rx.Component:
     """Renders the left panel content based on phase type."""
     return rx.box(
-        # Phase header
-        rx.hstack(
-            rx.badge(
-                LessonState.current_phase_key,
-                color_scheme="purple",
-                size="3"
+        # Progress Bar and Phase header
+        rx.vstack(
+            rx.hstack(
+                rx.badge(
+                    rx.cond(AppState.is_spanish, "Módulo 1", "Module 1"),
+                    color_scheme="purple",
+                    variant="soft",
+                    size="1"
+                ),
+                rx.spacer(),
+                rx.text(f"Fase {LessonState.current_phase_index + 1} de 8", color=T.TEXT_MUTED, font_size="xs", font_weight="bold"),
+                width="100%",
             ),
-            rx.spacer(),
-            rx.text(f"Fase {LessonState.current_phase_index + 1} de 7", color=T.TEXT_MUTED, font_size="sm"),
+            rx.box(
+                rx.box(
+                    width=LessonState.progress_percent.to_string() + "%",
+                    height="100%",
+                    background=T.BRAND,
+                    border_radius=T.RADIUS_FULL,
+                    transition="width 0.5s ease",
+                ),
+                width="100%",
+                height="6px",
+                background=T.BG_HOVER,
+                border_radius=T.RADIUS_FULL,
+                overflow="hidden",
+            ),
             width="100%",
-            margin_bottom=T.SPACE_4,
+            margin_bottom=T.SPACE_6,
+            spacing="2",
         ),
         
         # Content based on type
@@ -64,10 +83,14 @@ def render_content() -> rx.Component:
                     rx.vstack(
                         rx.foreach(
                             LessonState.parsons_blocks,
-                            lambda block: rx.box(
+                            lambda block, index: rx.box(
                                 rx.hstack(
-                                    rx.icon("grip-vertical", color=T.TEXT_MUTED, size=16),
-                                    rx.text(block["text"], width="100%", font_family="monospace", font_size="sm"),
+                                    rx.flex(
+                                        rx.text(index + 1, font_weight="bold", color="white", font_size="xs"),
+                                        width="24px", height="24px", border_radius="50%", background=T.BRAND_MEDIUM,
+                                        align="center", justify="center", flex_shrink="0"
+                                    ),
+                                    rx.text(block["text"], width="100%", font_family="'Inter', sans-serif", font_size="sm", color=T.TEXT_PRIMARY),
                                     rx.vstack(
                                         rx.icon_button(
                                             rx.icon("chevron-up"),
@@ -75,7 +98,8 @@ def render_content() -> rx.Component:
                                             size="1",
                                             variant="ghost",
                                             color_scheme="gray",
-                                            cursor="pointer"
+                                            cursor="pointer",
+                                            disabled=index == 0,
                                         ),
                                         rx.icon_button(
                                             rx.icon("chevron-down"),
@@ -93,23 +117,27 @@ def render_content() -> rx.Component:
                                 ),
                                 width="100%",
                                 margin_bottom=T.SPACE_2,
-                                padding=T.SPACE_3,
-                                background=T.BG_SECONDARY,
-                                border=f"1px solid {T.BORDER}",
+                                padding=f"{T.SPACE_2} {T.SPACE_3}",
+                                background=T.BG_ELEVATED,
+                                border_left=f"4px solid {T.BRAND}",
                                 border_radius=T.RADIUS_MD,
                                 box_shadow=T.SHADOW_SM,
-                                _hover={"border_color": T.BRAND, "transform": "translateY(-1px)"},
+                                _hover={"transform": "translateX(2px)"},
                                 transition=f"all {T.EASE_FAST}"
                             )
                         ),
-                        rx.button("Comprobar respuesta", on_click=LessonState.check_parsons, margin_top=T.SPACE_4),
+                        rx.cond(
+                            LessonState.is_success,
+                            rx.button("¡Continuar a la siguiente fase! 🎉", on_click=LessonState.next_phase, color_scheme="green", size="3", margin_top=T.SPACE_4, width="100%", cursor="pointer"),
+                            rx.button("Comprobar respuesta", on_click=LessonState.check_parsons, color_scheme="purple", margin_top=T.SPACE_4, width="100%", cursor="pointer")
+                        ),
                         rx.cond(
                             LessonState.feedback_message != "",
                             rx.callout(
                                 LessonState.feedback_message,
                                 icon=rx.cond(LessonState.is_success, "check", "info"),
                                 color_scheme=rx.cond(LessonState.is_success, "green", "orange"),
-                                margin_top=T.SPACE_2,
+                                margin_top=T.SPACE_4,
                                 width="100%"
                             )
                         )
@@ -137,7 +165,7 @@ def render_content() -> rx.Component:
             ),
             rx.spacer(),
             rx.cond(
-                LessonState.current_phase_index == 6,
+                LessonState.current_phase_key == "9_summary",
                 rx.button(
                     "Completar",
                     rx.icon("check", size=16),
@@ -214,18 +242,32 @@ def render_workspace() -> rx.Component:
                     margin_bottom=T.SPACE_4
                 ),
                 
-                # Run Button
-                rx.button(
-                    rx.icon("play", size=18),
-                    "Ejecutar Código",
-                    on_click=LessonState.run_code,
-                    color_scheme="green",
-                    size="3",
-                    align_self="flex-end",
-                    cursor="pointer",
-                    box_shadow=f"0 4px 14px 0 rgba(34, 197, 94, 0.39)",
-                    _hover={"transform": "translateY(-1px)", "box_shadow": f"0 6px 20px rgba(34, 197, 94, 0.23)"},
-                    transition="all 0.2s ease"
+                # Action Button
+                rx.cond(
+                    LessonState.is_success,
+                    rx.button(
+                        "¡Continuar a la siguiente fase! 🎉",
+                        on_click=LessonState.next_phase,
+                        color_scheme="green",
+                        size="3",
+                        align_self="flex-end",
+                        cursor="pointer",
+                        box_shadow=f"0 4px 14px 0 rgba(34, 197, 94, 0.39)",
+                        _hover={"transform": "translateY(-1px)", "box_shadow": f"0 6px 20px rgba(34, 197, 94, 0.23)"},
+                        transition="all 0.2s ease"
+                    ),
+                    rx.button(
+                        rx.icon("play", size=18),
+                        "Ejecutar Código",
+                        on_click=LessonState.run_code,
+                        color_scheme="purple",
+                        size="3",
+                        align_self="flex-end",
+                        cursor="pointer",
+                        box_shadow=f"0 4px 14px 0 {T.BRAND_LIGHT}",
+                        _hover={"transform": "translateY(-1px)", "box_shadow": f"0 6px 20px {T.BRAND_MEDIUM}"},
+                        transition="all 0.2s ease"
+                    )
                 ),
                 
                 # Terminal
@@ -245,9 +287,29 @@ def render_workspace() -> rx.Component:
                             rx.hstack(
                                 rx.icon("zap", color="#fbbf24", size=16),
                                 rx.text("SKILLOGIC AI:", font_weight="bold", color="#fbbf24", font_family="monospace"),
-                                align="center", margin_bottom=T.SPACE_1
+                                rx.spacer(),
+                                rx.cond(
+                                    LessonState.pro_feedback_message != "",
+                                    rx.button(
+                                        rx.icon("lightbulb", size=14),
+                                        rx.cond(LessonState.show_pro_feedback, "Ocultar pista", "Ver pista PRO"),
+                                        on_click=LessonState.toggle_pro_feedback,
+                                        size="1",
+                                        variant="soft",
+                                        color_scheme="yellow",
+                                        cursor="pointer"
+                                    )
+                                ),
+                                align="center", margin_bottom=T.SPACE_2
                             ),
-                            rx.text(LessonState.feedback_message, color="#fef3c7", font_family="monospace"),
+                            rx.text(
+                                rx.cond(
+                                    LessonState.show_pro_feedback,
+                                    LessonState.pro_feedback_message,
+                                    LessonState.feedback_message
+                                ),
+                                color="#fef3c7", font_family="monospace", line_height="1.5"
+                            ),
                         )
                     ),
                     background="#0f172a", # Slate 900

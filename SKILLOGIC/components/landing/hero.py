@@ -47,13 +47,15 @@ def hero_section() -> rx.Component:
         ),
         
         # CTA
-        rx.hstack(
+        # CTA
+        rx.flex(
             rx.button(
                 rx.icon(tag="rocket", size=18),
                 rx.text(t("Crear cuenta gratuita", "Create free account")),
                 on_click=rx.redirect("/register"),
                 size="4",
-                background=T.BRAND,
+                variant="solid",
+                color_scheme="purple",
                 color="white",
                 border_radius=T.RADIUS_LG,
                 box_shadow=f"0 10px 25px -5px {T.BRAND_MEDIUM}",
@@ -63,6 +65,7 @@ def hero_section() -> rx.Component:
                 font_weight=T.WEIGHT_BOLD,
                 font_size=T.TEXT_LG,
                 gap=T.SPACE_2,
+                width=rx.breakpoints(initial="100%", sm="auto"),
             ),
             rx.drawer.root(
                 rx.drawer.trigger(
@@ -81,6 +84,7 @@ def hero_section() -> rx.Component:
                         font_size=T.TEXT_LG,
                         gap=T.SPACE_2,
                         cursor="pointer",
+                        width=rx.breakpoints(initial="100%", sm="auto"),
                     )
                 ),
                 rx.drawer.overlay(z_index="100", background_color="rgba(0,0,0,0.4)", backdrop_filter="blur(4px)"),
@@ -172,8 +176,8 @@ def hero_section() -> rx.Component:
                 direction="right",
             ),
             gap=T.SPACE_4,
-            flex_direction=rx.breakpoints(initial="column", md="row"),
-            align_items="start"
+            direction=rx.breakpoints(initial="column", sm="row"),
+            align="center",
         ),
         
         # Social Proof / Trust markers
@@ -188,8 +192,8 @@ def hero_section() -> rx.Component:
 
     logo_content = rx.box(
         rx.box(
-            width="350px",
-            height="350px",
+            width="450px",
+            height="450px",
             background="radial-gradient(circle, rgba(124, 58, 237, 0.2) 0%, transparent 70%)",
             border_radius="50%",
             position="absolute",
@@ -201,8 +205,8 @@ def hero_section() -> rx.Component:
         ),
         rx.image(
             src="/python_logo.svg",
-            width="320px",
-            height="320px",
+            width="420px",
+            height="420px",
             alt="Python logo",
             z_index="1",
             style={

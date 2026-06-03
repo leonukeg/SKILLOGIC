@@ -11,6 +11,7 @@ from SKILLOGIC.components.landing.testimonials import testimonials_section
 from SKILLOGIC.components.landing.faq import faq_section
 from SKILLOGIC.components.landing.cta import bottom_cta_section
 from SKILLOGIC.components.landing.footer import footer
+from SKILLOGIC.components.landing.cookie_banner import cookie_banner
 
 @rx.page(
     route="/",
@@ -40,8 +41,10 @@ def landing_page() -> rx.Component:
         faq_section(),
         bottom_cta_section(),
         footer(),
+        cookie_banner(),
         background=T.BG_PRIMARY,
         min_height="100vh",
         width="100%",
         font_family=T.FONT_BODY,
     )
+

@@ -72,7 +72,7 @@ def register_page() -> rx.Component:
                 justify="center", gap=T.SPACE_2, margin_top=T.SPACE_6,
             ),
 
-            background=T.BG_SECONDARY, border=f"1px solid {T.BORDER}", border_radius=T.RADIUS_2XL, padding=f"{T.SPACE_10} {T.SPACE_8}", width="100%", max_width="420px", position="relative", z_index="1", box_shadow=T.SHADOW_XL,
+            background=T.BG_SECONDARY, border=f"1px solid {T.BORDER}", border_radius=T.RADIUS_2XL, padding=rx.breakpoints(initial=f"{T.SPACE_8} {T.SPACE_4}", sm=f"{T.SPACE_10} {T.SPACE_8}"), width="100%", max_width="480px", position="relative", z_index="1", box_shadow=T.SHADOW_XL,
         ),
 
         data_theme=AppState.theme, display="flex", align_items="center", justify_content="center", min_height="100vh", width="100%", padding=T.SPACE_4, background=T.BG_PRIMARY, font_family=T.FONT_BODY, position="relative", overflow="hidden",

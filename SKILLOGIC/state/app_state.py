@@ -35,8 +35,14 @@ class AppState(rx.State):
     theme: str = "dark"   # "dark" | "light"
     lang: str = "es"      # "es"   | "en"
 
-    # ── Navigation ────────────────────────────────────────────
+    # ── Navigation & UI ────────────────────────────────────────────
     active_nav: str = "home"
+    cookies_accepted: bool = False
+
+    @rx.event
+    def accept_cookies(self):
+        self.cookies_accepted = True
+
     
     def set_home_active(self):
         if self.active_nav not in ["home", "lessons"]:

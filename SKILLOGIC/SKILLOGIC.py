@@ -15,6 +15,7 @@ from SKILLOGIC.pages.katas_list import katas_list_page
 from SKILLOGIC.pages.kata_solver import kata_page
 from SKILLOGIC.pages.landing import landing_page
 from SKILLOGIC.pages.roadmap import roadmap_page
+from SKILLOGIC.pages import legal
 from SKILLOGIC.state.curriculum_state import CurriculumState
 from SKILLOGIC.state.admin_users_state import AdminUsersState
 from SKILLOGIC.state.update_password_state import UpdatePasswordState
@@ -66,8 +67,8 @@ GLOBAL_STYLES = {
     # Python logo — smooth float + tilt
     "@keyframes pythonFloat": {
         "0%, 100%": {"transform": "translateY(0px) rotate(0deg) scale(1)"},
-        "25%":      {"transform": "translateY(-12px) rotate(5deg) scale(1.04)"},
-        "75%":      {"transform": "translateY(-7px) rotate(-3deg) scale(1.02)"},
+        "33%":      {"transform": "translateY(-30px) rotate(10deg) scale(1.08)"},
+        "66%":      {"transform": "translateY(15px) rotate(-8deg) scale(0.95)"},
     },
     "@keyframes fadeIn": {
         "from": {"opacity": "0", "transform": "translateY(-8px)"},
@@ -78,6 +79,7 @@ GLOBAL_STYLES = {
 # ── App bootstrap ─────────────────────────────────────────────
 
 app = rx.App(
+    theme=rx.theme(appearance="dark", accent_color="purple", radius="large"),
     style=GLOBAL_STYLES,
     stylesheets=[
         GOOGLE_FONTS_URL,
@@ -139,3 +141,7 @@ app.add_page(
     description="Actualiza tu contraseña de forma segura.",
     on_load=UpdatePasswordState.on_load,
 )
+
+app.add_page(legal.terms_page, route="/terms", title="SKILLOGIC — Términos y Condiciones")
+app.add_page(legal.privacy_page, route="/privacy", title="SKILLOGIC — Política de Privacidad")
+app.add_page(legal.cookies_page, route="/cookies", title="SKILLOGIC — Política de Cookies")

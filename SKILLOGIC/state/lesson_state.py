@@ -8,7 +8,6 @@ from SKILLOGIC.data.lesson_1_1 import LESSON_1_1
 from SKILLOGIC.state.auth_state import AuthState
 from SKILLOGIC.lib.supabase_client import fetch_user_profile, update_user_progress
 
-# Define the sequence of phases
 PHASES = [
     "1_hook",
     "2_challenge",
@@ -16,7 +15,8 @@ PHASES = [
     "4_guided_build",
     "5_struggle",
     "7_build",
-    "8_retrieval"
+    "8_retrieval",
+    "9_summary"
 ]
 # 6_feedback is not a separate phase in the UI, it's triggered when struggle fails.
 
@@ -35,6 +35,7 @@ class LessonState(rx.State):
     # Validation state
     is_success: bool = False
     feedback_message: str = ""
+    pro_feedback_message: str = ""
     show_pro_feedback: bool = False
     
     @rx.var
@@ -118,6 +119,7 @@ class LessonState(rx.State):
         self.terminal_output = ""
         self.is_success = False
         self.feedback_message = ""
+        self.pro_feedback_message = ""
         self.show_pro_feedback = False
         
         data = self.phase_data
@@ -252,13 +254,13 @@ class LessonState(rx.State):
             
             # Check for Pedagogical Feedback mapping (Step 6)
             error_name = type(e).__name__
+            self.pro_feedback_message = ""
             feedback_mapping = LESSON_1_1["steps"].get("6_feedback", {}).get("errors", [])
             for mapping in feedback_mapping:
                 if mapping["error_type"] == error_name:
                     # We found a matching pedagogical feedback
-                    self.feedback_message = mapping["free"]  # Default to free
-                    # Note: UI will show a button to switch to PRO feedback (mapping["pro"])
-                    # We'll store the pro message temporarily in state if needed, but we can just compute it in UI
+                    self.feedback_message = mapping["free"]
+                    self.pro_feedback_message = mapping.get("pro", "")
                     break
             
             if not self.feedback_message:

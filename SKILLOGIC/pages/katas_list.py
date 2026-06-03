@@ -143,25 +143,60 @@ def _kata_list_item(kata: dict) -> rx.Component:
         )
     )
 
+    desc_text = rx.cond(AppState.is_spanish, kata["description_es"], kata["description_en"])
+    title_text = rx.cond(AppState.is_spanish, kata["title_es"], kata["title_en"])
+
     return rx.box(
-        rx.hstack(
-            # Icono + Badge + Título y Descripción (en stack)
-            rx.hstack(
-                # Icono de estado
-                rx.box(
-                    status_icon,
-                    display="flex",
-                    align_items="center",
-                    justify_content="center",
-                    width="36px",
-                    height="36px",
-                    border_radius=T.RADIUS_MD,
-                    background=rx.cond(is_locked, T.BG_HOVER, rx.cond(is_completed, T.SUCCESS_LIGHT, T.BRAND_LIGHT)),
-                    flex_shrink="0",
+        rx.flex(
+            # Icono a la izquierda
+            rx.box(
+                status_icon,
+                display="flex",
+                align_items="center",
+                justify_content="center",
+                width="36px",
+                height="36px",
+                border_radius=T.RADIUS_MD,
+                background=rx.cond(is_locked, T.BG_HOVER, rx.cond(is_completed, T.SUCCESS_LIGHT, T.BRAND_LIGHT)),
+                flex_shrink="0",
+            ),
+            
+            # Contenido principal a la derecha
+            rx.flex(
+                # Título
+                rx.text(
+                    title_text,
+                    font_weight=T.WEIGHT_SEMIBOLD,
+                    font_size=T.TEXT_MD,
+                    color=rx.cond(is_locked, T.TEXT_MUTED, T.TEXT_PRIMARY),
+                    margin_bottom=T.SPACE_1,
                 ),
                 
-                # Dificultad (Badge)
-                rx.box(
+                # Descripción con Popover (Hover Card)
+                rx.hover_card.root(
+                    rx.hover_card.trigger(
+                        rx.text(
+                            desc_text,
+                            font_size=T.TEXT_SM,
+                            color=T.TEXT_SECONDARY,
+                            no_of_lines=1,
+                            cursor="pointer",
+                            _hover={"color": T.TEXT_PRIMARY},
+                        )
+                    ),
+                    rx.hover_card.content(
+                        rx.text(desc_text, font_size=T.TEXT_SM, color=T.TEXT_PRIMARY, line_height="1.5"),
+                        max_width="320px",
+                        background=T.BG_ELEVATED,
+                        padding=T.SPACE_3,
+                        border=f"1px solid {T.BORDER}",
+                        border_radius=T.RADIUS_MD,
+                        box_shadow=T.SHADOW_LG,
+                    )
+                ),
+                
+                # Fila inferior: Badge, Spacer, XP, Botón
+                rx.flex(
                     rx.badge(
                         rx.cond(AppState.is_spanish, difficulty.capitalize(), difficulty.capitalize()),
                         color_scheme=rx.cond(difficulty == "facil", "green", rx.cond(difficulty == "medio", "yellow", "red")),
@@ -169,64 +204,41 @@ def _kata_list_item(kata: dict) -> rx.Component:
                         radius="full",
                         size="1",
                     ),
-                    width="70px",
-                    display="flex",
-                    justify_content="center",
-                    flex_shrink="0",
-                ),
-                
-                # Título y Descripción
-                rx.vstack(
+                    rx.spacer(),
                     rx.text(
-                        rx.cond(AppState.is_spanish, kata["title_es"], kata["title_en"]),
-                        font_weight=T.WEIGHT_SEMIBOLD,
-                        font_size=T.TEXT_MD,
-                        color=rx.cond(is_locked, T.TEXT_MUTED, T.TEXT_PRIMARY),
-                    ),
-                    rx.text(
-                        rx.cond(AppState.is_spanish, kata["description_es"], kata["description_en"]),
+                        f"+{kata['xp_reward']} XP",
+                        font_weight=T.WEIGHT_BOLD,
                         font_size=T.TEXT_SM,
-                        color=T.TEXT_SECONDARY,
-                        no_of_lines=1,
+                        color=rx.cond(is_locked, T.TEXT_MUTED, T.BRAND),
+                        white_space="nowrap",
                     ),
-                    spacing="1",
-                    align_items="start",
-                    flex="1",
+                    rx.button(
+                        rx.cond(
+                            is_locked, 
+                            "Bloqueado", 
+                            rx.cond(is_completed, "Repetir", "Resolver")
+                        ),
+                        size="1",
+                        color_scheme=rx.cond(is_locked, "gray", rx.cond(is_completed, "gray", "violet")),
+                        disabled=is_locked,
+                        on_click=rx.redirect(f"/kata/{kata_id}"),
+                        cursor=rx.cond(is_locked, "not-allowed", "pointer"),
+                    ),
+                    direction="row",
+                    align="center",
+                    gap=T.SPACE_3,
+                    width="100%",
+                    margin_top=T.SPACE_3,
+                    flex_wrap="wrap",
                 ),
-                align_items="center",
-                spacing="4",
+                direction="column",
                 flex="1",
                 min_width="0",
             ),
-            
-            # Puntos XP + Botón
-            rx.hstack(
-                rx.text(
-                    f"+{kata['xp_reward']} XP",
-                    font_weight=T.WEIGHT_BOLD,
-                    color=rx.cond(is_locked, T.TEXT_MUTED, T.BRAND),
-                    white_space="nowrap",
-                ),
-                rx.button(
-                    rx.cond(
-                        is_locked, 
-                        "Bloqueado", 
-                        rx.cond(is_completed, "Repetir", "Resolver")
-                    ),
-                    size="1",
-                    color_scheme=rx.cond(is_locked, "gray", rx.cond(is_completed, "gray", "violet")),
-                    disabled=is_locked,
-                    on_click=rx.redirect(f"/kata/{kata_id}"),
-                    cursor=rx.cond(is_locked, "not-allowed", "pointer"),
-                ),
-                spacing="4",
-                align_items="center",
-                flex_shrink="0",
-            ),
-            
+            direction="row",
+            align="start",
+            gap=T.SPACE_4,
             width="100%",
-            justify="between",
-            align_items="center",
             padding=T.SPACE_4,
         ),
         background=T.BG_SECONDARY,

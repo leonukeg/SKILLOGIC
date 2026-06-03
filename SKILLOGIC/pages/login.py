@@ -109,7 +109,7 @@ def login_page() -> rx.Component:
                         ),
                         rx.el.input(
                             type="text",
-                            placeholder=rx.cond(AppState.is_spanish, "ej: admin", "e.g. admin"),
+                            placeholder=rx.cond(AppState.is_spanish, "ej: juanperez", "e.g. jdoe"),
                             id="login-email",
                             width="100%",
                             height="44px",
@@ -250,7 +250,7 @@ def login_page() -> rx.Component:
             background=T.BG_SECONDARY,
             border=f"1px solid {T.BORDER}",
             border_radius=T.RADIUS_2XL,
-            padding=f"{T.SPACE_10} {T.SPACE_8}",
+            padding=rx.breakpoints(initial=f"{T.SPACE_8} {T.SPACE_4}", sm=f"{T.SPACE_10} {T.SPACE_8}"),
             width="100%",
             max_width="420px",
             position="relative",

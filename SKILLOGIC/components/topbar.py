@@ -9,6 +9,8 @@ from SKILLOGIC.state.progress_state import ProgressState
 from SKILLOGIC.styles import theme as T
 
 
+from SKILLOGIC.components.sidebar import sidebar
+
 def topbar() -> rx.Component:
     """Top navigation bar fixed at the top of the main area."""
 
@@ -19,20 +21,33 @@ def topbar() -> rx.Component:
     )
 
     return rx.box(
-        # Search bar (MVP Cleanup)
-        # rx.box(
-        # ... (Search box disabled) ...
-        # ),
-
-        # Mobile Menu Toggle (Visible only on mobile)
-        rx.box(
-            rx.icon("menu", size=24, color=T.TEXT_PRIMARY),
-            display=rx.breakpoints(initial="flex", lg="none"),
-            cursor="pointer",
-            padding=T.SPACE_2,
-            border_radius=T.RADIUS_MD,
-            _hover={"background": T.BG_HOVER},
-            # TODO: Add on_click for mobile menu drawer
+        # Mobile Menu Toggle with Drawer
+        rx.drawer.root(
+            rx.drawer.trigger(
+                rx.box(
+                    rx.icon("menu", size=24, color=T.TEXT_PRIMARY),
+                    display=rx.breakpoints(initial="flex", lg="none"),
+                    cursor="pointer",
+                    padding=T.SPACE_2,
+                    border_radius=T.RADIUS_MD,
+                    _hover={"background": T.BG_HOVER},
+                )
+            ),
+            rx.drawer.overlay(z_index="100", background_color="rgba(0,0,0,0.5)", backdrop_filter="blur(4px)"),
+            rx.drawer.portal(
+                rx.drawer.content(
+                    sidebar(),
+                    top="0",
+                    bottom="0",
+                    left="0",
+                    width=T.SIDEBAR_WIDTH,
+                    position="fixed",
+                    z_index="101",
+                    background="transparent",
+                    outline="none",
+                )
+            ),
+            direction="left",
         ),
 
         # Spacer

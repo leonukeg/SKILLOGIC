@@ -428,12 +428,7 @@ def sidebar() -> rx.Component:
         min_height="100vh",
         background=T.BG_SECONDARY,
         border_right=f"1px solid {T.BORDER}",
-        display=rx.breakpoints(initial="none", lg="flex"),
         flex_direction="column",
-        position="fixed",
-        top="0",
-        left="0",
-        z_index="10",
         overflow_y="auto",
         overflow_x="hidden",
     )
