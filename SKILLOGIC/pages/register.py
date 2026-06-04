@@ -56,7 +56,7 @@ def register_page() -> rx.Component:
                     rx.button(
                         rx.cond(AppState.is_spanish, "Registrarse", "Sign up"),
                         type="submit",
-                        width="100%", height="48px", background=T.BRAND, color="white", border_radius=T.RADIUS_MD, font_size=T.TEXT_BASE, font_weight=T.WEIGHT_SEMIBOLD, cursor="pointer", box_shadow=T.SHADOW_BRAND, margin_top=T.SPACE_2, transition=f"all {T.EASE_FAST}", _hover={"background": T.BRAND_HOVER, "transform": "translateY(-1px)", "box_shadow": f"0 6px 28px {T.BRAND_GLOW}"},
+                        width="100%", height="48px", style={"background_color": f"{T.BRAND} !important", "color": "white !important"}, border_radius=T.RADIUS_MD, font_size=T.TEXT_BASE, font_weight=T.WEIGHT_SEMIBOLD, cursor="pointer", box_shadow=T.SHADOW_BRAND, margin_top=T.SPACE_2, transition=f"all {T.EASE_FAST}", _hover={"background_color": f"{T.BRAND_HOVER} !important", "transform": "translateY(-1px)", "box_shadow": f"0 6px 28px {T.BRAND_GLOW}"},
                     ),
                     width="100%",
                 ),

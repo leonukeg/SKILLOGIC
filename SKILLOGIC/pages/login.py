@@ -186,8 +186,10 @@ def login_page() -> rx.Component:
                         type="submit",
                         width="100%",
                         height="48px",
-                        background=T.BRAND,
-                        color="white",
+                        style={
+                            "background_color": f"{T.BRAND} !important",
+                            "color": "white !important",
+                        },
                         border_radius=T.RADIUS_MD,
                         font_size=T.TEXT_BASE,
                         font_weight=T.WEIGHT_SEMIBOLD,
