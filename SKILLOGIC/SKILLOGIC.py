@@ -74,6 +74,16 @@ GLOBAL_STYLES = {
         "from": {"opacity": "0", "transform": "translateY(-8px)"},
         "to":   {"opacity": "1", "transform": "translateY(0)"},
     },
+    # Hide Reflex watermark
+    ".rt-Box a[href='https://reflex.dev']": {
+        "display": "none !important",
+    },
+    "#reflex-logo": {
+        "display": "none !important",
+    },
+    ".reflex-watermark": {
+        "display": "none !important",
+    },
 }
 
 # ── App bootstrap ─────────────────────────────────────────────

@@ -18,9 +18,9 @@ def footer() -> rx.Component:
             ),
             rx.spacer(display=rx.breakpoints(initial="none", md="block")),
             rx.flex(
-                rx.link(t("Términos", "Terms"), href="/terms", font_size=T.TEXT_SM, color=T.TEXT_MUTED, _hover={"color": T.TEXT_PRIMARY}, text_decoration="none"),
-                rx.link(t("Privacidad", "Privacy"), href="/privacy", font_size=T.TEXT_SM, color=T.TEXT_MUTED, _hover={"color": T.TEXT_PRIMARY}, text_decoration="none"),
-                rx.link(t("Cookies", "Cookies"), href="/cookies", font_size=T.TEXT_SM, color=T.TEXT_MUTED, _hover={"color": T.TEXT_PRIMARY}, text_decoration="none"),
+                rx.link(t("Términos", "Terms"), href="/terms", font_size=T.TEXT_SM, color=T.TEXT_MUTED, color_scheme="gray", _hover={"color": T.TEXT_PRIMARY}, text_decoration="none"),
+                rx.link(t("Privacidad", "Privacy"), href="/privacy", font_size=T.TEXT_SM, color=T.TEXT_MUTED, color_scheme="gray", _hover={"color": T.TEXT_PRIMARY}, text_decoration="none"),
+                rx.link(t("Cookies", "Cookies"), href="/cookies", font_size=T.TEXT_SM, color=T.TEXT_MUTED, color_scheme="gray", _hover={"color": T.TEXT_PRIMARY}, text_decoration="none"),
                 gap=T.SPACE_4,
                 flex_wrap="wrap",
                 justify="center",

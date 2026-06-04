@@ -73,6 +73,8 @@ def hero_section() -> rx.Component:
                         rx.icon(tag="book-open", size=18),
                         rx.text(t("Ver currículum", "View curriculum")),
                         variant="outline",
+                        color_scheme="gray",
+                        high_contrast=True,
                         color=T.TEXT_PRIMARY,
                         border_color=T.BORDER_STRONG,
                         size="4",
