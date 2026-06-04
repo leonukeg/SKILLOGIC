@@ -10,7 +10,7 @@ def footer() -> rx.Component:
             rx.flex(
                 rx.text(t("© 2026 SKILLOGIC. Todos los derechos reservados.", "© 2026 SKILLOGIC. All rights reserved."), font_size=T.TEXT_SM, color=T.TEXT_MUTED),
                 rx.text("•", font_size=T.TEXT_SM, color=T.TEXT_MUTED, opacity="0.5"),
-                rx.link(t("Construido con Reflex", "Built with Reflex"), href="https://reflex.dev", is_external=True, font_size=T.TEXT_SM, color_scheme="gray", color=T.TEXT_MUTED, text_decoration="none", _hover={"color": T.TEXT_PRIMARY}, transition=f"all {T.EASE_BASE}"),
+                rx.link(t("Construido con Reflex", "Built with Reflex"), id="my-footer-link", href="https://reflex.dev", is_external=True, font_size=T.TEXT_SM, color_scheme="gray", color=T.TEXT_MUTED, text_decoration="none", _hover={"color": T.TEXT_PRIMARY}, transition=f"all {T.EASE_BASE}"),
                 gap="2",
                 align="center",
                 flex_wrap="wrap",

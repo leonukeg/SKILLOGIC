@@ -75,13 +75,13 @@ GLOBAL_STYLES = {
         "to":   {"opacity": "1", "transform": "translateY(0)"},
     },
     # Hide Reflex watermark
-    ".rt-Box a[href='https://reflex.dev']": {
+    "a[href='https://reflex.dev']:not(#my-footer-link)": {
+        "display": "none !important",
+    },
+    ".rt-r-position-fixed.rt-r-bottom-4.rt-r-right-4.rt-r-z-index-50": {
         "display": "none !important",
     },
     "#reflex-logo": {
-        "display": "none !important",
-    },
-    ".reflex-watermark": {
         "display": "none !important",
     },
 }
