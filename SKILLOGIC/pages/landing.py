@@ -33,11 +33,11 @@ def landing_page() -> rx.Component:
     return rx.box(
         landing_navbar(),
         hero_section(),
-        stats_section(),
+        # stats_section(),  # TODO: Re-enable when we have real numbers
         problem_solution_section(),
         features_section(),
         how_it_works_section(),
-        testimonials_section(),
+        # testimonials_section(),  # TODO: Re-enable when we have real users
         faq_section(),
         bottom_cta_section(),
         footer(),
