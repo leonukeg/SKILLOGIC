@@ -117,14 +117,36 @@ def hero_section() -> rx.Component:
         z_index="1",
     )
 
-    return rx.flex(
-        text_content,
-        logo_content,
-        direction=rx.breakpoints(initial="column", lg="row"),
-        align="center",
-        justify="between",
-        max_width="1200px",
-        margin="0 auto",
-        padding=f"{T.SPACE_16} {T.SPACE_8}",
+    background_orbs = rx.box(
+        rx.box(
+            position="absolute", top="-10%", left="-5%", width="400px", height="400px",
+            background="radial-gradient(circle, rgba(168, 85, 247, 0.15) 0%, transparent 70%)",
+            filter="blur(60px)", border_radius="50%",
+        ),
+        rx.box(
+            position="absolute", bottom="-10%", right="20%", width="500px", height="500px",
+            background="radial-gradient(circle, rgba(56, 189, 248, 0.1) 0%, transparent 70%)",
+            filter="blur(60px)", border_radius="50%",
+        ),
+        position="absolute", top="0", left="0", right="0", bottom="0", z_index="0", overflow="hidden", pointer_events="none"
+    )
+
+    return rx.box(
+        background_orbs,
+        rx.flex(
+            text_content,
+            logo_content,
+            direction=rx.breakpoints(initial="column", lg="row"),
+            align="center",
+            justify="between",
+            max_width="1200px",
+            margin="0 auto",
+            padding=f"{T.SPACE_16} {T.SPACE_8}",
+            position="relative",
+            z_index="1"
+        ),
+        position="relative",
+        width="100%",
+        overflow="hidden"
     )
 

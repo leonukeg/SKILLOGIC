@@ -7,6 +7,6 @@ config = rx.Config(
     # RadixThemesPlugin: explicit (suppresses deprecation warning from Radix components).
     plugins=[
         rx.plugins.SitemapPlugin(),
-        rx.plugins.RadixThemesPlugin(),
+        rx.plugins.RadixThemesPlugin(theme=rx.theme(appearance="dark", accent_color="purple", radius="large")),
     ],
 )

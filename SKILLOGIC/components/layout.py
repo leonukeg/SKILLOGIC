@@ -31,7 +31,7 @@ def app_layout(*page_content: rx.Component) -> rx.Component:
             bottom="0",
             z_index="10",
         ),
-        rx.box(
+        rx.flex(
             topbar(),
             rx.box(
                 rx.box(
@@ -80,8 +80,7 @@ def app_layout(*page_content: rx.Component) -> rx.Component:
             ),
             margin_left=rx.breakpoints(initial="0", lg=T.SIDEBAR_WIDTH),
             width=rx.breakpoints(initial="100%", lg=f"calc(100% - {T.SIDEBAR_WIDTH})"),
-            display="flex",
-            flex_direction="column",
+            direction="column",
             min_height="100vh",
         ),
         # ── Theme attribute — THIS is what drives dark/light CSS vars ──

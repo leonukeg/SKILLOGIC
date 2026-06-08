@@ -70,6 +70,10 @@ GLOBAL_STYLES = {
         "33%":      {"transform": "translateY(-30px) rotate(10deg) scale(1.08)"},
         "66%":      {"transform": "translateY(15px) rotate(-8deg) scale(0.95)"},
     },
+    "@keyframes pulseGlow": {
+        "0%, 100%": {"box_shadow": "0 0 15px rgba(168, 85, 247, 0.4)", "border_color": "rgba(168, 85, 247, 0.3)"},
+        "50%":      {"box_shadow": "0 0 25px rgba(168, 85, 247, 0.8)", "border_color": "rgba(168, 85, 247, 0.7)"},
+    },
     "@keyframes fadeIn": {
         "from": {"opacity": "0", "transform": "translateY(-8px)"},
         "to":   {"opacity": "1", "transform": "translateY(0)"},
@@ -89,7 +93,6 @@ GLOBAL_STYLES = {
 # ── App bootstrap ─────────────────────────────────────────────
 
 app = rx.App(
-    theme=rx.theme(appearance="dark", accent_color="purple", radius="large"),
     style=GLOBAL_STYLES,
     stylesheets=[
         GOOGLE_FONTS_URL,
@@ -152,6 +155,3 @@ app.add_page(
     on_load=UpdatePasswordState.on_load,
 )
 
-app.add_page(legal.terms_page, route="/terms", title="SKILLOGIC — Términos y Condiciones")
-app.add_page(legal.privacy_page, route="/privacy", title="SKILLOGIC — Política de Privacidad")
-app.add_page(legal.cookies_page, route="/cookies", title="SKILLOGIC — Política de Cookies")

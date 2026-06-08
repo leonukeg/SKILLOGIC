@@ -12,9 +12,10 @@ Plataforma de aprendizaje de Python construida en **Reflex** — Python puro, si
 | Base de datos | Supabase (PostgreSQL) + Gotrue Auth |
 | UI/UX | Diseño Atómico, Flexbox Responsivo, Tokens de Diseño (Theme) |
 
-## Características Actuales (MVP Funcional)
+## Características Actuales
 
-- 🌙 / ☀️ **Modo oscuro / claro** — Soporte nativo para cambio de tema y tokens de diseño avanzados.
+- 🎨 **Atomic Vibe Design System** — UI premium con Glassmorfismo, grids asimétricos (Bento Box), animaciones fluidas y tokens de diseño estrictos.
+- 🌙 / ☀️ **Modo oscuro / claro** — Soporte nativo y consistente gracias a la inyección de `RadixThemesPlugin`.
 - 📱 **Totalmente Responsivo** — UI adaptada para móviles, tablets y escritorio (Flex wrap, Stack vertical en móvil).
 - 🔐 **Autenticación Completa (Supabase)** — Registro, Login y Recuperación de contraseña completamente integrados.
 - 🎓 **Lecciones Interactivas (Metodología SKILLOGIC)**:

@@ -20,7 +20,7 @@ def topbar() -> rx.Component:
         "Search lessons, topics or challenges...",
     )
 
-    return rx.box(
+    return rx.flex(
         # Mobile Menu Toggle with Drawer
         rx.drawer.root(
             rx.drawer.trigger(
@@ -93,16 +93,6 @@ def topbar() -> rx.Component:
             on_click=AppState.toggle_lang,
         ),
 
-        # Streak badge (MVP Cleanup)
-        # rx.box(
-        # ...
-        # ),
-
-        # Notifications icon (MVP Cleanup)
-        # rx.box(
-        # ...
-        # ),
-
         # User avatar
         rx.box(
             rx.text(
@@ -127,11 +117,12 @@ def topbar() -> rx.Component:
         ),
 
         # Topbar container
+        direction="row",
+        align="center",
+        width="100%",
         height=T.TOPBAR_HEIGHT,
         background=T.BG_SECONDARY,
         border_bottom=f"1px solid {T.BORDER}",
-        display="flex",
-        align_items="center",
         gap=T.SPACE_3,
         padding=f"0 {T.SPACE_6}",
         position="sticky",
