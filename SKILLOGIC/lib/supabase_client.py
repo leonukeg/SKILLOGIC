@@ -58,10 +58,13 @@ def fetch_user_profile(user_id: str) -> dict:
 
 def update_user_progress(user_id: str, progress_data: dict):
     """Actualiza la columna progress (JSONB) en la tabla profiles."""
-    client = get_supabase()
+    client = get_supabase_admin() or get_supabase()
     if not client: return
     
-    client.table("profiles").update({"progress": progress_data}).eq("id", user_id).execute()
+    try:
+        client.table("profiles").update({"progress": progress_data}).eq("id", user_id).execute()
+    except Exception as e:
+        print(f"Error updating user_progress: {e}")
 
 def fetch_user_stats(user_id: str) -> dict:
     """Obtiene las estadísticas de gamificación del usuario."""
@@ -89,7 +92,10 @@ def fetch_user_stats(user_id: str) -> dict:
 
 def update_user_stats(user_id: str, stats_data: dict):
     """Actualiza las estadísticas de gamificación en la tabla user_stats."""
-    client = get_supabase()
+    client = get_supabase_admin() or get_supabase()
     if not client: return
     
-    client.table("user_stats").update(stats_data).eq("user_id", user_id).execute()
+    try:
+        client.table("user_stats").update(stats_data).eq("user_id", user_id).execute()
+    except Exception as e:
+        print(f"Error updating user_stats: {e}")

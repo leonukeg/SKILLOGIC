@@ -14,6 +14,11 @@ class ProgressState(rx.State):
     streak_days: int = 0
     last_active: str = ""
     completed_katas: list[str] = []
+    
+    # Notificaciones de logro
+    show_achievement: bool = False
+    achievement_xp: int = 0
+    achievement_message: str = ""
 
     async def load_stats(self):
         """Carga las estadísticas desde Supabase."""
@@ -69,8 +74,8 @@ class ProgressState(rx.State):
 
     @rx.var
     def streak_xp_earned(self) -> int:
-        """Suma de XP ganada por mantener la racha."""
-        return self.streak_days * 10
+        """XP obtenido a través de las rachas (5 XP por día de racha)."""
+        return self.streak_days * 5
 
     @rx.var
     def lessons_xp_earned(self) -> int:
@@ -78,13 +83,17 @@ class ProgressState(rx.State):
         remainder = self.xp - self.katas_xp_earned - self.streak_xp_earned
         return max(0, remainder)
 
-    async def add_xp(self, amount: int):
-        """Suma XP y actualiza en Supabase."""
+    async def add_xp(self, amount: int, reason: str = "Logro completado"):
+        """Suma XP y actualiza en Supabase. Muestra popup de logro."""
         self.xp += amount
         
         # Subida de nivel
+        old_level = self.level
         while self.xp >= self.level * XP_PER_LEVEL:
             self.level += 1
+            
+        level_up = self.level > old_level
+        final_reason = "¡Subiste de nivel!" if level_up else reason
             
         # Actualizar racha y fecha
         self.streak_days = max(1, self.streak_days) # Al menos 1 día de racha si hizo algo
@@ -99,19 +108,33 @@ class ProgressState(rx.State):
                 # "last_active": self.last_active
             })
             
+        # Popup de logro
+        self.achievement_xp = amount
+        self.achievement_message = final_reason
+        self.show_achievement = True
+        print(f">>> MOSTRANDO POPUP: {final_reason} (+{amount} XP) <<<")
+        yield
+        
+        import asyncio
+        await asyncio.sleep(3.5)
+        self.show_achievement = False
+        print(">>> OCULTANDO POPUP <<<")
+        yield
+            
     async def complete_lesson(self):
         """Simula completar una lección."""
-        await self.add_xp(50)
+        async for update in self.add_xp(50, "Lección completada"):
+            yield update
         
     async def complete_challenge(self):
         """Simula completar un reto."""
-        await self.add_xp(100)
+        async for update in self.add_xp(100, "Reto superado"):
+            yield update
 
     async def mark_kata_completed(self, kata_id: str, xp_reward: int):
         """Marca un kata como completado y da XP si es la primera vez."""
         if kata_id not in self.completed_katas:
             self.completed_katas.append(kata_id)
-            await self.add_xp(xp_reward)
             
             auth = await self.get_state(AuthState)
             if auth.is_authenticated:
@@ -119,3 +142,10 @@ class ProgressState(rx.State):
                 progress_data = profile.get("progress", {}) if profile else {}
                 progress_data["completed_katas"] = self.completed_katas
                 update_user_progress(auth.user_id, progress_data)
+                
+            async for update in self.add_xp(xp_reward, "Kata superado"):
+                yield update
+        else:
+            # Feedback aunque ya lo haya completado
+            async for update in self.add_xp(0, "Kata ya completado"):
+                yield update

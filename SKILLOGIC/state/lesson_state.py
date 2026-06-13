@@ -112,7 +112,14 @@ class LessonState(rx.State):
         
     async def finish_lesson(self):
         await self._save_current_progress_to_db(completed=True)
-        return rx.redirect("/dashboard")
+        
+        from SKILLOGIC.state.progress_state import ProgressState
+        progress = await self.get_state(ProgressState)
+        
+        async for update in progress.complete_lesson():
+            yield update
+            
+        yield rx.redirect("/dashboard")
         
     def setup_phase(self):
         """Initializes the UI state based on the current phase type."""

@@ -160,22 +160,24 @@ class AdminUsersState(rx.State):
             self.reset_email_error = f"Error: {str(e)}"
             self.reset_email_sent = False
 
-    def toggle_selected_role(self):
+    async def toggle_selected_role(self):
         if not self.selected_user: return
         user_id = self.selected_user["id"]
         current_role = self.selected_user["role"]
         
         client = get_supabase()
-        if not client: return
+        admin_client = get_supabase_admin()
+        db_client = admin_client if admin_client else client
+        if not db_client: return
         
         new_role = "master" if current_role != "master" else "basic"
         
         # Hay que hacer fetch primero para no machacar el progreso
-        res = client.table("profiles").select("progress").eq("id", user_id).execute()
+        res = db_client.table("profiles").select("progress").eq("id", user_id).execute()
         if res.data and len(res.data) > 0:
             prog = res.data[0].get("progress", {})
             prog["role"] = new_role
-            client.table("profiles").update({"progress": prog}).eq("id", user_id).execute()
+            db_client.table("profiles").update({"progress": prog}).eq("id", user_id).execute()
             
             # Actualizamos estado local
             for u in self.users:
@@ -183,24 +185,41 @@ class AdminUsersState(rx.State):
                     u["role"] = new_role
                     self.selected_user["role"] = new_role # update modal view
             self.users = self.users
+            
+            auth = await self.get_state(AuthState)
+            if auth.user_id == user_id:
+                auth.role = new_role
 
-    def reset_selected_progress(self):
+    async def reset_selected_progress(self):
         if not self.selected_user: return
         user_id = self.selected_user["id"]
         
         client = get_supabase()
-        if not client: return
+        admin_client = get_supabase_admin()
+        db_client = admin_client if admin_client else client
+        if not db_client: return
         
-        res = client.table("profiles").select("progress").eq("id", user_id).execute()
+        res = db_client.table("profiles").select("progress").eq("id", user_id).execute()
         if res.data and len(res.data) > 0:
             prog = res.data[0].get("progress", {})
             prog["lessons"] = {} # Borra historial de lecciones
+            prog["completed_katas"] = [] # Borra katas completados
             
-            client.table("profiles").update({
+            db_client.table("profiles").update({
                 "progress": prog,
                 "xp": 0,
                 "streak": 0
             }).eq("id", user_id).execute()
+            
+            # Reset user_stats
+            try:
+                db_client.table("user_stats").update({
+                    "xp": 0,
+                    "level": 1,
+                    "streak_days": 0
+                }).eq("user_id", user_id).execute()
+            except Exception as e:
+                print("No se pudo limpiar user_stats:", e)
             
             # Actualizamos estado local
             for u in self.users:
@@ -212,3 +231,15 @@ class AdminUsersState(rx.State):
                     self.selected_user["streak"] = 0
                     self.selected_user["completed_lessons"] = 0
             self.users = self.users
+
+            # Limpiar memoria local si el usuario modificado soy yo mismo
+            auth = await self.get_state(AuthState)
+            if auth.user_id == user_id:
+                from SKILLOGIC.state.progress_state import ProgressState
+                progress = await self.get_state(ProgressState)
+                progress.xp = 0
+                progress.level = 1
+                progress.streak_days = 0
+                progress.completed_katas = []
+                # Forzar update de UI
+                progress.xp = progress.xp

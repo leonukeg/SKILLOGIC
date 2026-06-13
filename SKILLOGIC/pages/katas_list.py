@@ -11,7 +11,7 @@ def _katas_stats_header() -> rx.Component:
     xp_earned = ProgressState.katas_xp_earned
     
     # Calcular porcentaje de completitud
-    completed_percent = ((completed_count * 100) / 8).to(int)
+    completed_percent = ((completed_count * 100) / 10).to(int)
     
     # Rango del usuario
     rank = rx.cond(
@@ -33,7 +33,7 @@ def _katas_stats_header() -> rx.Component:
                     ),
                     rx.vstack(
                         rx.text(rx.cond(AppState.is_spanish, "Progreso", "Progress"), font_size=T.TEXT_XS, color=T.TEXT_MUTED, font_weight=T.WEIGHT_SEMIBOLD, text_transform="uppercase"),
-                        rx.text(completed_count.to_string() + " / 8", font_size=T.TEXT_XL, font_weight=T.WEIGHT_BOLD, color=T.TEXT_PRIMARY),
+                        rx.text(completed_count.to_string() + " / 10", font_size=T.TEXT_XL, font_weight=T.WEIGHT_BOLD, color=T.TEXT_PRIMARY),
                         spacing="0",
                         align_items="start"
                     ),

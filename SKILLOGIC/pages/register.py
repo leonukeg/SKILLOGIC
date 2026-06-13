@@ -8,7 +8,7 @@ from SKILLOGIC.state.auth_state import AuthState
 from SKILLOGIC.styles import theme as T
 
 def register_page() -> rx.Component:
-    return rx.box(
+    return rx.center(
         # Background glows
         rx.box(position="absolute", width="600px", height="600px", border_radius="50%", background=f"radial-gradient(circle, {T.BRAND_LIGHT} 0%, transparent 70%)", top="-200px", right="-100px", pointer_events="none"),
         rx.box(position="absolute", width="400px", height="400px", border_radius="50%", background="radial-gradient(circle, rgba(249,115,22,0.06) 0%, transparent 70%)", bottom="-100px", left="-100px", pointer_events="none"),
@@ -56,7 +56,7 @@ def register_page() -> rx.Component:
                     rx.button(
                         rx.cond(AppState.is_spanish, "Registrarse", "Sign up"),
                         type="submit",
-                        width="100%", height="48px", style={"background_color": f"{T.BRAND} !important", "color": "white !important"}, border_radius=T.RADIUS_MD, font_size=T.TEXT_BASE, font_weight=T.WEIGHT_SEMIBOLD, cursor="pointer", box_shadow=T.SHADOW_BRAND, margin_top=T.SPACE_2, transition=f"all {T.EASE_FAST}", _hover={"background_color": f"{T.BRAND_HOVER} !important", "transform": "translateY(-1px)", "box_shadow": f"0 6px 28px {T.BRAND_GLOW}"},
+                        width="100%", height="48px", background=T.BRAND, color="white", border_radius=T.RADIUS_MD, font_size=T.TEXT_BASE, font_weight=T.WEIGHT_SEMIBOLD, cursor="pointer", box_shadow=T.SHADOW_BRAND, margin_top=T.SPACE_2, transition=f"all {T.EASE_FAST}", _hover={"background": T.BRAND_HOVER, "transform": "translateY(-1px)", "box_shadow": f"0 6px 28px {T.BRAND_GLOW}"},
                     ),
                     width="100%",
                 ),
@@ -75,5 +75,5 @@ def register_page() -> rx.Component:
             background=T.BG_SECONDARY, border=f"1px solid {T.BORDER}", border_radius=T.RADIUS_2XL, padding=rx.breakpoints(initial=f"{T.SPACE_8} {T.SPACE_4}", sm=f"{T.SPACE_10} {T.SPACE_8}"), width="100%", max_width="480px", position="relative", z_index="1", box_shadow=T.SHADOW_XL,
         ),
 
-        data_theme=AppState.theme, display="flex", align_items="center", justify_content="center", min_height="100vh", width="100%", padding=T.SPACE_4, background=T.BG_PRIMARY, font_family=T.FONT_BODY, position="relative", overflow="hidden",
+        data_theme=AppState.theme, height="100vh", width="100%", padding=T.SPACE_4, background=T.BG_PRIMARY, font_family=T.FONT_BODY, position="relative", overflow="hidden",
     )

@@ -146,11 +146,12 @@ class CurriculumState(rx.State):
         self.todays_plan[index]["completed"] = "True" if val else "False"
         self.todays_plan = self.todays_plan
         
+        await self.save_data()
+        
         if val:
             progress = await self.get_state(ProgressState)
-            await progress.complete_lesson()
-            
-        return await self.save_data()
+            async for update in progress.complete_lesson():
+                yield update
         
     async def toggle_plan_by_title(self, title_en: str, val: bool):
         for i, item in enumerate(self.todays_plan):
@@ -158,12 +159,13 @@ class CurriculumState(rx.State):
                 self.todays_plan[i]["completed"] = "True" if val else "False"
                 self.todays_plan = self.todays_plan
                 
+                await self.save_data()
+                
                 if val:
                     progress = await self.get_state(ProgressState)
-                    await progress.complete_lesson()
+                    async for update in progress.complete_lesson():
+                        yield update
                 break
-                
-        return await self.save_data()
         
     async def set_challenge_title(self, value: str):
         self.daily_challenge["title_es"] = value

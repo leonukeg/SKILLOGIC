@@ -7,12 +7,8 @@ def faq_section() -> rx.Component:
     
     def faq_item(question: str, answer: str) -> rx.Component:
         return rx.accordion.item(
-            header=rx.accordion.trigger(
-                rx.text(question, font_weight=T.WEIGHT_BOLD, font_size=T.TEXT_LG, color=T.TEXT_PRIMARY),
-            ),
-            content=rx.accordion.content(
-                rx.text(answer, color=T.TEXT_SECONDARY, line_height="1.6", font_size=T.TEXT_BASE),
-            ),
+            header=rx.text(question, font_weight=T.WEIGHT_BOLD, font_size=T.TEXT_LG, color=T.TEXT_PRIMARY),
+            content=rx.text(answer, color=T.TEXT_SECONDARY, line_height="1.6", font_size=T.TEXT_BASE),
             value=question,
             border_bottom=f"1px solid {T.BORDER_SUBTLE}",
             padding_y=T.SPACE_2,

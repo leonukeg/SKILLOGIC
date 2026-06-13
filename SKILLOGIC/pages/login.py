@@ -16,7 +16,7 @@ _LILAC  = "#a78bfa"
 def login_page() -> rx.Component:
     """Login page — no sidebar, centered card layout."""
 
-    return rx.box(
+    return rx.center(
         # Background glow effects
         rx.box(
             position="absolute",
@@ -186,10 +186,8 @@ def login_page() -> rx.Component:
                         type="submit",
                         width="100%",
                         height="48px",
-                        style={
-                            "background_color": f"{T.BRAND} !important",
-                            "color": "white !important",
-                        },
+                        background=T.BRAND,
+                        color="white",
                         border_radius=T.RADIUS_MD,
                         font_size=T.TEXT_BASE,
                         font_weight=T.WEIGHT_SEMIBOLD,
@@ -262,10 +260,7 @@ def login_page() -> rx.Component:
 
         # Full-page container
         data_theme=AppState.theme,
-        display="flex",
-        align_items="center",
-        justify_content="center",
-        min_height="100vh",
+        height="100vh",
         width="100%",
         padding=T.SPACE_4,
         background=T.BG_PRIMARY,

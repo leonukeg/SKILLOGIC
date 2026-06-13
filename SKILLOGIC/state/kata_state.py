@@ -20,7 +20,18 @@ class KataState(rx.State):
     is_success: bool = False
     is_loading: bool = False
     feedback_message: str = ""
+    last_kata_id: str = ""
     
+    @rx.var
+    def next_kata_id(self) -> str:
+        from SKILLOGIC.data.katas import KATAS_DB
+        for i, k in enumerate(KATAS_DB):
+            if k["id"] == self.current_kata_id:
+                if i + 1 < len(KATAS_DB):
+                    return KATAS_DB[i + 1]["id"]
+                break
+        return ""
+
     @rx.var
     def kata_data(self) -> dict:
         return get_kata_by_id(self.current_kata_id) or {}
@@ -29,16 +40,18 @@ class KataState(rx.State):
         self.user_code = val
         
     def on_load(self):
-        # Reiniciar estado
+        # Reiniciar estado de la consola
         self.terminal_output = ""
         self.is_success = False
         self.feedback_message = ""
         self.is_loading = False
         
-        # Cargar código inicial
-        kata = self.kata_data
-        if kata and not self.user_code:
-            self.user_code = kata.get("initial_code", "")
+        # Cargar código inicial solo si entramos a un nuevo Kata
+        if self.kata_id != self.last_kata_id:
+            self.last_kata_id = self.kata_id
+            kata = self.kata_data
+            if kata:
+                self.user_code = kata.get("initial_code", "")
 
     async def run_kata(self):
         """Ejecuta el código del usuario y las pruebas ocultas."""
@@ -73,7 +86,8 @@ class KataState(rx.State):
                 
                 # Otorgar XP y marcar como completado
                 progress = await self.get_state(ProgressState)
-                await progress.mark_kata_completed(self.current_kata_id, kata.get("xp_reward", 0))
+                async for update in progress.mark_kata_completed(self.current_kata_id, kata.get("xp_reward", 0)):
+                    yield update
             else:
                 self.feedback_message = "El código se ejecutó, pero no pasó todas las pruebas."
                 

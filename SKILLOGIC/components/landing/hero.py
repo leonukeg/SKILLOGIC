@@ -55,10 +55,8 @@ def hero_section() -> rx.Component:
                 on_click=rx.redirect("/register"),
                 size="4",
                 variant="solid",
-                style={
-                    "background_color": f"{T.BRAND} !important",
-                    "color": "white !important",
-                },
+                background=T.BRAND,
+                color="white",
                 border_radius=T.RADIUS_LG,
                 box_shadow=f"0 10px 25px -5px {T.BRAND_MEDIUM}",
                 _hover={"transform": "translateY(-2px)", "box_shadow": f"0 15px 30px -5px {T.BRAND_MEDIUM}"},

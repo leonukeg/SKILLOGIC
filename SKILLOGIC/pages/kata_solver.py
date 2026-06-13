@@ -1,6 +1,7 @@
 import reflex as rx
 from SKILLOGIC.state.app_state import AppState
 from SKILLOGIC.state.kata_state import KataState
+from SKILLOGIC.components.gamification_popup import gamification_popup
 from SKILLOGIC.styles import theme as T
 
 def render_kata_content() -> rx.Component:
@@ -181,6 +182,21 @@ def kata_page() -> rx.Component:
             align="center"
         ),
         rx.spacer(),
+        rx.cond(
+            KataState.next_kata_id != "",
+            rx.link(
+                rx.button(
+                    rx.cond(AppState.is_spanish, "Siguiente Kata", "Next Kata"),
+                    rx.icon("arrow-right", size=18),
+                    variant="solid",
+                    color_scheme="green",
+                    cursor="pointer",
+                    box_shadow="0 0 10px rgba(74, 222, 128, 0.4)",
+                ),
+                href="/kata/" + KataState.next_kata_id,
+                underline="none",
+            )
+        ),
         rx.button(
             AppState.toggle_theme_label,
             variant="ghost",
@@ -216,6 +232,7 @@ def kata_page() -> rx.Component:
     )
     
     return rx.box(
+        gamification_popup(),
         topbar,
         content,
         width="100vw",

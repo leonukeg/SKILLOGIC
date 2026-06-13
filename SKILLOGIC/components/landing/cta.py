@@ -13,10 +13,8 @@ def bottom_cta_section() -> rx.Component:
                 t("Comenzar mi aprendizaje gratis", "Start my learning for free"),
                 on_click=rx.redirect("/register"),
                 size="4",
-                style={
-                    "background_color": "white !important",
-                    "color": f"{T.BRAND} !important",
-                },
+                background="white",
+                color=T.BRAND,
                 border_radius=T.RADIUS_LG,
                 padding=f"{T.SPACE_4} {T.SPACE_8}",
                 font_weight=T.WEIGHT_EXTRABOLD,

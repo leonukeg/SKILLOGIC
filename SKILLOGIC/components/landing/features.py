@@ -51,14 +51,14 @@ def features_section() -> rx.Component:
                     "gamepad-2", "span 1", "linear-gradient(135deg, #10b981, #059669)"
                 ),
                 bento_card(
-                    "Katas Diarios", "Daily Katas",
-                    "Practica tu lógica con mini-retos de código que fortalecen tu memoria muscular.", "Practice your logic with code mini-challenges that build your muscle memory.",
-                    "swords", "span 1", "linear-gradient(135deg, #f59e0b, #d97706)"
-                ),
-                bento_card(
                     "Feedback Instantáneo", "Instant Feedback",
                     "Nuestro sistema evalúa tu código al instante y te da pistas si te equivocas.", "Our system evaluates your code instantly and gives you hints if you make a mistake.",
-                    "zap", "span 2", "linear-gradient(135deg, #3b82f6, #2563eb)"
+                    "zap", "span 1", "linear-gradient(135deg, #3b82f6, #2563eb)"
+                ),
+                bento_card(
+                    "Katas Diarios", "Daily Katas",
+                    "Practica tu lógica con mini-retos de código que fortalecen tu memoria muscular.", "Practice your logic with code mini-challenges that build your muscle memory.",
+                    "swords", "span 2", "linear-gradient(135deg, #f59e0b, #d97706)"
                 ),
                 columns=rx.breakpoints(initial="1", md="3"),
                 gap=T.SPACE_6,

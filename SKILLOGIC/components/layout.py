@@ -12,6 +12,7 @@ import reflex as rx
 from SKILLOGIC.state import AppState
 from SKILLOGIC.components.sidebar import sidebar
 from SKILLOGIC.components.topbar import topbar
+from SKILLOGIC.components.gamification_popup import gamification_popup
 from SKILLOGIC.styles import theme as T
 
 
@@ -22,6 +23,7 @@ def app_layout(*page_content: rx.Component) -> rx.Component:
     data_theme drives the CSS custom property theme switch.
     """
     return rx.box(
+        gamification_popup(),
         rx.box(
             sidebar(),
             display=rx.breakpoints(initial="none", lg="flex"),
