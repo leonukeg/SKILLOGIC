@@ -418,6 +418,8 @@ def sidebar() -> rx.Component:
             gap=T.SPACE_2,
             padding=f"{T.SPACE_5} {T.SPACE_4}",
             border_bottom=f"1px solid {T.BORDER_SUBTLE}",
+            cursor="pointer",
+            on_click=rx.redirect(rx.cond(AuthState.is_authenticated, "/dashboard", "/")),
         ),
         nav,
         progress_section,

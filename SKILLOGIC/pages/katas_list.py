@@ -154,8 +154,8 @@ def _kata_list_item(kata: dict) -> rx.Component:
                 display="flex",
                 align_items="center",
                 justify_content="center",
-                width="36px",
-                height="36px",
+                width="32px",
+                height="32px",
                 border_radius=T.RADIUS_MD,
                 background=rx.cond(is_locked, T.BG_HOVER, rx.cond(is_completed, T.SUCCESS_LIGHT, T.BRAND_LIGHT)),
                 flex_shrink="0",
@@ -167,9 +167,9 @@ def _kata_list_item(kata: dict) -> rx.Component:
                 rx.text(
                     title_text,
                     font_weight=T.WEIGHT_SEMIBOLD,
-                    font_size=T.TEXT_MD,
+                    font_size=T.TEXT_SM,
                     color=rx.cond(is_locked, T.TEXT_MUTED, T.TEXT_PRIMARY),
-                    margin_bottom=T.SPACE_1,
+                    margin_bottom="2px",
                 ),
                 
                 # Descripción con Popover (Hover Card)
@@ -177,7 +177,7 @@ def _kata_list_item(kata: dict) -> rx.Component:
                     rx.hover_card.trigger(
                         rx.text(
                             desc_text,
-                            font_size=T.TEXT_SM,
+                            font_size=T.TEXT_XS,
                             color=T.TEXT_SECONDARY,
                             no_of_lines=1,
                             cursor="pointer",
@@ -237,9 +237,9 @@ def _kata_list_item(kata: dict) -> rx.Component:
             ),
             direction="row",
             align="start",
-            gap=T.SPACE_4,
+            gap=T.SPACE_3,
             width="100%",
-            padding=T.SPACE_4,
+            padding=T.SPACE_3,
         ),
         background=T.BG_SECONDARY,
         border=f"1px solid {T.BORDER}",
@@ -252,8 +252,42 @@ def _kata_list_item(kata: dict) -> rx.Component:
             "transform": rx.cond(is_locked, "none", "translateX(4px)"),
         },
         width="100%",
-        margin_bottom=T.SPACE_3,
+        margin_bottom=T.SPACE_2,
     )
+
+def _render_grouped_katas() -> list[rx.Component]:
+    from collections import defaultdict
+    groups = defaultdict(list)
+    for k in KATAS_DB:
+        lid = k.get("lesson_id", "final_boss")
+        groups[lid].append(k)
+
+    components = []
+    sorted_keys = sorted(groups.keys(), key=lambda x: x if x != "final_boss" else "zzz")
+    
+    for key in sorted_keys:
+        if key == "final_boss":
+            title_es = "Retos Finales (Nivel FAANG)"
+            title_en = "Final Bosses (FAANG Level)"
+        else:
+            parts = key.split('_')
+            title_es = f"Lección {parts[1]}.{parts[2]}" if len(parts) >= 3 else key
+            title_en = f"Lesson {parts[1]}.{parts[2]}" if len(parts) >= 3 else key
+            
+        components.append(
+            rx.box(
+                rx.text(rx.cond(AppState.is_spanish, title_es, title_en), font_weight=T.WEIGHT_BOLD, color=T.BRAND, font_size=T.TEXT_MD, letter_spacing="1px", text_transform="uppercase"),
+                border_bottom=f"1px solid {T.BORDER_SUBTLE}",
+                width="100%",
+                padding_bottom=T.SPACE_2,
+                margin_top=rx.cond(len(components) > 0, T.SPACE_6, T.SPACE_2),
+                margin_bottom=T.SPACE_4,
+            )
+        )
+        for k in groups[key]:
+            components.append(_kata_list_item(k))
+            
+    return components
 
 @rx.page(route="/katas", title="Katas | SKILLOGIC", on_load=ProgressState.load_stats)
 def katas_list_page() -> rx.Component:
@@ -286,7 +320,7 @@ def katas_list_page() -> rx.Component:
             
             # Lista de Katas
             rx.vstack(
-                *[ _kata_list_item(k) for k in KATAS_DB ],
+                *_render_grouped_katas(),
                 width="100%",
                 spacing="0",
             ),

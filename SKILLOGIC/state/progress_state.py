@@ -1,4 +1,5 @@
 import reflex as rx
+import random
 from datetime import datetime, timezone
 from SKILLOGIC.state.auth_state import AuthState
 from SKILLOGIC.lib.supabase_client import fetch_user_stats, update_user_stats, fetch_user_profile, update_user_progress
@@ -19,6 +20,7 @@ class ProgressState(rx.State):
     show_achievement: bool = False
     achievement_xp: int = 0
     achievement_message: str = ""
+    achievement_icon: str = "🏆"
 
     async def load_stats(self):
         """Carga las estadísticas desde Supabase."""
@@ -109,6 +111,7 @@ class ProgressState(rx.State):
             })
             
         # Popup de logro
+        self.achievement_icon = random.choice(["🏆", "🏅", "👑", "🎁", "🎖️", "🌟", "🎉"])
         self.achievement_xp = amount
         self.achievement_message = final_reason
         self.show_achievement = True
@@ -116,7 +119,7 @@ class ProgressState(rx.State):
         yield
         
         import asyncio
-        await asyncio.sleep(3.5)
+        await asyncio.sleep(6.0)
         self.show_achievement = False
         print(">>> OCULTANDO POPUP <<<")
         yield

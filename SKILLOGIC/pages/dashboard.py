@@ -241,6 +241,7 @@ def _learning_path() -> rx.Component:
             ),
             rx.link(
                 rx.cond(AppState.is_spanish, "Ver ruta completa →", "View full path →"),
+                href="/roadmap",
                 font_size=T.TEXT_SM,
                 color=T.BRAND,
                 font_weight=T.WEIGHT_MEDIUM,

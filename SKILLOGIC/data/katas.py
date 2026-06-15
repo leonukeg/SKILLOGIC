@@ -3,7 +3,17 @@ SKILLOGIC — Katas Data Database
 Stores the coding challenges (katas) with their difficulties, xp rewards, and test cases.
 """
 
-KATAS_DB = [
+from SKILLOGIC.data.katas_1_1 import KATAS_1_1
+from SKILLOGIC.data.katas_1_2 import KATAS_1_2
+from SKILLOGIC.data.katas_1_3 import KATAS_1_3
+from SKILLOGIC.data.katas_1_4 import KATAS_1_4
+from SKILLOGIC.data.katas_1_5 import KATAS_1_5
+from SKILLOGIC.data.katas_2_1 import KATAS_2_1
+from SKILLOGIC.data.katas_2_2 import KATAS_2_2
+from SKILLOGIC.data.katas_2_3 import KATAS_2_3
+from SKILLOGIC.data.katas_2_4 import KATAS_2_4
+
+OLD_KATAS = [
     # ------------------- "FÁCIL" (En realidad Difícil) -------------------
     {
         "id": "kata_facil_1",
@@ -244,6 +254,8 @@ except Exception as e:
 """
     }
 ]
+
+KATAS_DB = KATAS_1_1 + KATAS_1_2 + KATAS_1_3 + KATAS_1_4 + KATAS_1_5 + KATAS_2_1 + KATAS_2_2 + KATAS_2_3 + KATAS_2_4 + OLD_KATAS
 
 def get_kata_by_id(kata_id: str) -> dict | None:
     for kata in KATAS_DB:

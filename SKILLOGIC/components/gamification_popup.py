@@ -53,6 +53,58 @@ SNAKE_CSS = """
   75% { bottom: -40px; opacity: 1; }
   100% { bottom: 100%; opacity: 1; }
 }
+
+@keyframes trophy-bounce {
+  0%, 100% { transform: scale(1) translateY(0); }
+  50% { transform: scale(1.2) translateY(-10px); }
+}
+.trophy-anim {
+    display: inline-block;
+    animation: trophy-bounce 1s ease-in-out infinite;
+    text-shadow: 0 0 30px rgba(250, 204, 21, 0.8);
+}
+
+/* Confetti Burst CSS */
+.confetti {
+    position: absolute;
+    font-size: 2.5rem;
+    top: 50%;
+    left: 50%;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 0;
+}
+.c-1 { animation: burst1 1.5s ease-out infinite; }
+.c-2 { animation: burst2 1.5s ease-out infinite 0.1s; }
+.c-3 { animation: burst3 1.5s ease-out infinite 0.2s; }
+.c-4 { animation: burst4 1.5s ease-out infinite 0.3s; }
+.c-5 { animation: burst5 1.5s ease-out infinite 0.4s; }
+.c-6 { animation: burst6 1.5s ease-out infinite 0.25s; }
+
+@keyframes burst1 {
+    0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+    100% { transform: translate(-300%, -300%) scale(1.5) rotate(45deg); opacity: 0; }
+}
+@keyframes burst2 {
+    0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+    100% { transform: translate(250%, -280%) scale(1.2) rotate(-30deg); opacity: 0; }
+}
+@keyframes burst3 {
+    0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+    100% { transform: translate(-280%, 250%) scale(1.4) rotate(90deg); opacity: 0; }
+}
+@keyframes burst4 {
+    0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+    100% { transform: translate(280%, 280%) scale(1.3) rotate(-90deg); opacity: 0; }
+}
+@keyframes burst5 {
+    0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+    100% { transform: translate(0%, -350%) scale(1.6) rotate(180deg); opacity: 0; }
+}
+@keyframes burst6 {
+    0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+    100% { transform: translate(-350%, 0%) scale(1.6) rotate(180deg); opacity: 0; }
+}
 </style>
 """
 
@@ -68,7 +120,23 @@ def gamification_popup() -> rx.Component:
             rx.box(class_name="snake-bottom"),
             rx.box(class_name="snake-left"),
             
+            # Confetti Elements
+            rx.box("✨", class_name="confetti c-1"),
+            rx.box("🎉", class_name="confetti c-2"),
+            rx.box("🎊", class_name="confetti c-3"),
+            rx.box("⭐", class_name="confetti c-4"),
+            rx.box("🔥", class_name="confetti c-5"),
+            rx.box("✨", class_name="confetti c-6"),
+
             rx.vstack(
+                # Icono de Copa Animada GIGANTE
+                rx.box(
+                    rx.text(ProgressState.achievement_icon, font_size="8rem", line_height="1"),
+                    class_name="trophy-anim",
+                    margin_bottom=T.SPACE_4,
+                    z_index="2",
+                    position="relative"
+                ),
                 # Texto principal
                 rx.text(
                     ProgressState.achievement_message,

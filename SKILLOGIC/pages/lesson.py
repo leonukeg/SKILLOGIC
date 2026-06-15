@@ -367,7 +367,7 @@ def lesson_page() -> rx.Component:
         ),
         rx.spacer(),
         # Title in the center
-        rx.text("Lección: Cómo piensa una computadora", font_weight="bold"),
+        rx.text(f"Lección: {LessonState.lesson_title}", font_weight="bold"),
         rx.spacer(),
         # Save and Exit on the right
         rx.box(

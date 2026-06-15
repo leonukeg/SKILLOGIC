@@ -4,7 +4,7 @@ import io
 import contextlib
 import traceback
 from typing import List, Dict, Any
-from SKILLOGIC.data.lesson_1_1 import LESSON_1_1
+from SKILLOGIC.data.curriculum import get_lesson_by_id
 from SKILLOGIC.state.auth_state import AuthState
 from SKILLOGIC.lib.supabase_client import fetch_user_profile, update_user_progress
 
@@ -43,8 +43,18 @@ class LessonState(rx.State):
         return PHASES[self.current_phase_index]
         
     @rx.var
+    def lesson_title(self) -> str:
+        lesson = get_lesson_by_id(self.lesson_id)
+        if not lesson:
+            return "Lección Desconocida"
+        return lesson.get("title", "")
+
+    @rx.var
     def phase_data(self) -> Dict[str, Any]:
-        return LESSON_1_1["steps"].get(self.current_phase_key, {})
+        lesson = get_lesson_by_id(self.lesson_id)
+        if not lesson:
+            return {}
+        return lesson.get("steps", {}).get(self.current_phase_key, {})
         
     @rx.var
     def progress_percent(self) -> int:
@@ -262,7 +272,8 @@ class LessonState(rx.State):
             # Check for Pedagogical Feedback mapping (Step 6)
             error_name = type(e).__name__
             self.pro_feedback_message = ""
-            feedback_mapping = LESSON_1_1["steps"].get("6_feedback", {}).get("errors", [])
+            lesson = get_lesson_by_id(self.lesson_id) or {}
+            feedback_mapping = lesson.get("steps", {}).get("6_feedback", {}).get("errors", [])
             for mapping in feedback_mapping:
                 if mapping["error_type"] == error_name:
                     # We found a matching pedagogical feedback

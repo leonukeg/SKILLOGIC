@@ -2,6 +2,7 @@ import reflex as rx
 from SKILLOGIC.styles import theme as T
 from SKILLOGIC.state.app_state import AppState
 from SKILLOGIC.components.landing.helpers import t
+from SKILLOGIC.state.auth_state import AuthState
 
 class NavbarState(rx.State):
     """Local state for the landing navbar mobile menu."""
@@ -35,6 +36,8 @@ def landing_navbar() -> rx.Component:
                     color=T.TEXT_PRIMARY,
                 ),
                 align="center", gap=T.SPACE_2,
+                cursor="pointer",
+                on_click=rx.redirect(rx.cond(AuthState.is_authenticated, "/dashboard", "/")),
             ),
             
             # Auth Buttons & Lang Toggle (Desktop)
