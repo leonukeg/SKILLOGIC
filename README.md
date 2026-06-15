@@ -21,7 +21,7 @@ Construida con [Reflex](https://reflex.dev) (Python puro Full-Stack), integrando
 
 ### 🧠 Práctica Activa e Inmersiva
 - **Consola de Python en el Navegador**: Ejecuta código Python real en milisegundos directamente en la interfaz. Sin instalar nada.
-- **Katas de Dificultad Real (FAANG)**: Nuestros retos de código tienen una "dificultad engañosa". Lo que parece fácil, en realidad te obligará a exprimir tu lógica matemática. Los niveles difíciles incluyen problemas reales como **Kadane's Algorithm** o **Trapping Rain Water**.
+- **Katas de Dificultad Real (FAANG)**: Contamos con una base de datos dinámica de **100 Katas progresivos** repartidos por lección. Tienen una "dificultad engañosa". Lo que parece fácil, en realidad te obligará a exprimir tu lógica matemática. Los niveles difíciles incluyen problemas reales de FAANG.
 - **Evaluador Invisible**: Tus scripts se evalúan en tiempo real contra pruebas unitarias (`asserts`) completamente ocultas.
 
 ### 🎮 Gamificación Adictiva (Dopamine Hacking)
@@ -87,7 +87,8 @@ SKILLOGIC/
 ## 🗺️ Roadmap de Desarrollo
 - [x] Consola interactiva integrada.
 - [x] Gamificación (XP y Rachas).
-- [x] Base de datos de Katas nivel Entrevista.
+- [x] Base de datos de 100 Katas progresivos nivel Entrevista integrados.
+- [x] Currículum ampliado a más del 50% de contenido inicial (Módulos 1 y 2 completos).
 - [ ] Ejecución en entorno aislado Sandbox / Dockerización de respuestas.
 - [ ] Tablas de clasificación (Leaderboard Global).
 
