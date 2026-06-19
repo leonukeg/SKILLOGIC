@@ -41,7 +41,7 @@ KATAS_1_2 = [
         "description_es": "Convierte el texto `susurro = \"hola mundo\"` a mayúsculas usando `.upper()` y guárdalo en `grito`.",
         "description_en": "Convert to uppercase.",
         "initial_code": "susurro = \"hola mundo\"\ngrito = \n",
-        "test_code": "try:\n    assert grito == 'HOLA MUNDO', 'Debe ser en mayúsculas'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
+        "test_code": "try:\n    assert grito == 'HOLA MUNDO', 'Debe ser en mayúsculas'\n    assert '.upper(' in USER_CODE, 'Trampa detectada: Debes usar el método .upper()'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
     },
     {
         "id": "kata_1_2_4",
@@ -55,7 +55,7 @@ KATAS_1_2 = [
         "description_es": "Usa el método `.strip()` para eliminar los espacios al principio y final de `sucio = \"   texto   \"` y guárdalo en `limpio`.",
         "description_en": "Use .strip()",
         "initial_code": "sucio = \"   texto   \"\nlimpio = \n",
-        "test_code": "try:\n    assert limpio == 'texto', 'Debe estar sin espacios en bordes'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
+        "test_code": "try:\n    assert limpio == 'texto', 'Debe estar sin espacios en bordes'\n    assert '.strip(' in USER_CODE, 'Trampa detectada: Debes usar el método .strip()'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
     },
     {
         "id": "kata_1_2_5",
@@ -69,7 +69,7 @@ KATAS_1_2 = [
         "description_es": "Tienes `frase = \"Me gusta Java\"`. Usa `.replace()` para cambiar \"Java\" por \"Python\" y guárdalo en `nueva_frase`.",
         "description_en": "Replace Java with Python.",
         "initial_code": "frase = \"Me gusta Java\"\nnueva_frase = \n",
-        "test_code": "try:\n    assert nueva_frase == 'Me gusta Python', 'Debe decir Python'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
+        "test_code": "try:\n    assert nueva_frase == 'Me gusta Python', 'Debe decir Python'\n    assert '.replace(' in USER_CODE, 'Trampa detectada: Debes usar el método .replace()'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
     },
     {
         "id": "kata_1_2_6",
@@ -83,7 +83,7 @@ KATAS_1_2 = [
         "description_es": "Usa slicing `[inicio:fin]` para extraer la palabra \"LOGIC\" de `texto = \"SKILLOGIC\"`. Guárdala en `porcion`.",
         "description_en": "Extract LOGIC using slicing.",
         "initial_code": "texto = \"SKILLOGIC\"\nporcion = \n",
-        "test_code": "try:\n    assert porcion == 'LOGIC', 'Debes extraer LOGIC'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
+        "test_code": "try:\n    assert porcion == 'LOGIC', 'Debes extraer LOGIC'\n    assert ':' in USER_CODE, 'Trampa detectada: Debes usar slicing con :'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
     },
     {
         "id": "kata_1_2_7",
@@ -111,7 +111,7 @@ KATAS_1_2 = [
         "description_es": "Usa `.split(\",\")` para separar `csv = \"manzana,pera,uva\"` y guárdalo en `lista_frutas`.",
         "description_en": "Split the csv by comma.",
         "initial_code": "csv = \"manzana,pera,uva\"\nlista_frutas = \n",
-        "test_code": "try:\n    assert type(lista_frutas) == list and len(lista_frutas) == 3, 'Debe ser una lista de 3 elementos'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
+        "test_code": "try:\n    assert type(lista_frutas) == list and len(lista_frutas) == 3, 'Debe ser una lista de 3 elementos'\n    assert '.split(' in USER_CODE, 'Trampa detectada: Debes usar el método .split()'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
     },
     {
         "id": "kata_1_2_9",

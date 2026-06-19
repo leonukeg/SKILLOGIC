@@ -41,7 +41,7 @@ KATAS_1_3 = [
         "description_es": "Guarda en `es_diferente` el booleano de comprobar si \"Perro\" es distinto (`!=`) a \"Gato\".",
         "description_en": "Check inequality.",
         "initial_code": "es_diferente = \n",
-        "test_code": "try:\n    assert es_diferente == True, 'Debe ser True'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
+        "test_code": "try:\n    assert es_diferente == True, 'Debe ser True'\n    assert \'.append(\' in USER_CODE, \'Trampa detectada: Debes usar .append()\'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
     },
     {
         "id": "kata_1_3_4",
@@ -55,7 +55,7 @@ KATAS_1_3 = [
         "description_es": "Crea la variable `acceso` y asígnale `True` SOLO SI `edad >= 18` AND `tiene_ticket == True`.",
         "description_en": "Use AND logic.",
         "initial_code": "edad = 20\ntiene_ticket = True\nacceso = \n",
-        "test_code": "try:\n    assert acceso == True, 'Debes usar and'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
+        "test_code": "try:\n    assert acceso == True, 'Debes usar and'\n    assert \'.insert(\' in USER_CODE, \'Trampa detectada: Debes usar .insert()\'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
     },
     {
         "id": "kata_1_3_5",
@@ -69,7 +69,7 @@ KATAS_1_3 = [
         "description_es": "Para obtener el `descuento`, el cliente debe tener `es_estudiante == True` OR `es_jubilado == True`. Calcula el valor booleano.",
         "description_en": "Use OR logic.",
         "initial_code": "es_estudiante = False\nes_jubilado = True\ndescuento = \n",
-        "test_code": "try:\n    assert descuento == True, 'Debes usar or'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
+        "test_code": "try:\n    assert descuento == True, 'Debes usar or'\n    assert \'.pop(\' in USER_CODE, \'Trampa detectada: Debes usar .pop()\'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
     },
     {
         "id": "kata_1_3_6",
@@ -83,7 +83,7 @@ KATAS_1_3 = [
         "description_es": "Usa `not` para invertir el booleano de `usuario_bloqueado` (que es `False`) y guardar el resultado en `puede_entrar`.",
         "description_en": "Use not operator.",
         "initial_code": "usuario_bloqueado = False\npuede_entrar = \n",
-        "test_code": "try:\n    assert puede_entrar == True, 'Debe ser la negación'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
+        "test_code": "try:\n    assert puede_entrar == True, 'Debe ser la negación'\n    assert \'.remove(\' in USER_CODE, \'Trampa detectada: Debes usar .remove()\'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
     },
     {
         "id": "kata_1_3_7",
@@ -97,7 +97,7 @@ KATAS_1_3 = [
         "description_es": "Escribe un bloque `if` que verifique si `x > 5`. De ser cierto, cambia el valor de `x` a `0`. Asegúrate de indentar.",
         "description_en": "Write an if statement.",
         "initial_code": "x = 10\n# Escribe el if aquí\n\n",
-        "test_code": "try:\n    assert x == 0, 'x debió cambiar a 0'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
+        "test_code": "try:\n    assert x == 0, 'x debió cambiar a 0'\n    assert \'.sort(\' in USER_CODE, \'Trampa detectada: Debes usar .sort()\'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
     },
     {
         "id": "kata_1_3_8",
@@ -111,7 +111,7 @@ KATAS_1_3 = [
         "description_es": "Si `clima == \"lluvia\"` guarda en `accion` la palabra \"paraguas\", de lo contrario (`else`), guarda \"sombrero\".",
         "description_en": "Use if/else.",
         "initial_code": "clima = \"sol\"\naccion = \"\"\n# Escribe el if/else aquí\n\n",
-        "test_code": "try:\n    assert accion == 'sombrero', 'Debe ser sombrero'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
+        "test_code": "try:\n    assert accion == 'sombrero', 'Debe ser sombrero'\n    assert \'.reverse(\' in USER_CODE, \'Trampa detectada: Debes usar .reverse()\'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
     },
     {
         "id": "kata_1_3_9",

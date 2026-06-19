@@ -13,7 +13,7 @@ KATAS_2_4 = [
         "description_es": "Una lambda es una función anónima de una sola línea. Guarda en `duplicar` una lambda que reciba `x` y retorne `x * 2`.",
         "description_en": "Create a lambda function.",
         "initial_code": "duplicar = lambda x: \n",
-        "test_code": "try:\n    assert duplicar(5) == 10, 'La lambda debe multiplicar por 2'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
+        "test_code": "try:\n    assert duplicar(5) == 10, 'La lambda debe multiplicar por 2'\n    assert 'lambda' in USER_CODE, 'Trampa detectada: Debes usar lambda'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
     },
     {
         "id": "kata_2_4_2",
@@ -41,7 +41,7 @@ KATAS_2_4 = [
         "description_es": "Usa `map()` y una lambda para sumarle 1 a cada elemento de `nums = [1, 2, 3]`. Recuerda envolver el `map()` en `list()` para ver el resultado.",
         "description_en": "Use map() with lambda.",
         "initial_code": "nums = [1, 2, 3]\n# Completa el map:\nmas_uno = list(map(  ))\n",
-        "test_code": "try:\n    assert mas_uno == [2, 3, 4], 'Usa map y lambda x: x+1'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
+        "test_code": "try:\n    assert mas_uno == [2, 3, 4], 'Usa map y lambda x: x+1'\n    assert 'filter(' in USER_CODE, 'Trampa detectada: Debes usar filter()'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
     },
     {
         "id": "kata_2_4_4",

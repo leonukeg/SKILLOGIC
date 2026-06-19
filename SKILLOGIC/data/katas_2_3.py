@@ -13,7 +13,7 @@ KATAS_2_3 = [
         "description_es": "Crea un diccionario vacío llamado `usuario` usando llaves `{}`.",
         "description_en": "Create an empty dictionary.",
         "initial_code": "usuario = \n",
-        "test_code": "try:\n    assert type(usuario) == dict and len(usuario) == 0, 'Debe ser un diccionario vacío'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
+        "test_code": "try:\n    assert type(usuario) == dict and len(usuario) == 0, 'Debe ser un diccionario vacío'\n    assert 'def ' in USER_CODE, 'Trampa detectada: Debes definir la función con def'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
     },
     {
         "id": "kata_2_3_2",

@@ -13,7 +13,7 @@ KATAS_2_1 = [
         "description_es": "Define una función vacía llamada `saludar` que retorne la palabra 'Hola'.",
         "description_en": "Define a function that returns 'Hola'.",
         "initial_code": "# Define tu función aquí\n\n",
-        "test_code": "try:\n    assert saludar() == 'Hola', 'Debe retornar Hola'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
+        "test_code": "try:\n    assert saludar() == 'Hola', 'Debe retornar Hola'\n    assert 'if ' in USER_CODE, 'Trampa detectada: Debes usar if'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
     },
     {
         "id": "kata_2_1_2",
@@ -41,7 +41,7 @@ KATAS_2_1 = [
         "description_es": "Define `sumar_tres(a, b, c)` que retorne la suma de los tres parámetros.",
         "description_en": "Sum three numbers.",
         "initial_code": "# Define sumar_tres\n\n",
-        "test_code": "try:\n    assert sumar_tres(1, 2, 3) == 6, 'Debe retornar 6'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
+        "test_code": "try:\n    assert sumar_tres(1, 2, 3) == 6, 'Debe retornar 6'\n    assert 'elif ' in USER_CODE, 'Trampa detectada: Debes usar elif'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
     },
     {
         "id": "kata_2_1_4",
@@ -55,7 +55,7 @@ KATAS_2_1 = [
         "description_es": "Define `bienvenida(nombre=\"Invitado\")`. Si se llama sin argumentos, debe retornar 'Hola Invitado', si se le pasa un nombre, 'Hola [nombre]'.",
         "description_en": "Use a default parameter.",
         "initial_code": "# Define bienvenida\n\n",
-        "test_code": "try:\n    assert bienvenida() == 'Hola Invitado' and bienvenida('Ana') == 'Hola Ana', 'Usa parámetros por defecto'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
+        "test_code": "try:\n    assert bienvenida() == 'Hola Invitado' and bienvenida('Ana') == 'Hola Ana', 'Usa parámetros por defecto'\n    assert 'and ' in USER_CODE, 'Trampa detectada: Debes usar and'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
     },
     {
         "id": "kata_2_1_5",
@@ -69,7 +69,7 @@ KATAS_2_1 = [
         "description_es": "Dentro de la función `oculto()`, crea una variable local `secreto = 99` y retórnala.",
         "description_en": "Return a local variable.",
         "initial_code": "def oculto():\n    # Tu código:\n    pass\n",
-        "test_code": "try:\n    assert oculto() == 99, 'Debe retornar 99'\n    try:\n        print(secreto) # Esto debe fallar\n        raise ValueError('Secreto no debe ser global')\n    except NameError:\n        print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
+        "test_code": "try:\n    assert oculto() == 99, 'Debe retornar 99'\n    try:\n        print(secreto) # Esto debe fallar\n        raise ValueError('Secreto no debe ser global')\n    except NameError:\n        assert 'or ' in USER_CODE, 'Trampa detectada: Debes usar or'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
     },
     {
         "id": "kata_2_1_6",
@@ -83,7 +83,7 @@ KATAS_2_1 = [
         "description_es": "Crea `es_par(n)`. Si `n % 2 == 0`, retorna `True`. De lo contrario, `False`.",
         "description_en": "Return True if even.",
         "initial_code": "def es_par(n):\n    # Tu código:\n    pass\n",
-        "test_code": "try:\n    assert es_par(4) == True and es_par(5) == False, 'Falla en lógica par/impar'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
+        "test_code": "try:\n    assert es_par(4) == True and es_par(5) == False, 'Falla en lógica par/impar'\n    assert 'not ' in USER_CODE, 'Trampa detectada: Debes usar not'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
     },
     {
         "id": "kata_2_1_7",
@@ -97,7 +97,7 @@ KATAS_2_1 = [
         "description_es": "Define `solo_enteros(valor)`. Si `type(valor) == int`, retorna el valor. Si no, retorna 0.",
         "description_en": "Return 0 if not int.",
         "initial_code": "# Define solo_enteros\n\n",
-        "test_code": "try:\n    assert solo_enteros(5) == 5 and solo_enteros('a') == 0, 'Chequeo de tipo fallido'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
+        "test_code": "try:\n    assert solo_enteros(5) == 5 and solo_enteros('a') == 0, 'Chequeo de tipo fallido'\n    assert 'in ' in USER_CODE, 'Trampa detectada: Debes usar in'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
     },
     {
         "id": "kata_2_1_8",

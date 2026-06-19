@@ -13,7 +13,7 @@ KATAS_1_4 = [
         "description_es": "Usa un bucle `for` con `range(5)` para ir sumando cada iteración `i` a la variable `total`. La variable total empieza en 0.",
         "description_en": "Use for loop with range(5).",
         "initial_code": "total = 0\n# Escribe tu for aquí:\n\n",
-        "test_code": "try:\n    assert total == 10, 'La suma de 0+1+2+3+4 es 10'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
+        "test_code": "try:\n    assert total == 10, 'La suma de 0+1+2+3+4 es 10'\n    assert \'{\' in USER_CODE, \'Trampa detectada: Debes usar llaves {} para el diccionario\'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
     },
     {
         "id": "kata_1_4_2",
@@ -41,7 +41,7 @@ KATAS_1_4 = [
         "description_es": "Usando `range(inicio, fin, salto)`, haz un `for` que sume solo los números pares del 0 al 10 (sin incluir el 10) a la variable `suma_pares`.",
         "description_en": "Stepped range.",
         "initial_code": "suma_pares = 0\n# Tu for:\n\n",
-        "test_code": "try:\n    assert suma_pares == 20, '0+2+4+6+8 = 20'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
+        "test_code": "try:\n    assert suma_pares == 20, '0+2+4+6+8 = 20'\n    assert \'del \' in USER_CODE, \'Trampa detectada: Debes usar del para eliminar\'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
     },
     {
         "id": "kata_1_4_4",
@@ -55,7 +55,7 @@ KATAS_1_4 = [
         "description_es": "Tienes un `while True:` (infinito). Añade un `if` dentro: si `contador == 3`, usa la palabra `break` para romper el bucle.",
         "description_en": "Use break.",
         "initial_code": "contador = 0\nwhile True:\n    contador += 1\n    # Escribe tu condición de break aquí\n\n",
-        "test_code": "try:\n    assert contador == 3, 'Debió frenar en 3'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
+        "test_code": "try:\n    assert contador == 3, 'Debió frenar en 3'\n    assert \'.keys(\' in USER_CODE, \'Trampa detectada: Debes usar .keys()\'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
     },
     {
         "id": "kata_1_4_5",
@@ -69,7 +69,7 @@ KATAS_1_4 = [
         "description_es": "Usa un `for i in range(5):`. Si `i == 2`, usa `continue`. Si no, suma `i` a `acumulado`.",
         "description_en": "Use continue.",
         "initial_code": "acumulado = 0\n# Escribe el for con continue\n\n",
-        "test_code": "try:\n    assert acumulado == 8, '0+1+3+4 = 8'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
+        "test_code": "try:\n    assert acumulado == 8, '0+1+3+4 = 8'\n    assert \'.values(\' in USER_CODE, \'Trampa detectada: Debes usar .values()\'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
     },
     {
         "id": "kata_1_4_6",
@@ -83,7 +83,7 @@ KATAS_1_4 = [
         "description_es": "Puedes usar `for letra in texto:`. Cuenta cuántas letras 'a' (minúscula) tiene la frase \"la magia del agua\" usando un `if` y la variable `conteo`.",
         "description_en": "Count 'a's.",
         "initial_code": "frase = \"la magia del agua\"\nconteo = 0\n# Recorre y cuenta\n\n",
-        "test_code": "try:\n    assert conteo == 5, 'Debe haber 5 aes'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
+        "test_code": "try:\n    assert conteo == 5, 'Debe haber 5 aes'\n    assert \'.items(\' in USER_CODE, \'Trampa detectada: Debes usar .items()\'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
     },
     {
         "id": "kata_1_4_7",
@@ -97,7 +97,7 @@ KATAS_1_4 = [
         "description_es": "Calcula el factorial de 5 (5 * 4 * 3 * 2 * 1) usando un bucle `while` o `for`. Guárdalo en `factorial`.",
         "description_en": "Calculate factorial of 5.",
         "initial_code": "n = 5\nfactorial = 1\n# Tu bucle:\n\n",
-        "test_code": "try:\n    assert factorial == 120, 'Factorial de 5 es 120'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
+        "test_code": "try:\n    assert factorial == 120, 'Factorial de 5 es 120'\n    assert \'.get(\' in USER_CODE, \'Trampa detectada: Debes usar .get()\'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
     },
     {
         "id": "kata_1_4_8",
@@ -111,7 +111,7 @@ KATAS_1_4 = [
         "description_es": "Escribe un bucle `for` dentro de otro bucle `for`. El externo recorre `range(3)` y el interno `range(2)`. En el interno, suma 1 a la variable `clicks`. ¿Adivinas cuánto dará?",
         "description_en": "Nested loops.",
         "initial_code": "clicks = 0\n# For externo e interno\n\n",
-        "test_code": "try:\n    assert clicks == 6, '3 * 2 = 6 repeticiones totales'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
+        "test_code": "try:\n    assert clicks == 6, '3 * 2 = 6 repeticiones totales'\n    assert \'.update(\' in USER_CODE, \'Trampa detectada: Debes usar .update()\'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
     },
     {
         "id": "kata_1_4_9",
@@ -125,7 +125,7 @@ KATAS_1_4 = [
         "description_es": "Haz un `for` usando `range` para ir del 10 al 1 (inclusive) contando HASTA ATRÁS, y agrégalos a una cadena `resultado` (ej: \"10987654321\"). Pista: `range(10, 0, -1)`.",
         "description_en": "Count backwards.",
         "initial_code": "resultado = \"\"\n# Tu for:\n\n",
-        "test_code": "try:\n    assert resultado == '10987654321', 'Asegúrate de incluir el 1 y no el 0'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
+        "test_code": "try:\n    assert resultado == '10987654321', 'Asegúrate de incluir el 1 y no el 0'\n    assert \'.clear(\' in USER_CODE, \'Trampa detectada: Debes usar .clear()\'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
     },
     {
         "id": "kata_1_4_10",

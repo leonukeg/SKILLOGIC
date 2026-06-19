@@ -13,7 +13,7 @@ KATAS_1_5 = [
         "description_es": "Este código tiene un `SyntaxError`. Falta algo vital para que el `if` funcione. Arréglalo.",
         "description_en": "Fix the SyntaxError.",
         "initial_code": "estado = \"listo\"\n# Arregla el error de sintaxis en la línea de abajo\nif estado == \"listo\"\n    completado = True\n",
-        "test_code": "try:\n    assert completado == True, 'Asegúrate de poner los dos puntos :'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
+        "test_code": "try:\n    assert completado == True, 'Asegúrate de poner los dos puntos :'\n    assert \':\' in USER_CODE, \'Trampa detectada: Asegúrate de usar : en el if\'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
     },
     {
         "id": "kata_1_5_2",
@@ -139,6 +139,6 @@ KATAS_1_5 = [
         "description_es": "Para evitar que un error rompa el programa, los pros usan `try / except`. Envuelve la división problemática en un bloque `try:` y usa `except:` para guardar 'error' en la variable `estado` si falla.",
         "description_en": "Use try/except.",
         "initial_code": "estado = \"ok\"\n# Añade try/except alrededor de esto:\nresultado = 10 / 0\n# Si falla, pon: estado = \"error\"\n",
-        "test_code": "try:\n    assert estado == 'error', 'Debió atrapar el error'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
+        "test_code": "try:\n    assert estado == 'error', 'Debió atrapar el error'\n    assert \'try\' in USER_CODE, \'Trampa detectada: Debes usar try\'\n    assert 'except' in USER_CODE, 'Trampa detectada: Debes usar except'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
     }
 ]

@@ -13,7 +13,7 @@ KATAS_2_2 = [
         "description_es": "Crea una variable llamada `mochila` y asígnale una lista vacía `[]`.",
         "description_en": "Create an empty list.",
         "initial_code": "mochila = \n",
-        "test_code": "try:\n    assert type(mochila) == list and len(mochila) == 0, 'Debe ser una lista vacía'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
+        "test_code": "try:\n    assert type(mochila) == list and len(mochila) == 0, 'Debe ser una lista vacía'\n    assert 'for ' in USER_CODE, 'Trampa detectada: Debes usar for'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
     },
     {
         "id": "kata_2_2_2",
@@ -41,7 +41,7 @@ KATAS_2_2 = [
         "description_es": "Tienes la lista `items = [\"mapa\", \"espada\", \"escudo\"]`. Guarda en la variable `arma` el SEGUNDO elemento de la lista usando índices `[1]`.",
         "description_en": "Get the second item.",
         "initial_code": "items = [\"mapa\", \"espada\", \"escudo\"]\narma = \n",
-        "test_code": "try:\n    assert arma == 'espada', 'El índice 1 es espada'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
+        "test_code": "try:\n    assert arma == 'espada', 'El índice 1 es espada'\n    assert 'range(' in USER_CODE, 'Trampa detectada: Debes usar range()'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
     },
     {
         "id": "kata_2_2_4",
@@ -55,7 +55,7 @@ KATAS_2_2 = [
         "description_es": "Usa un índice negativo `[-1]` para obtener el último elemento de la lista `cofre = [\"oro\", \"plata\", \"bronce\", \"diamante\"]` y guárdalo en `gema`.",
         "description_en": "Use negative index.",
         "initial_code": "cofre = [\"oro\", \"plata\", \"bronce\", \"diamante\"]\ngema = \n",
-        "test_code": "try:\n    assert gema == 'diamante', 'Debía ser diamante'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
+        "test_code": "try:\n    assert gema == 'diamante', 'Debía ser diamante'\n    assert 'break' in USER_CODE, 'Trampa detectada: Debes usar break'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
     },
     {
         "id": "kata_2_2_5",
@@ -69,7 +69,7 @@ KATAS_2_2 = [
         "description_es": "Usa el método `.pop()` en la lista `cartas` para extraer la última carta de la lista y guardarla en la variable `sacada`.",
         "description_en": "Use pop().",
         "initial_code": "cartas = [\"As\", \"Rey\", \"Reina\"]\nsacada = \n",
-        "test_code": "try:\n    assert sacada == 'Reina' and cartas == ['As', 'Rey'], 'Usa pop()'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
+        "test_code": "try:\n    assert sacada == 'Reina' and cartas == ['As', 'Rey'], 'Usa pop()'\n    assert 'continue' in USER_CODE, 'Trampa detectada: Debes usar continue'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
     },
     {
         "id": "kata_2_2_6",
@@ -83,7 +83,7 @@ KATAS_2_2 = [
         "description_es": "Usa slicing `[inicio:fin]` en la lista `numeros = [0, 1, 2, 3, 4, 5]` para extraer solo `[2, 3, 4]` y guárdalo en `porcion`.",
         "description_en": "Slice the list.",
         "initial_code": "numeros = [0, 1, 2, 3, 4, 5]\nporcion = \n",
-        "test_code": "try:\n    assert porcion == [2, 3, 4], 'Debes extraer 2, 3, 4'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
+        "test_code": "try:\n    assert porcion == [2, 3, 4], 'Debes extraer 2, 3, 4'\n    assert 'enumerate(' in USER_CODE, 'Trampa detectada: Debes usar enumerate()'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
     },
     {
         "id": "kata_2_2_7",

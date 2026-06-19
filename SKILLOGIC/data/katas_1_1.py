@@ -55,7 +55,7 @@ KATAS_1_1 = [
         "description_es": "Guarda en la variable `tipo` el TIPO de dato que es la variable `misterio` usando la función `type()`.",
         "description_en": "Save the type of mystery into type.",
         "initial_code": "misterio = 3.14\ntipo = \n",
-        "test_code": "try:\n    assert tipo == float, 'Debe ser float'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
+        "test_code": "try:\n    assert tipo == float, 'Debe ser float'\n    assert \'type(\' in USER_CODE, \'Trampa detectada: Debes usar la función type()\'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
     },
     {
         "id": "kata_1_1_5",
@@ -83,7 +83,7 @@ KATAS_1_1 = [
         "description_es": "Convierte la variable string `edad_str = \"25\"` en un entero numérico usando `int()` y guárdalo en `edad`.",
         "description_en": "Cast to int.",
         "initial_code": "edad_str = \"25\"\nedad = \n",
-        "test_code": "try:\n    assert edad == 25 and type(edad) == int, 'Debe ser int 25'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
+        "test_code": "try:\n    assert edad == 25 and type(edad) == int, 'Debe ser int 25'\n    assert \'int(\' in USER_CODE, \'Trampa detectada: Debes usar la función int() para castear\'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
     },
     {
         "id": "kata_1_1_7",
@@ -125,7 +125,7 @@ KATAS_1_1 = [
         "description_es": "Usa el operador `%` para calcular el residuo de dividir 100 entre 3. Guárdalo en `residuo`.",
         "description_en": "Get remainder of 100/3",
         "initial_code": "residuo = \n",
-        "test_code": "try:\n    assert residuo == 1, 'Debe ser 1'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
+        "test_code": "try:\n    assert residuo == 1, 'Debe ser 1'\n    assert \'%\' in USER_CODE, \'Trampa detectada: Debes usar el operador % para el módulo\'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
     },
     {
         "id": "kata_1_1_10",
@@ -139,6 +139,6 @@ KATAS_1_1 = [
         "description_es": "A diferencia de `/`, Python tiene `//` para dividir sin dejar decimales. Divide 10 entre 3 con división entera y guarda en `entero`.",
         "description_en": "Use // to divide 10 by 3.",
         "initial_code": "entero = \n",
-        "test_code": "try:\n    assert entero == 3 and type(entero) == int, 'Debe ser 3'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
+        "test_code": "try:\n    assert entero == 3 and type(entero) == int, 'Debe ser 3'\n    assert \'//\' in USER_CODE, \'Trampa detectada: Debes usar el operador // para división entera\'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
     }
 ]
