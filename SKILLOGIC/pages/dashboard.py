@@ -79,7 +79,7 @@ def _hero_card() -> rx.Component:
                             "transform": "translateY(-1px)",
                             "box_shadow": f"0 6px 28px {T.BRAND_GLOW}",
                         },
-                        on_click=rx.redirect("/lesson/funciones"),
+                        on_click=rx.redirect("/roadmap"),
                     ),
                     rx.button(
                         rx.cond(AppState.is_spanish, "Ver mi ruta", "View my path"),
@@ -91,6 +91,7 @@ def _hero_card() -> rx.Component:
                         font_weight=T.WEIGHT_SEMIBOLD,
                         padding=f"{T.SPACE_3} {T.SPACE_6}",
                         cursor="pointer",
+                        on_click=rx.redirect("/roadmap"),
                         transition=f"all {T.EASE_FAST}",
                         _hover={"background": T.BG_HOVER},
                     ),

@@ -41,7 +41,7 @@ KATAS_1_1 = [
         "description_es": "Tienes la variable `vidas = 3`. Réstale 1 a la variable usando reasignación (vidas = vidas - 1).",
         "description_en": "Subtract 1 from lives.",
         "initial_code": "vidas = 3\n# Resta 1 aquí\n",
-        "test_code": "try:\n    assert vidas == 2, 'vidas debe ser 2'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
+        "test_code": "try:\n    assert vidas == 2, 'vidas debe ser 2'\n    assert '-' in USER_CODE, 'Trampa detectada: Debes usar el operador - para restar y reasignar'\n    print('ALL_TESTS_PASSED')\nexcept Exception as e:\n    print(e)"
     },
     {
         "id": "kata_1_1_4",

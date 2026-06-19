@@ -196,7 +196,7 @@ def sidebar() -> rx.Component:
                         color=T.TEXT_SECONDARY, _hover={"color": T.TEXT_PRIMARY},
                     ),
                     content=rx.vstack(
-                        _nav_item("users", "Usuarios", "Users", "/admin", "admin_users"),
+                        rx.text("Próximamente", color=T.TEXT_MUTED, font_size=T.TEXT_XS, padding_left=T.SPACE_4),
                         padding_left=T.SPACE_4,
                     ),
                     value="settings",
