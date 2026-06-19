@@ -204,6 +204,15 @@ def _kata_list_item(kata: dict) -> rx.Component:
                         box_shadow=T.SHADOW_LG,
                     )
                 ),
+                rx.spacer(),
+                rx.badge(
+                    rx.cond(AppState.is_spanish, kata.get("category_es", "Reto"), kata.get("category_en", "Challenge")),
+                    color_scheme="gray",
+                    variant="surface",
+                    radius="full",
+                    size="1",
+                    margin_top=T.SPACE_2,
+                ),
                 spacing="2",
                 align_items="start",
                 width="100%",
