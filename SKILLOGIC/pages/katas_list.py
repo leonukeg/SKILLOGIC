@@ -170,8 +170,7 @@ def _kata_list_item(kata: dict) -> rx.Component:
                     font_size=T.TEXT_SM,
                     color=T.TEXT_PRIMARY,
                     line_height="1.3",
-                    height="2.6em", # Aproximadamente 2 líneas
-                    overflow="hidden",
+                    no_of_lines=2,
                 ),
                 rx.hover_card.root(
                     rx.hover_card.trigger(
@@ -179,9 +178,8 @@ def _kata_list_item(kata: dict) -> rx.Component:
                             desc_text,
                             font_size=T.TEXT_XS,
                             color=T.TEXT_SECONDARY,
-                            no_of_lines=2,
+                            no_of_lines=3,
                             cursor="pointer",
-                            height="2.8em",
                         )
                     ),
                     rx.hover_card.content(
@@ -199,10 +197,12 @@ def _kata_list_item(kata: dict) -> rx.Component:
                 width="100%",
                 flex="1",
                 margin_top=T.SPACE_2,
+                overflow="hidden",
             ),
             
             # Pie de la tarjeta: XP y Botón
-            rx.hstack(
+            rx.box(
+                rx.hstack(
                 rx.text(
                     f"+{kata['xp_reward']} XP",
                     font_weight=T.WEIGHT_EXTRABOLD,
@@ -218,11 +218,15 @@ def _kata_list_item(kata: dict) -> rx.Component:
                     cursor="pointer",
                 ),
                 width="100%",
-                margin_top=T.SPACE_3,
                 align_items="center",
             ),
             width="100%",
-            height="100%", # Ocupar todo el espacio de la caja
+            margin_top=T.SPACE_4,
+            border_top=f"1px solid {T.BORDER_SUBTLE}",
+            padding_top=T.SPACE_3,
+        ),
+        width="100%",
+        height="100%", # Ocupar todo el espacio de la caja
             padding=T.SPACE_4,
         ),
         background=T.BG_SECONDARY,
