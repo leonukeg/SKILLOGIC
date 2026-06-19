@@ -138,41 +138,50 @@ def _kata_list_item(kata: dict) -> rx.Component:
     title_text = rx.cond(AppState.is_spanish, kata["title_es"], kata["title_en"])
 
     return rx.box(
-        rx.flex(
-            # Icono a la izquierda
-            rx.box(
-                status_icon,
-                display="flex",
-                align_items="center",
-                justify_content="center",
-                width="32px",
-                height="32px",
-                border_radius=T.RADIUS_MD,
-                background=rx.cond(is_locked, T.BG_HOVER, rx.cond(is_completed, T.SUCCESS_LIGHT, T.BRAND_LIGHT)),
-                flex_shrink="0",
+        rx.vstack(
+            # Cabecera de la tarjeta: Icono + Badges
+            rx.hstack(
+                rx.box(
+                    status_icon,
+                    display="flex",
+                    align_items="center",
+                    justify_content="center",
+                    width="36px",
+                    height="36px",
+                    border_radius=T.RADIUS_MD,
+                    background=rx.cond(is_completed, T.SUCCESS_LIGHT, T.BRAND_LIGHT),
+                ),
+                rx.spacer(),
+                rx.badge(
+                    rx.cond(AppState.is_spanish, difficulty.capitalize(), difficulty.capitalize()),
+                    color_scheme=rx.cond(difficulty == "facil", "green", rx.cond(difficulty == "medio", "yellow", "red")),
+                    variant="soft",
+                    radius="full",
+                    size="1",
+                ),
+                width="100%",
             ),
             
-            # Contenido principal a la derecha
-            rx.flex(
-                # Título
+            # Título y Descripción (cuerpo de la tarjeta)
+            rx.vstack(
                 rx.text(
                     title_text,
-                    font_weight=T.WEIGHT_SEMIBOLD,
+                    font_weight=T.WEIGHT_BOLD,
                     font_size=T.TEXT_SM,
-                    color=rx.cond(is_locked, T.TEXT_MUTED, T.TEXT_PRIMARY),
-                    margin_bottom="2px",
+                    color=T.TEXT_PRIMARY,
+                    line_height="1.3",
+                    height="2.6em", # Aproximadamente 2 líneas
+                    overflow="hidden",
                 ),
-                
-                # Descripción con Popover (Hover Card)
                 rx.hover_card.root(
                     rx.hover_card.trigger(
                         rx.text(
                             desc_text,
                             font_size=T.TEXT_XS,
                             color=T.TEXT_SECONDARY,
-                            no_of_lines=1,
+                            no_of_lines=2,
                             cursor="pointer",
-                            _hover={"color": T.TEXT_PRIMARY},
+                            height="2.8em",
                         )
                     ),
                     rx.hover_card.content(
@@ -185,65 +194,50 @@ def _kata_list_item(kata: dict) -> rx.Component:
                         box_shadow=T.SHADOW_LG,
                     )
                 ),
-                
-                # Fila inferior: Badge, Spacer, XP, Botón
-                rx.flex(
-                    rx.badge(
-                        rx.cond(AppState.is_spanish, difficulty.capitalize(), difficulty.capitalize()),
-                        color_scheme=rx.cond(difficulty == "facil", "green", rx.cond(difficulty == "medio", "yellow", "red")),
-                        variant="soft",
-                        radius="full",
-                        size="1",
-                    ),
-                    rx.spacer(),
-                    rx.text(
-                        f"+{kata['xp_reward']} XP",
-                        font_weight=T.WEIGHT_BOLD,
-                        font_size=T.TEXT_SM,
-                        color=rx.cond(is_locked, T.TEXT_MUTED, T.BRAND),
-                        white_space="nowrap",
-                    ),
-                    rx.button(
-                        rx.cond(
-                            is_locked, 
-                            "Bloqueado", 
-                            rx.cond(is_completed, "Repetir", "Resolver")
-                        ),
-                        size="1",
-                        color_scheme=rx.cond(is_locked, "gray", rx.cond(is_completed, "gray", "violet")),
-                        disabled=is_locked,
-                        on_click=rx.redirect(f"/kata/{kata_id}"),
-                        cursor=rx.cond(is_locked, "not-allowed", "pointer"),
-                    ),
-                    direction="row",
-                    align="center",
-                    gap=T.SPACE_3,
-                    width="100%",
-                    margin_top=T.SPACE_3,
-                    flex_wrap="wrap",
-                ),
-                direction="column",
+                spacing="2",
+                align_items="start",
+                width="100%",
                 flex="1",
-                min_width="0",
+                margin_top=T.SPACE_2,
             ),
-            direction="row",
-            align="start",
-            gap=T.SPACE_3,
+            
+            # Pie de la tarjeta: XP y Botón
+            rx.hstack(
+                rx.text(
+                    f"+{kata['xp_reward']} XP",
+                    font_weight=T.WEIGHT_EXTRABOLD,
+                    font_size=T.TEXT_SM,
+                    color=T.BRAND,
+                ),
+                rx.spacer(),
+                rx.button(
+                    rx.cond(is_completed, "Repetir", "Resolver"),
+                    size="1",
+                    color_scheme=rx.cond(is_completed, "gray", "violet"),
+                    on_click=rx.redirect(f"/kata/{kata_id}"),
+                    cursor="pointer",
+                ),
+                width="100%",
+                margin_top=T.SPACE_3,
+                align_items="center",
+            ),
             width="100%",
-            padding=T.SPACE_3,
+            height="100%", # Ocupar todo el espacio de la caja
+            padding=T.SPACE_4,
         ),
         background=T.BG_SECONDARY,
         border=f"1px solid {T.BORDER}",
         border_radius=T.RADIUS_LG,
-        opacity=rx.cond(is_locked, "0.65", "1"),
         transition=f"all {T.EASE_BASE}",
+        height="100%",
+        display="flex",
+        flex_direction="column",
         _hover={
-            "border_color": rx.cond(is_locked, T.BORDER, T.BRAND_MEDIUM),
-            "background": rx.cond(is_locked, T.BG_SECONDARY, T.BG_HOVER),
-            "transform": rx.cond(is_locked, "none", "translateX(4px)"),
+            "border_color": T.BRAND_MEDIUM,
+            "background": T.BG_HOVER,
+            "transform": "translateY(-4px)",
+            "box_shadow": T.SHADOW_MD,
         },
-        width="100%",
-        margin_bottom=T.SPACE_2,
     )
 
 def _daily_kata_banner() -> rx.Component:
@@ -297,34 +291,15 @@ def _daily_kata_banner() -> rx.Component:
         position="relative"
     )
 
-def _render_grouped_katas() -> list[rx.Component]:
-    from collections import defaultdict
-    groups = defaultdict(list)
-    for k in KATAS_DB:
-        # Group by category (we'll use the english string as key internally, and map back to dict)
-        cat_key = k.get("category_en", "Advanced Algorithms (FAANG)")
-        groups[cat_key].append(k)
-
-    components = []
-    
-    for key, items in groups.items():
-        title_es = items[0].get("category_es", key)
-        title_en = items[0].get("category_en", key)
-            
-        components.append(
-            rx.box(
-                rx.text(rx.cond(AppState.is_spanish, title_es, title_en), font_weight=T.WEIGHT_BOLD, color=T.BRAND, font_size=T.TEXT_MD, letter_spacing="1px", text_transform="uppercase"),
-                border_bottom=f"1px solid {T.BORDER_SUBTLE}",
-                width="100%",
-                padding_bottom=T.SPACE_2,
-                margin_top=rx.cond(len(components) > 0, T.SPACE_6, T.SPACE_2),
-                margin_bottom=T.SPACE_4,
-            )
-        )
-        for k in items:
-            components.append(_kata_list_item(k))
-            
-    return components
+def _render_kata_grid() -> rx.Component:
+    """Renderiza todos los katas en un grid, como un álbum de colección."""
+    return rx.grid(
+        *[_kata_list_item(k) for k in KATAS_DB],
+        columns=rx.breakpoints(initial="1", sm="2", md="3", lg="4", xl="5"),
+        gap=T.SPACE_4,
+        width="100%",
+        margin_bottom=T.SPACE_8,
+    )
 
 @rx.page(route="/katas", title="Katas | SKILLOGIC", on_load=ProgressState.load_stats)
 def katas_list_page() -> rx.Component:
@@ -358,12 +333,8 @@ def katas_list_page() -> rx.Component:
             # Daily Kata Banner
             _daily_kata_banner(),
             
-            # Katas List
-            rx.vstack(
-                *_render_grouped_katas(),
-                width="100%",
-                spacing="0",
-            ),
+            # Katas Grid
+            _render_kata_grid(),
             
             padding=rx.breakpoints(initial=f"{T.SPACE_4}", md=f"{T.SPACE_8}"),
             width="100%",
