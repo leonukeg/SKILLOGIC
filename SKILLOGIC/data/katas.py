@@ -257,6 +257,37 @@ except Exception as e:
 
 KATAS_DB = KATAS_1_1 + KATAS_1_2 + KATAS_1_3 + KATAS_1_4 + KATAS_1_5 + KATAS_2_1 + KATAS_2_2 + KATAS_2_3 + KATAS_2_4 + OLD_KATAS
 
+# Post-process to make Katas independent (Dojo Revolution)
+CATEGORY_MAP = {
+    "lesson_1_1": ("Fundamentos y Variables", "Basics & Variables"),
+    "lesson_1_2": ("Strings y Textos", "Strings & Text"),
+    "lesson_1_3": ("Listas y Arrays", "Lists & Arrays"),
+    "lesson_1_4": ("Diccionarios", "Dictionaries"),
+    "lesson_1_5": ("Debugging y Errores", "Debugging & Errors"),
+    "lesson_2_1": ("Condicionales (If/Else)", "Conditionals (If/Else)"),
+    "lesson_2_2": ("Bucles (For/While)", "Loops (For/While)"),
+    "lesson_2_3": ("Funciones", "Functions"),
+    "lesson_2_4": ("Programación Funcional", "Functional Programming"),
+}
+
+import datetime
+
+def get_daily_kata() -> dict:
+    # Use deterministic hash of today's date to pick a kata
+    today_str = datetime.date.today().strftime("%Y-%m-%d")
+    idx = hash(today_str) % len(KATAS_DB)
+    return KATAS_DB[idx]
+
+for kata in KATAS_DB:
+    # Unlock all katas
+    kata["requires_kata"] = None
+    
+    # Assign category
+    lid = kata.get("lesson_id", "")
+    cats = CATEGORY_MAP.get(lid, ("Algoritmos Avanzados (FAANG)", "Advanced Algorithms (FAANG)"))
+    kata["category_es"] = cats[0]
+    kata["category_en"] = cats[1]
+
 def get_kata_by_id(kata_id: str) -> dict | None:
     for kata in KATAS_DB:
         if kata["id"] == kata_id:

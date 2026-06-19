@@ -82,11 +82,20 @@ class KataState(rx.State):
             
             if "ALL_TESTS_PASSED" in output:
                 self.is_success = True
-                self.feedback_message = "¡Excelente! Todas las pruebas pasaron correctamente."
+                
+                from SKILLOGIC.data.katas import get_daily_kata
+                is_daily = (self.current_kata_id == get_daily_kata()["id"])
+                xp_earned = kata.get("xp_reward", 0)
+                
+                if is_daily:
+                    xp_earned *= 2
+                    self.feedback_message = "¡Increíble! Has resuelto el KATA DEL DÍA. ¡Has ganado el DOBLE de experiencia! 🚀"
+                else:
+                    self.feedback_message = "¡Excelente! Todas las pruebas pasaron correctamente."
                 
                 # Otorgar XP y marcar como completado
                 progress = await self.get_state(ProgressState)
-                async for update in progress.mark_kata_completed(self.current_kata_id, kata.get("xp_reward", 0)):
+                async for update in progress.mark_kata_completed(self.current_kata_id, xp_earned):
                     yield update
             else:
                 self.feedback_message = "El código se ejecutó, pero no pasó todas las pruebas."
