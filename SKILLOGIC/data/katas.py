@@ -271,6 +271,7 @@ CATEGORY_MAP = {
 }
 
 import datetime
+import re
 
 def get_daily_kata() -> dict:
     # Use deterministic hash of today's date to pick a kata
@@ -278,9 +279,17 @@ def get_daily_kata() -> dict:
     idx = hash(today_str) % len(KATAS_DB)
     return KATAS_DB[idx]
 
-for kata in KATAS_DB:
+for i, kata in enumerate(KATAS_DB):
     # Unlock all katas
     kata["requires_kata"] = None
+    
+    # Clean old local numbering (e.g., "1. Algo" -> "Algo")
+    clean_es = re.sub(r'^\d+\.\s*', '', kata.get("title_es", ""))
+    clean_en = re.sub(r'^\d+\.\s*', '', kata.get("title_en", ""))
+    
+    # Apply global numbering 1 to infinity
+    kata["title_es"] = f"{i + 1}. {clean_es}"
+    kata["title_en"] = f"{i + 1}. {clean_en}"
     
     # Assign category
     lid = kata.get("lesson_id", "")
