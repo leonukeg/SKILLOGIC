@@ -72,26 +72,7 @@ def topbar() -> rx.Component:
             on_click=AppState.toggle_theme,
         ),
 
-        # ── Language toggle (🇪🇸 ES / 🇬🇧 EN) ──────────────────
-        rx.button(
-            AppState.toggle_lang_label,
-            title=AppState.toggle_lang_title,
-            background=T.BG_HOVER,
-            border=f"1px solid {T.BORDER}",
-            border_radius=T.RADIUS_FULL,
-            padding=f"{T.SPACE_1} {T.SPACE_3}",
-            font_size=T.TEXT_SM,
-            font_weight=T.WEIGHT_SEMIBOLD,
-            color=T.TEXT_SECONDARY,
-            cursor="pointer",
-            transition=f"all {T.EASE_FAST}",
-            _hover={
-                "background": T.BG_ELEVATED,
-                "color": T.TEXT_PRIMARY,
-                "border_color": T.BORDER_STRONG,
-            },
-            on_click=AppState.toggle_lang,
-        ),
+
 
         # User avatar
         rx.box(

@@ -42,15 +42,7 @@ def landing_navbar() -> rx.Component:
             
             # Auth Buttons & Lang Toggle (Desktop)
             rx.flex(
-                rx.button(
-                    AppState.toggle_lang_label,
-                    on_click=AppState.toggle_lang,
-                    variant="ghost",
-                    color_scheme="gray",
-                    size="2",
-                    title=AppState.toggle_lang_title,
-                    font_weight=T.WEIGHT_BOLD,
-                ),
+
                 rx.button(
                     t("Qué es SKILLOGIC", "What is SKILLOGIC"),
                     on_click=rx.redirect("/about"),
@@ -109,16 +101,7 @@ def landing_navbar() -> rx.Component:
             NavbarState.is_open,
             rx.box(
                 rx.vstack(
-                    rx.button(
-                        AppState.toggle_lang_label,
-                        on_click=[AppState.toggle_lang, NavbarState.close_menu],
-                        variant="ghost",
-                        color_scheme="gray",
-                        size="3",
-                        title=AppState.toggle_lang_title,
-                        font_weight=T.WEIGHT_BOLD,
-                        width="100%",
-                    ),
+
                     rx.button(
                         t("Qué es SKILLOGIC", "What is SKILLOGIC"),
                         on_click=[rx.redirect("/about"), NavbarState.close_menu],
