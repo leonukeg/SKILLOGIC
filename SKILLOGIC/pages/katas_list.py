@@ -170,16 +170,28 @@ def _kata_list_item(kata: dict) -> rx.Component:
                     font_size=T.TEXT_SM,
                     color=T.TEXT_PRIMARY,
                     line_height="1.3",
-                    no_of_lines=2,
+                    height="2.6em",
+                    overflow="hidden",
+                    text_overflow="ellipsis",
+                    display="-webkit-box",
+                    style={"WebkitLineClamp": "2", "WebkitBoxOrient": "vertical"}
                 ),
                 rx.hover_card.root(
                     rx.hover_card.trigger(
-                        rx.text(
-                            desc_text,
-                            font_size=T.TEXT_XS,
-                            color=T.TEXT_SECONDARY,
-                            no_of_lines=3,
+                        rx.box(
+                            rx.text(
+                                desc_text,
+                                font_size=T.TEXT_XS,
+                                color=T.TEXT_SECONDARY,
+                                line_height="1.5",
+                                height="4.5em",
+                                overflow="hidden",
+                                text_overflow="ellipsis",
+                                display="-webkit-box",
+                                style={"WebkitLineClamp": "3", "WebkitBoxOrient": "vertical"}
+                            ),
                             cursor="pointer",
+                            width="100%",
                         )
                     ),
                     rx.hover_card.content(
