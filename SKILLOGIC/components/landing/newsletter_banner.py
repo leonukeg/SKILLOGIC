@@ -9,7 +9,7 @@ class NewsletterState(rx.State):
     error_message: str = ""
     show_banner: bool = False
 
-    @rx.background
+    @rx.event(background=True)
     async def trigger_banner_after_delay(self):
         import asyncio
         await asyncio.sleep(12)
