@@ -24,10 +24,10 @@ def hero_section() -> rx.Component:
         
         # Hook / Headline
         rx.heading(
-            as_="h1",
             t("Aprende Python escribiendo ", "Learn Python by writing "),
             rx.text.span(t("código real", "real code"), color="transparent", background_image=f"linear-gradient(90deg, {T.BRAND}, #a855f7)", background_clip="text", webkit_background_clip="text"),
             t(", no solo leyendo tutoriales.", ", not just reading tutorials."),
+            as_="h1",
             font_size=rx.breakpoints(initial="2.5rem", md="3.5rem", lg="4rem"),
             font_weight=T.WEIGHT_EXTRABOLD,
             color=T.TEXT_PRIMARY,
