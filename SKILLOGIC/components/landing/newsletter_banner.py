@@ -49,7 +49,7 @@ def newsletter_banner() -> rx.Component:
                 rx.cond(
                     NewsletterState.is_success,
                     rx.hstack(
-                        rx.icon(tag="check-circle-2", color=T.SUCCESS),
+                        rx.icon(tag="circle-check", color=T.SUCCESS),
                         rx.text("¡Suscrito con éxito! Revisa tu correo.", color="white", font_weight=T.WEIGHT_BOLD)
                     ),
                     rx.form(
