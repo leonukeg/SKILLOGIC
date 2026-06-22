@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { margin: 0; padding: 0; font-family: 'Inter', -apple-system, sans-serif; background-color: #0F172A; color: #F8FAFC; }
+        .wrapper { width: 100%; background-color: #0F172A; padding: 40px 0; }
+        .container { max-width: 600px; margin: 0 auto; background-color: #1E293B; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); }
+        .header { background: #10B981; padding: 40px 30px; text-align: center; }
+        .header h1 { margin: 0; color: white; font-size: 28px; letter-spacing: -0.5px; font-weight: 800; }
+        .content { padding: 40px 30px; text-align: center; }
+        .content h2 { color: white; font-size: 22px; margin-top: 0; font-weight: 700; }
+        .content p { color: #CBD5E1; font-size: 16px; line-height: 1.6; margin-bottom: 20px; }
+        .kata-title { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); color: #10B981; padding: 15px; border-radius: 8px; font-size: 20px; font-weight: bold; margin: 25px 0; }
+        .button-wrap { text-align: center; margin: 35px 0; }
+        .button { background: #10B981; color: white !important; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); }
+        .footer { text-align: center; padding: 20px 30px; font-size: 13px; color: #64748B; border-top: 1px solid rgba(255,255,255,0.05); background-color: #0F172A;}
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="container">
+            <div class="header">
+                <h1>⚔️ Kata del Día</h1>
+            </div>
+            <div class="content">
+                <h2>¡Tu desafío diario te espera!</h2>
+                <p>El algoritmo de hoy evaluará tu lógica y velocidad. Tienes 12 horas para resolverlo y llevarte el <strong>doble de XP</strong>.</p>
+                <div class="kata-title">
+                    {kata_title}
+                </div>
+                <div class="button-wrap">
+                    <a href="https://skillogic.app/katas" class="button">Aceptar el Reto (XP x2)</a>
+                </div>
+                <p style="color: #94A3B8; font-size: 14px;">Recuerda que resolver problemas diarios es la única forma real de construir memoria muscular como programador.</p>
+            </div>
+            <div class="footer">
+                © 2026 SKILLOGIC. Sube de nivel un Kata a la vez.
+            </div>
+        </div>
+    </div>
+</body>
+</html>

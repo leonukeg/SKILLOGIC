@@ -1,6 +1,7 @@
 import reflex as rx
 from SKILLOGIC.styles import theme as T
 from SKILLOGIC.utils.mailer import send_newsletter_promo_email
+from SKILLOGIC.lib.supabase_client import get_supabase
 
 class NewsletterState(rx.State):
     email: str = ""
@@ -12,7 +13,7 @@ class NewsletterState(rx.State):
     @rx.event(background=True)
     async def trigger_banner_after_delay(self):
         import asyncio
-        await asyncio.sleep(12)
+        await asyncio.sleep(10)
         async with self:
             if not self.is_success:
                 self.show_banner = True
@@ -30,7 +31,14 @@ class NewsletterState(rx.State):
             self.is_loading = False
             return
             
-        try:
+            # Guardar en Supabase
+            try:
+                client = get_supabase()
+                client.table("newsletter_leads").insert({"email": email}).execute()
+            except Exception as e:
+                print(f"Aviso: No se pudo guardar en Supabase (¿la tabla existe?). Error: {e}")
+
+            # Enviar el correo con Resend
             result = send_newsletter_promo_email(email)
             if result:
                 self.is_success = True
@@ -109,9 +117,9 @@ def newsletter_banner() -> rx.Component:
         ),
         id="newsletter-banner",
         position="fixed",
-        bottom=rx.cond(NewsletterState.show_banner, "24px", "-150px"),
+        top=rx.cond(NewsletterState.show_banner, "50%", "-150px"),
         left="50%",
-        transform="translateX(-50%)",
+        transform="translate(-50%, -50%)",
         z_index="50",
         padding="0 20px",
         transition="all 0.6s cubic-bezier(0.16, 1, 0.3, 1)", # Smooth ease out
