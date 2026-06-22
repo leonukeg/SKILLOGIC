@@ -101,26 +101,26 @@ def newsletter_banner() -> rx.Component:
         id="newsletter-banner",
         position="fixed",
         bottom="-150px", # Hidden initially
-        left="0",
-        right="0",
+        left="50%",
+        transform="translateX(-50%)",
         z_index="50",
         padding="0 20px",
-        transition="all 0.6s cubic-bezier(0.16, 1, 0.3, 1)", # Smooth ease out
+        transition="all 0.4s ease-out",
         opacity="0",
         pointer_events="none", # To prevent clicks when hidden
     )
     
     # Custom JS to toggle the banner at 50% scroll
     script = rx.script("""
-        window.addEventListener('scroll', () => {
-            const banner = document.getElementById('newsletter-banner');
+        function checkBannerScroll() {
+            var banner = document.getElementById('newsletter-banner');
             if (banner) {
-                const scrollPosition = window.scrollY;
-                const windowHeight = window.innerHeight;
-                const documentHeight = document.body.scrollHeight;
+                var scrollTop = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
+                var docHeight = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+                var winHeight = window.innerHeight || document.documentElement.clientHeight;
                 
-                // Show if scrolled more than 50% of the total scrollable area
-                if (scrollPosition > (documentHeight - windowHeight) * 0.5) {
+                // Mostrar a partir del 40% del scroll
+                if (scrollTop > (docHeight - winHeight) * 0.4) {
                     banner.style.bottom = '24px';
                     banner.style.opacity = '1';
                     banner.style.pointerEvents = 'auto';
@@ -130,7 +130,10 @@ def newsletter_banner() -> rx.Component:
                     banner.style.pointerEvents = 'none';
                 }
             }
-        });
+        }
+        window.addEventListener('scroll', checkBannerScroll);
+        // Call once initially just in case
+        setTimeout(checkBannerScroll, 1000);
     """)
     
     return rx.fragment(banner, script)
