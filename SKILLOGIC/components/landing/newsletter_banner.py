@@ -110,30 +110,18 @@ def newsletter_banner() -> rx.Component:
         pointer_events="none", # To prevent clicks when hidden
     )
     
-    # Custom JS to toggle the banner at 50% scroll
     script = rx.script("""
-        function checkBannerScroll() {
+        // El tiempo promedio de rebote es de 10-15 segundos. 
+        // 12 segundos es el punto dulce (sweet spot) psicológico para captar la atención 
+        // de un usuario que ya ha mostrado interés inicial leyendo el primer contenido.
+        setTimeout(() => {
             var banner = document.getElementById('newsletter-banner');
             if (banner) {
-                var scrollTop = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
-                var docHeight = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
-                var winHeight = window.innerHeight || document.documentElement.clientHeight;
-                
-                // Mostrar a partir del 40% del scroll
-                if (scrollTop > (docHeight - winHeight) * 0.4) {
-                    banner.style.bottom = '24px';
-                    banner.style.opacity = '1';
-                    banner.style.pointerEvents = 'auto';
-                } else {
-                    banner.style.bottom = '-150px';
-                    banner.style.opacity = '0';
-                    banner.style.pointerEvents = 'none';
-                }
+                banner.style.bottom = '24px';
+                banner.style.opacity = '1';
+                banner.style.pointerEvents = 'auto';
             }
-        }
-        window.addEventListener('scroll', checkBannerScroll);
-        // Call once initially just in case
-        setTimeout(checkBannerScroll, 1000);
+        }, 12000);
     """)
     
     return rx.fragment(banner, script)
