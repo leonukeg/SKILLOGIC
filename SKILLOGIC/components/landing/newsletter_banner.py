@@ -31,6 +31,7 @@ class NewsletterState(rx.State):
             self.is_loading = False
             return
             
+        try:
             # Guardar en Supabase
             try:
                 client = get_supabase()

@@ -15,7 +15,9 @@ def load_template(filename: str, **kwargs) -> str:
     try:
         with open(template_path, "r", encoding="utf-8") as f:
             content = f.read()
-            return content.format(**kwargs)
+            for key, value in kwargs.items():
+                content = content.replace(f"{{{key}}}", str(value))
+            return content
     except Exception as e:
         print(f"Error cargando plantilla {filename}: {e}")
         return ""
