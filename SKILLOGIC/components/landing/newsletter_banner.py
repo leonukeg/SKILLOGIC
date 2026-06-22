@@ -7,6 +7,15 @@ class NewsletterState(rx.State):
     is_loading: bool = False
     is_success: bool = False
     error_message: str = ""
+    show_banner: bool = False
+
+    @rx.background
+    async def trigger_banner_after_delay(self):
+        import asyncio
+        await asyncio.sleep(12)
+        async with self:
+            if not self.is_success:
+                self.show_banner = True
 
     @rx.event
     async def subscribe(self, form_data: dict):
@@ -35,8 +44,8 @@ class NewsletterState(rx.State):
             self.is_loading = False
 
 def newsletter_banner() -> rx.Component:
-    """Fixed banner that appears when scrolled 50%"""
-    banner = rx.box(
+    """Fixed banner that appears after 12s via Reflex State"""
+    return rx.box(
         rx.box(
             rx.flex(
                 rx.vstack(
@@ -100,28 +109,13 @@ def newsletter_banner() -> rx.Component:
         ),
         id="newsletter-banner",
         position="fixed",
-        bottom="-150px", # Hidden initially
+        bottom=rx.cond(NewsletterState.show_banner, "24px", "-150px"),
         left="50%",
         transform="translateX(-50%)",
         z_index="50",
         padding="0 20px",
-        transition="all 0.4s ease-out",
-        opacity="0",
-        pointer_events="none", # To prevent clicks when hidden
+        transition="all 0.6s cubic-bezier(0.16, 1, 0.3, 1)", # Smooth ease out
+        opacity=rx.cond(NewsletterState.show_banner, "1", "0"),
+        pointer_events=rx.cond(NewsletterState.show_banner, "auto", "none"),
+        on_mount=NewsletterState.trigger_banner_after_delay,
     )
-    
-    script = rx.script("""
-        // El tiempo promedio de rebote es de 10-15 segundos. 
-        // 12 segundos es el punto dulce (sweet spot) psicológico para captar la atención 
-        // de un usuario que ya ha mostrado interés inicial leyendo el primer contenido.
-        setTimeout(() => {
-            var banner = document.getElementById('newsletter-banner');
-            if (banner) {
-                banner.style.bottom = '24px';
-                banner.style.opacity = '1';
-                banner.style.pointerEvents = 'auto';
-            }
-        }, 12000);
-    """)
-    
-    return rx.fragment(banner, script)
