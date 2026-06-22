@@ -15,17 +15,19 @@ from SKILLOGIC.components.landing.cookie_banner import cookie_banner
 
 @rx.page(
     route="/",
-    title="SKILLOGIC — Aprende Python de forma interactiva",
-    description="Plataforma gamificada para aprender Python. Supera Katas interactivos, gana XP, mantén tu racha y domina la programación desde cero.",
+    title="SKILLOGIC — Aprende Python desde cero de forma interactiva",
+    description="Aprende Python desde cero resolviendo problemas reales en tu navegador. Gana experiencia, sube de nivel y domina la programación. ¡Empieza gratis hoy!",
     meta=[
-        {"name": "keywords", "content": "python, aprender python, curso de python, programación interactiva, katas python, python desde cero, tutorial python"},
+        {"name": "keywords", "content": "aprender python, curso de python, python desde cero, programación interactiva, aprender a programar, python en español"},
+        {"name": "robots", "content": "index, follow"},
         {"property": "og:type", "content": "website"},
         {"property": "og:title", "content": "SKILLOGIC — Aprende Python de forma interactiva"},
-        {"property": "og:description", "content": "Plataforma gamificada para aprender Python. Supera Katas interactivos, gana XP, mantén tu racha y domina la programación."},
+        {"property": "og:description", "content": "Aprende Python desde cero resolviendo problemas reales en tu navegador. ¡Empieza gratis hoy!"},
         {"property": "og:site_name", "content": "SKILLOGIC"},
         {"property": "twitter:card", "content": "summary_large_image"},
         {"property": "twitter:title", "content": "SKILLOGIC — Aprende Python"},
         {"property": "twitter:description", "content": "Aprende a programar resolviendo problemas reales en tu navegador."},
+        {"rel": "canonical", "href": "https://skillogic.app/"}
     ]
 )
 def landing_page() -> rx.Component:

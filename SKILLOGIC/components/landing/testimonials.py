@@ -55,7 +55,7 @@ def testimonials_section() -> rx.Component:
     return rx.box(
         rx.vstack(
             rx.text(t("Testimonios", "Testimonials"), font_size=T.TEXT_SM, font_weight=T.WEIGHT_BOLD, color=T.BRAND, letter_spacing="1px", text_transform="uppercase"),
-            rx.text(t("Lo que dicen nuestros estudiantes", "What our students say"), font_size=T.TEXT_3XL, font_weight=T.WEIGHT_EXTRABOLD, color=T.TEXT_PRIMARY, margin_bottom=T.SPACE_8, text_align="center"),
+            rx.heading(t("Lo que dicen nuestros estudiantes", "What our students say"), as_="h2", font_size=T.TEXT_3XL, font_weight=T.WEIGHT_EXTRABOLD, color=T.TEXT_PRIMARY, margin_bottom=T.SPACE_8, text_align="center"),
             
             rx.grid(
                 testimonial_card(

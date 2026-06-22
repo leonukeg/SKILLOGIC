@@ -16,7 +16,7 @@ def features_section() -> rx.Component:
                     box_shadow=f"0 4px 15px {gradient.split(',')[1]}40",
                     margin_bottom=T.SPACE_4,
                 ),
-                rx.text(t(title_es, title_en), font_size=T.TEXT_XL, font_weight=T.WEIGHT_EXTRABOLD, color=T.TEXT_PRIMARY, margin_bottom=T.SPACE_2),
+                rx.heading(t(title_es, title_en), as_="h3", font_size=T.TEXT_XL, font_weight=T.WEIGHT_EXTRABOLD, color=T.TEXT_PRIMARY, margin_bottom=T.SPACE_2),
                 rx.text(t(desc_es, desc_en), font_size=T.TEXT_BASE, color=T.TEXT_SECONDARY, line_height="1.5"),
                 align="start",
                 height="100%",
@@ -37,7 +37,7 @@ def features_section() -> rx.Component:
     return rx.box(
         rx.vstack(
             rx.text(t("Características", "Features"), font_size=T.TEXT_SM, font_weight=T.WEIGHT_BOLD, color=T.BRAND, letter_spacing="1px", text_transform="uppercase"),
-            rx.text(t("Todo lo que necesitas para dominar Python", "Everything you need to master Python"), font_size=T.TEXT_3XL, font_weight=T.WEIGHT_EXTRABOLD, color=T.TEXT_PRIMARY, margin_bottom=T.SPACE_8, text_align="center"),
+            rx.heading(t("Todo lo que necesitas para dominar Python", "Everything you need to master Python"), as_="h2", font_size=T.TEXT_3XL, font_weight=T.WEIGHT_EXTRABOLD, color=T.TEXT_PRIMARY, margin_bottom=T.SPACE_8, text_align="center"),
             
             rx.grid(
                 bento_card(

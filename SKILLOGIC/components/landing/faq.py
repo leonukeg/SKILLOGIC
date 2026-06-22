@@ -20,8 +20,9 @@ def faq_section() -> rx.Component:
                 t("Preguntas Frecuentes", "Frequently Asked Questions"), 
                 font_size=T.TEXT_SM, font_weight=T.WEIGHT_BOLD, color=T.BRAND, letter_spacing="1px", text_transform="uppercase"
             ),
-            rx.text(
+            rx.heading(
                 t("Resolvemos tus dudas", "We answer your questions"), 
+                as_="h2",
                 font_size=T.TEXT_3XL, font_weight=T.WEIGHT_EXTRABOLD, color=T.TEXT_PRIMARY, margin_bottom=T.SPACE_8, text_align="center"
             ),
             rx.accordion.root(

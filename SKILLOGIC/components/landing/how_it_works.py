@@ -25,7 +25,7 @@ def how_it_works_section() -> rx.Component:
                 width="60px",
             ),
             rx.vstack(
-                rx.text(t(title_es, title_en), font_size=T.TEXT_2XL, font_weight=T.WEIGHT_BOLD, color=T.TEXT_PRIMARY),
+                rx.heading(t(title_es, title_en), as_="h3", font_size=T.TEXT_2XL, font_weight=T.WEIGHT_BOLD, color=T.TEXT_PRIMARY),
                 rx.text(t(desc_es, desc_en), font_size=T.TEXT_BASE, color=T.TEXT_SECONDARY, line_height="1.6", max_width="500px"),
                 align="start",
                 padding_top=T.SPACE_2,
@@ -39,7 +39,7 @@ def how_it_works_section() -> rx.Component:
     return rx.box(
         rx.vstack(
             rx.text(t("El Proceso", "The Process"), font_size=T.TEXT_SM, font_weight=T.WEIGHT_BOLD, color=T.BRAND, letter_spacing="1px", text_transform="uppercase"),
-            rx.text(t("Cómo funciona SKILLOGIC", "How SKILLOGIC works"), font_size=T.TEXT_3XL, font_weight=T.WEIGHT_EXTRABOLD, color=T.TEXT_PRIMARY, margin_bottom=T.SPACE_12, text_align="center"),
+            rx.heading(t("Cómo funciona SKILLOGIC", "How SKILLOGIC works"), as_="h2", font_size=T.TEXT_3XL, font_weight=T.WEIGHT_EXTRABOLD, color=T.TEXT_PRIMARY, margin_bottom=T.SPACE_12, text_align="center"),
             
             rx.vstack(
                 timeline_step(

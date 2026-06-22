@@ -32,7 +32,7 @@ def problem_solution_section() -> rx.Component:
     return rx.box(
         rx.vstack(
             rx.text(t("El Problema", "The Problem"), font_size=T.TEXT_SM, font_weight=T.WEIGHT_BOLD, color=T.BRAND, letter_spacing="1px", text_transform="uppercase"),
-            rx.text(t("Por qué abandonar cursos es tan común", "Why dropping courses is so common"), font_size=T.TEXT_3XL, font_weight=T.WEIGHT_EXTRABOLD, color=T.TEXT_PRIMARY, margin_bottom=T.SPACE_8, text_align="center"),
+            rx.heading(t("Por qué abandonar cursos es tan común", "Why dropping courses is so common"), as_="h2", font_size=T.TEXT_3XL, font_weight=T.WEIGHT_EXTRABOLD, color=T.TEXT_PRIMARY, margin_bottom=T.SPACE_8, text_align="center"),
             
             rx.grid(
                 column(

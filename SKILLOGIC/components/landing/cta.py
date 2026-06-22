@@ -7,7 +7,7 @@ def bottom_cta_section() -> rx.Component:
     """Strong bottom call to action before the footer."""
     return rx.box(
         rx.vstack(
-            rx.text(t("¿Listo para escribir tu primera línea?", "Ready to write your first line?"), font_size=T.TEXT_3XL, font_weight=T.WEIGHT_EXTRABOLD, color="white", text_align="center", margin_bottom=T.SPACE_4),
+            rx.heading(t("¿Listo para escribir tu primera línea?", "Ready to write your first line?"), as_="h2", font_size=T.TEXT_3XL, font_weight=T.WEIGHT_EXTRABOLD, color="white", text_align="center", margin_bottom=T.SPACE_4),
             rx.text(t("Únete a SKILLOGIC hoy y transforma tu carrera aprendiendo la tecnología más demandada del mercado.", "Join SKILLOGIC today and transform your career by learning the most in-demand technology in the market."), font_size=T.TEXT_LG, color="rgba(255,255,255,0.8)", text_align="center", max_width="600px", margin_bottom=T.SPACE_8),
             rx.button(
                 t("Comenzar mi aprendizaje gratis", "Start my learning for free"),
