@@ -79,17 +79,21 @@ def render_kata_workspace() -> rx.Component:
                 rx.text_area(
                     value=KataState.user_code,
                     on_change=KataState.set_user_code,
-                    height="45vh",
+                    height="50vh",
                     width="100%",
                     font_family="'Fira Code', 'Consolas', monospace",
                     font_size="md",
                     background="#1e1e1e",
                     color="#d4d4d4",
-                    padding=T.SPACE_4,
+                    padding=T.SPACE_5,
                     border="none",
                     border_radius="0",
                     border_bottom_radius=T.RADIUS_MD,
                     resize="none",
+                    spellcheck="false",
+                    wrap="off",
+                    white_space="pre",
+                    line_height="1.6",
                     _focus={"outline": "none", "box_shadow": f"inset 0 0 0 1px {T.BRAND}"}
                 ),
                 width="100%",
@@ -133,7 +137,7 @@ def render_kata_workspace() -> rx.Component:
                         rx.divider(margin_y=T.SPACE_3, border_color="#333"),
                         rx.hstack(
                             rx.icon("zap", color="#fbbf24", size=16),
-                            rx.text("SKILLOGIC AI:", font_weight="bold", color="#fbbf24", font_family="monospace"),
+                            rx.text("SKILLOGIC Sensei:", font_weight="bold", color="#fbbf24", font_family="monospace"),
                             align="center", margin_bottom=T.SPACE_1
                         ),
                         rx.text(KataState.feedback_message, color=rx.cond(KataState.is_success, "#4ade80", "#f87171"), font_family="monospace"),

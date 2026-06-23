@@ -8,6 +8,7 @@ from typing import Optional, Dict
 from SKILLOGIC.data.katas import get_kata_by_id
 from SKILLOGIC.state.progress_state import ProgressState
 from SKILLOGIC.state.auth_state import AuthState
+from SKILLOGIC.utils.ai_sensei import get_ai_hint
 
 class KataState(rx.State):
     """Maneja el estado y ejecución de un Kata individual."""
@@ -98,12 +99,15 @@ class KataState(rx.State):
                 async for update in progress.mark_kata_completed(self.current_kata_id, xp_earned):
                     yield update
             else:
-                self.feedback_message = "El código se ejecutó, pero no pasó todas las pruebas."
+                desc = kata.get("description_es", "")
+                self.feedback_message = get_ai_hint(self.user_code, output, desc)
                 
         except Exception as e:
             output = f.getvalue()
-            self.terminal_output = output + f"\nError de Ejecución: {str(e)}"
-            self.feedback_message = "Tu código tiene errores. Revisa la consola."
+            error_str = output + f"\nError de Ejecución: {str(e)}"
+            self.terminal_output = error_str
+            desc = kata.get("description_es", "")
+            self.feedback_message = get_ai_hint(self.user_code, error_str, desc)
             
         self.is_loading = False
         yield
