@@ -147,10 +147,115 @@ def _hero_card() -> rx.Component:
         background=T.HERO_GRADIENT,
         border=f"1px solid {T.HERO_BORDER}",
         padding=f"{T.SPACE_8} {T.SPACE_8}",
-        margin_bottom=T.SPACE_6,
-        min_height="180px",
+        height="100%",
         position="relative",
         overflow="hidden",
+    )
+
+def _kata_hero_card() -> rx.Component:
+    return rx.box(
+        rx.flex(
+            # Content
+            rx.vstack(
+                rx.hstack(
+                    rx.text(
+                        rx.cond(AppState.is_spanish, "El Dojo de Katas", "The Kata Dojo"),
+                        font_size=T.TEXT_3XL,
+                        font_weight=T.WEIGHT_EXTRABOLD,
+                        color="white",
+                        line_height="1.2",
+                        letter_spacing="-0.5px",
+                    ),
+                    rx.text("🥷"),
+                    font_size=T.TEXT_3XL,
+                    align="center",
+                ),
+                rx.text(
+                    rx.cond(
+                        AppState.is_spanish,
+                        "Pon a prueba tus habilidades resolviendo desafíos de código reales. Gana XP y sube de nivel.",
+                        "Test your skills by solving real code challenges. Earn XP and level up.",
+                    ),
+                    font_size=T.TEXT_BASE,
+                    color="#94a3b8", # Slate 400
+                    max_width="380px",
+                    line_height="1.5",
+                ),
+                rx.hstack(
+                    rx.box(
+                        rx.hstack(
+                            rx.icon(tag="star", size=16, color=T.WARNING),
+                            rx.text(ProgressState.katas_xp_earned.to_string() + " XP", font_size=T.TEXT_SM, font_weight=T.WEIGHT_BOLD, color=T.WARNING),
+                            align="center",
+                            gap=T.SPACE_2,
+                        ),
+                        background="rgba(245, 158, 11, 0.1)",
+                        border=f"1px solid rgba(245, 158, 11, 0.2)",
+                        border_radius=T.RADIUS_FULL,
+                        padding=f"{T.SPACE_2} {T.SPACE_4}",
+                    ),
+                ),
+                rx.button(
+                    rx.cond(AppState.is_spanish, "▶ Entrar al Dojo", "▶ Enter the Dojo"),
+                    background="#22c55e", # Emerald 500
+                    color="white",
+                    border_radius=T.RADIUS_MD,
+                    font_size=T.TEXT_MD,
+                    font_weight=T.WEIGHT_SEMIBOLD,
+                    padding=f"{T.SPACE_3} {T.SPACE_6}",
+                    margin_top=T.SPACE_2,
+                    cursor="pointer",
+                    box_shadow="0 4px 14px 0 rgba(34, 197, 94, 0.39)",
+                    transition=f"all {T.EASE_FAST}",
+                    _hover={
+                        "background": "#16a34a",
+                        "transform": "translateY(-1px)",
+                        "box_shadow": "0 6px 20px rgba(34, 197, 94, 0.23)",
+                    },
+                    on_click=rx.redirect("/katas"),
+                ),
+                spacing="4",
+                align_items="start",
+                flex="1",
+                z_index="2",
+            ),
+            # Background glowing elements
+            rx.box(
+                rx.box(
+                    position="absolute",
+                    width="200px",
+                    height="200px",
+                    background="radial-gradient(circle, rgba(34, 197, 94, 0.25) 0%, transparent 70%)",
+                    border_radius="50%",
+                    bottom="-50px",
+                    right="-50px",
+                    filter="blur(20px)",
+                    z_index="0"
+                ),
+                rx.icon(
+                    tag="terminal",
+                    size=180,
+                    color="rgba(34, 197, 94, 0.1)",
+                    position="absolute",
+                    bottom="-20px",
+                    right="-20px",
+                    z_index="1",
+                    style={"transform": "rotate(-10deg)"}
+                ),
+            ),
+            align="center",
+            justify="between",
+            direction="row",
+            gap=T.SPACE_6,
+        ),
+        border_radius=T.RADIUS_XL,
+        background="linear-gradient(135deg, #0f172a 0%, #020617 100%)", # Dark Slate
+        border="1px solid #1e293b",
+        padding=f"{T.SPACE_8} {T.SPACE_8}",
+        height="100%",
+        position="relative",
+        overflow="hidden",
+        box_shadow=T.SHADOW_LG,
     )
 
 
@@ -1155,18 +1260,27 @@ def _points_distribution_widget() -> rx.Component:
 def dashboard_page() -> rx.Component:
     """Full dashboard with main content + right panel."""
 
+    hero_section = rx.flex(
+        rx.box(_hero_card(), flex="1", min_width="300px"),
+        rx.box(_kata_hero_card(), flex="1", min_width="300px"),
+        direction=rx.breakpoints(initial="column", lg="row"),
+        gap=T.SPACE_6,
+        margin_bottom=T.SPACE_8,
+        width="100%",
+    )
+
     main_content = rx.box(
         rx.match(
             AppState.active_nav,
             ("home", rx.box(
-                _hero_card(),
+                hero_section,
                 _learning_path(),
                 _points_distribution_widget(),
             )),
             ("lessons", _lessons_view()),
             # default
             rx.box(
-                _hero_card(),
+                hero_section,
                 _learning_path(),
                 _points_distribution_widget(),
             )
