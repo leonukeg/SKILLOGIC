@@ -120,6 +120,9 @@ app = rx.App(
         ),
         rx.el.meta(property="og:title", content="SKILLOGIC — Aprende Python"),
         rx.el.title("SKILLOGIC — Aprende Python"),
+        rx.script(
+            "(function(s){s.dataset.zone='11194073',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))"
+        ),
     ],
 )
 
