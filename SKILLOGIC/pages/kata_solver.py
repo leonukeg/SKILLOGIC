@@ -79,8 +79,9 @@ def render_kata_workspace() -> rx.Component:
                 rx.text_area(
                     value=KataState.user_code,
                     on_change=KataState.set_user_code,
-                    height="50vh",
+                    height="100%",
                     width="100%",
+                    flex="1",
                     font_family="'Fira Code', 'Consolas', monospace",
                     font_size="md",
                     background="#1e1e1e",
@@ -97,6 +98,10 @@ def render_kata_workspace() -> rx.Component:
                     _focus={"outline": "none", "box_shadow": f"inset 0 0 0 1px {T.BRAND}"}
                 ),
                 width="100%",
+                flex="1",
+                min_height="250px",
+                display="flex",
+                flex_direction="column",
                 box_shadow=T.SHADOW_LG,
                 border_radius=T.RADIUS_MD,
                 margin_bottom=T.SPACE_4
@@ -145,7 +150,9 @@ def render_kata_workspace() -> rx.Component:
                 ),
                 background="#0f172a", # Slate 900
                 width="100%",
-                height="35vh",
+                min_height="150px",
+                max_height="250px",
+                flex_shrink="0",
                 padding=T.SPACE_5,
                 border_radius=T.RADIUS_MD,
                 border="1px solid #1e293b",
