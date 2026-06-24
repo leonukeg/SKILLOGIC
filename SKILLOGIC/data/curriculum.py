@@ -35,4 +35,11 @@ def save_curriculum(data: dict):
         json.dump(data, f, indent=2, ensure_ascii=False)
 
 def get_lesson_by_id(lesson_id: str) -> dict | None:
-    return LESSONS_DB.get(lesson_id)
+    if not lesson_id:
+        return None
+    # Normalize formats like "1.1" to "lesson_1_1"
+    normalized_id = str(lesson_id).replace(".", "_")
+    if not normalized_id.startswith("lesson_"):
+        normalized_id = f"lesson_{normalized_id}"
+    
+    return LESSONS_DB.get(normalized_id)
