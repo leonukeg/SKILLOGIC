@@ -1260,11 +1260,10 @@ def _points_distribution_widget() -> rx.Component:
 def dashboard_page() -> rx.Component:
     """Full dashboard with main content + right panel."""
 
-    hero_section = rx.flex(
-        rx.box(_hero_card(), flex="1", min_width="300px"),
-        rx.box(_kata_hero_card(), flex="1", min_width="300px"),
-        direction=rx.breakpoints(initial="column", lg="row"),
-        gap=T.SPACE_6,
+    hero_section = rx.vstack(
+        rx.box(_hero_card(), width="100%"),
+        rx.box(_kata_hero_card(), width="100%"),
+        spacing="6",
         margin_bottom=T.SPACE_8,
         width="100%",
     )
