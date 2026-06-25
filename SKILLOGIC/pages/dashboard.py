@@ -133,9 +133,7 @@ def _hero_card() -> rx.Component:
                 display="flex",
                 align_items="center",
                 justify_content="center",
-                margin_right="-20px", # Bleed off the right edge a bit
-                margin_top="-30px",
-                margin_bottom="-30px",
+                margin="auto",
                 z_index="1"
             ),
             align="center",
@@ -235,17 +233,19 @@ def _kata_hero_card() -> rx.Component:
                 rx.icon(
                     tag="terminal",
                     size=180,
-                    color="rgba(34, 197, 94, 0.1)",
-                    position="absolute",
-                    bottom="-20px",
-                    right="-20px",
+                    color="rgba(34, 197, 94, 0.4)", # Brighter green
+                    position="relative",
                     z_index="1",
-                    style={"transform": "rotate(-10deg)"}
+                    style={
+                        "transform": "rotate(10deg)",
+                        "animation": "pythonFloat 4s ease-in-out infinite" # Reusing float animation
+                    }
                 ),
             ),
+            padding_left=T.SPACE_8,
             align="center",
             justify="between",
-            direction="row",
+            direction="row-reverse", # Swap order: Icon left, Text right
             gap=T.SPACE_6,
         ),
         border_radius=T.RADIUS_XL,
